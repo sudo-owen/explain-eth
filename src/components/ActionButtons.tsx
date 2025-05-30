@@ -1,14 +1,17 @@
 import React, { useState } from 'react'
 import { ChainState, Recipient } from '../types/blockchain'
-import { getAvailableNFTs } from '../utils/transactions'
+import { getAvailableNFTs, formatETH } from '../utils/transactions'
 import { ColorTheme } from './ChainColumn'
+import { getRecipientEmoji, recipients } from '../utils/recipients'
 
 interface ActionButtonsProps {
   chainState: ChainState
   onSendMoney: (recipient: Recipient, amount: number) => void
   onPurchaseNFT: (nftId: string, price: number, emoji: string) => void
-  onSellNFT: (nftId: string) => void
-  onDepositSavings: (amount: number) => void
+  onDepositEarnings: (amount: number) => void
+  onWithdrawEarnings: (amount: number) => void
+  onClaimEarnings: () => void
+  currentEarnings: number
   theme: ColorTheme
 }
 
@@ -16,8 +19,10 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   chainState,
   onSendMoney,
   onPurchaseNFT,
-  onSellNFT,
-  onDepositSavings,
+  onDepositEarnings,
+  onWithdrawEarnings,
+  onClaimEarnings,
+  currentEarnings,
   theme
 }) => {
   const [activeAction, setActiveAction] = useState<string | null>(null)
@@ -25,7 +30,6 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   const [selectedRecipient, setSelectedRecipient] = useState<Recipient>('Bob')
 
   const availableNFTs = getAvailableNFTs()
-  const recipients: Recipient[] = ['Bob', 'Carol', 'Eve']
 
   const getThemeColors = () => {
     if (theme === 'rollup') {
@@ -57,7 +61,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   }
 
   const handleQuickDeposit = (amount: number) => {
-    onDepositSavings(amount)
+    onDepositEarnings(amount)
   }
 
   const handleQuickSend = (amount: number) => {
@@ -73,17 +77,29 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
     }
   }
 
-  const handleSellNFT = (nftId: string) => {
-    onSellNFT(nftId)
-  }
 
-  const handleDepositSavings = () => {
+
+  const handleDepositEarnings = () => {
     const amountNum = parseFloat(amount)
     if (amountNum > 0) {
-      onDepositSavings(amountNum)
+      onDepositEarnings(amountNum)
       setAmount('')
       setActiveAction(null)
     }
+  }
+
+  const handleWithdrawEarnings = () => {
+    const amountNum = parseFloat(amount)
+    if (amountNum > 0) {
+      onWithdrawEarnings(amountNum)
+      setAmount('')
+      setActiveAction(null)
+    }
+  }
+
+  const handleClaimEarnings = () => {
+    onClaimEarnings()
+    setActiveAction(null)
   }
 
   return (
@@ -91,10 +107,10 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
       <h3 className="text-lg font-semibold text-gray-100 mb-4">Actions</h3>
 
       {/* Compact Action Buttons Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-4">
+      <div className="grid grid-cols-3 gap-2 mb-4">
         <button
           onClick={() => setActiveAction(activeAction === 'send' ? null : 'send')}
-          className={`p-2 ${colors.primary} text-white rounded-lg transition-colors font-medium text-sm flex items-center justify-center space-x-1`}
+          className={`p-2 ${colors.primary} text-white rounded-lg transition-colors font-medium text-sm flex items-center justify-center space-x-1 cursor-pointer`}
         >
           <span>💸</span>
           <span>Send</span>
@@ -102,87 +118,95 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 
         <button
           onClick={() => setActiveAction(activeAction === 'purchase' ? null : 'purchase')}
-          className={`p-2 ${colors.secondary} text-white rounded-lg transition-colors font-medium text-sm flex items-center justify-center space-x-1`}
+          className={`p-2 ${colors.secondary} text-white rounded-lg transition-colors font-medium text-sm flex items-center justify-center space-x-1 cursor-pointer`}
         >
           <span>🎨</span>
           <span>Buy NFT</span>
         </button>
 
-        {chainState.nfts.length > 0 && (
-          <button
-            onClick={() => setActiveAction(activeAction === 'sell' ? null : 'sell')}
-            className={`p-2 ${colors.warning} text-white rounded-lg transition-colors font-medium text-sm flex items-center justify-center space-x-1`}
-          >
-            <span>💰</span>
-            <span>Sell NFT</span>
-          </button>
-        )}
-
         <button
-          onClick={() => setActiveAction(activeAction === 'savings' ? null : 'savings')}
-          className={`p-2 ${colors.success} text-white rounded-lg transition-colors font-medium text-sm flex items-center justify-center space-x-1`}
+          onClick={() => setActiveAction(activeAction === 'earnings' ? null : 'earnings')}
+          className={`p-2 ${colors.success} text-white rounded-lg transition-colors font-medium text-sm flex items-center justify-center space-x-1 cursor-pointer`}
         >
-          <span>🏦</span>
-          <span>Save</span>
+          <span>💰</span>
+          <span>Earn</span>
         </button>
       </div>
       {/* Action Forms */}
-      <div className="min-h-[200px]">
+      <div className="h-[320px] flex items-start">
         {/* Send Money Form */}
         {activeAction === 'send' && (
-          <div className={`p-4 ${colors.innerBackground} rounded-lg space-y-3 mb-4`}>
+          <div className={`w-full p-4 ${colors.innerBackground} rounded-lg space-y-4`}>
+            {/* Recipient Selection */}
             <div>
-              <label className="block text-sm text-gray-300 mb-2">Recipient</label>
-              <select
-                value={selectedRecipient}
-                onChange={(e) => setSelectedRecipient(e.target.value as Recipient)}
-                className={`w-full p-2 ${colors.inputBackground} text-white rounded border`}
-              >
+              <label className="block text-sm text-gray-300 mb-2">Select Recipient</label>
+              <div className="grid grid-cols-3 gap-2">
                 {recipients.map(recipient => (
-                  <option key={recipient} value={recipient}>{recipient}</option>
+                  <button
+                    key={recipient}
+                    onClick={() => setSelectedRecipient(recipient)}
+                    className={`
+                      flex items-center space-x-2 p-3 rounded-lg border-2 transition-all
+                      ${selectedRecipient === recipient
+                        ? `${colors.primary} border-white/30`
+                        : `${colors.inputBackground} border-transparent hover:border-white/20`
+                      }
+                    `}
+                  >
+                    <div className="text-lg">{getRecipientEmoji(recipient)}</div>
+                    <div className="flex-1 min-w-0 text-left">
+                      <div className="text-xs font-medium text-white truncate">{recipient}</div>
+                      <div className="text-xs text-gray-300">
+                        {chainState.recipientBalances[recipient] > 0
+                          ? formatETH(chainState.recipientBalances[recipient])
+                          : formatETH(0)
+                        }
+                      </div>
+                    </div>
+                  </button>
                 ))}
-              </select>
+              </div>
             </div>
 
             {/* Quick Send Buttons */}
             <div>
-              <label className="block text-sm text-gray-300 mb-2">Quick Send</label>
+              <label className="block text-sm text-gray-300 mb-2">Quick Send to {selectedRecipient}</label>
               <div className="grid grid-cols-3 gap-2 mb-3">
                 <button
-                  onClick={() => handleQuickSend(1)}
-                  disabled={chainState.balance < 1}
-                  className={`p-2 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm`}
+                  onClick={() => handleQuickSend(0.01)}
+                  disabled={chainState.balance < 0.01}
+                  className={`p-2 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm cursor-pointer`}
                 >
-                  💵 $1
+                  💵 0.01 ETH
                 </button>
                 <button
-                  onClick={() => handleQuickSend(5)}
-                  disabled={chainState.balance < 5}
-                  className={`p-2 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm`}
+                  onClick={() => handleQuickSend(0.05)}
+                  disabled={chainState.balance < 0.05}
+                  className={`p-2 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm cursor-pointer`}
                 >
-                  💰 $5
+                  💰 0.05 ETH
                 </button>
                 <button
-                  onClick={() => handleQuickSend(10)}
-                  disabled={chainState.balance < 10}
-                  className={`p-2 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm`}
+                  onClick={() => handleQuickSend(0.1)}
+                  disabled={chainState.balance < 0.1}
+                  className={`p-2 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm cursor-pointer`}
                 >
-                  💎 $10
+                  💎 0.1 ETH
                 </button>
               </div>
             </div>
 
             {/* Custom Amount */}
             <div>
-              <label className="block text-sm text-gray-300 mb-2">Custom Amount ($)</label>
+              <label className="block text-sm text-gray-300 mb-2">Custom Amount (ETH)</label>
               <div className="flex space-x-2">
                 <input
                   type="number"
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
-                  placeholder="0.00"
+                  placeholder="0.000"
                   min="0"
-                  step="0.01"
+                  step="0.001"
                   className={`flex-1 p-2 ${colors.inputBackground} text-white rounded border`}
                 />
                 <button
@@ -197,9 +221,9 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           </div>
         )}
 
-      {/* NFT Gallery */}
-      {activeAction === 'purchase' && (
-        <div className={`p-4 ${colors.innerBackground} rounded-lg mb-4`}>
+        {/* NFT Gallery */}
+        {activeAction === 'purchase' && (
+          <div className={`w-full p-4 ${colors.innerBackground} rounded-lg`}>
           <h4 className="text-sm font-medium text-gray-300 mb-3">🎨 Art Gallery - Click to Purchase</h4>
           <div className="grid grid-cols-4 gap-3">
             {availableNFTs.map(nft => (
@@ -214,98 +238,136 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
                     : 'bg-gray-600 border-gray-500'
                   }
                 `}
-                title={`${nft.name} - $${nft.price}`}
+                title={`${nft.name} - ${formatETH(nft.price)}`}
               >
                 <div className="text-2xl mb-1">{nft.emoji}</div>
-                <div className="text-xs text-white font-medium">${nft.price}</div>
+                <div className="text-xs text-white font-medium">{formatETH(nft.price)}</div>
               </button>
             ))}
           </div>
         </div>
-      )}
+        )}
 
-      {/* Sell NFT */}
-      {activeAction === 'sell' && chainState.nfts.length > 0 && (
-        <div className={`p-4 ${colors.innerBackground} rounded-lg mb-4`}>
-          <h4 className="text-sm font-medium text-gray-300 mb-3">💰 Your NFT Collection - Click to Sell</h4>
-          <div className="space-y-2">
-            {chainState.nfts.map(nft => (
-              <div key={nft.id} className={`flex justify-between items-center p-3 ${colors.inputBackground} rounded border`}>
-                <div className="flex items-center space-x-3">
-                  <div className="text-2xl">{nft.emoji}</div>
-                  <div>
-                    <div className="text-sm text-gray-200 font-medium">{nft.name}</div>
-                    <div className="text-xs text-gray-400">
-                      Bought for ${nft.purchasePrice}
-                    </div>
-                  </div>
-                </div>
-                <button
-                  onClick={() => handleSellNFT(nft.id)}
-                  className="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-sm transition-colors"
-                >
-                  💰 Sell
-                </button>
+        {/* Earnings */}
+        {activeAction === 'earnings' && (
+          <div className={`w-full p-4 ${colors.innerBackground} rounded-lg space-y-4`}>
+            <h4 className="text-sm font-medium text-gray-300 mb-3">💰 Earn (1% per second)</h4>
+
+            {/* Current Earnings Display - Always visible */}
+            <div className="p-3 bg-green-900/20 border border-green-600/30 rounded-lg">
+              <div className="flex justify-between items-center">
+                <span className="text-sm text-gray-300">Accrued Interest:</span>
+                <span className="text-lg font-semibold text-green-400">
+                  {formatETH(currentEarnings)}
+                </span>
               </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Deposit Savings */}
-      {activeAction === 'savings' && (
-        <div className={`p-4 ${colors.innerBackground} rounded-lg mb-4`}>
-          <h4 className="text-sm font-medium text-gray-300 mb-3">🏦 Savings Deposit (10% per minute)</h4>
-
-          {/* Quick Deposit Buttons */}
-          <div className="grid grid-cols-3 gap-2 mb-3">
-            <button
-              onClick={() => handleQuickDeposit(1)}
-              disabled={chainState.balance < 1}
-              className={`p-2 ${colors.success} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm`}
-            >
-              💵 $1
-            </button>
-            <button
-              onClick={() => handleQuickDeposit(10)}
-              disabled={chainState.balance < 10}
-              className={`p-2 ${colors.success} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm`}
-            >
-              💰 $10
-            </button>
-            <button
-              onClick={() => handleQuickDeposit(50)}
-              disabled={chainState.balance < 50}
-              className={`p-2 ${colors.success} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm`}
-            >
-              💎 $50
-            </button>
-          </div>
-
-          {/* Custom Amount */}
-          <div className="space-y-2">
-            <label className="block text-sm text-gray-300">Custom Amount ($)</label>
-            <div className="flex space-x-2">
-              <input
-                type="number"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
-                placeholder="0.00"
-                min="0"
-                step="0.01"
-                className={`flex-1 p-2 ${colors.inputBackground} text-white rounded border`}
-              />
               <button
-                onClick={handleDepositSavings}
-                disabled={!amount || parseFloat(amount) <= 0}
-                className={`px-4 py-2 ${colors.success} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors`}
+                onClick={handleClaimEarnings}
+                disabled={currentEarnings <= 0}
+                className={`w-full mt-2 p-2 ${colors.success} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm`}
               >
-                🏦 Deposit
+                🎯 Claim Interest
               </button>
             </div>
+
+            {/* Action Buttons */}
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <h5 className="text-xs text-gray-400 mb-2">Deposit</h5>
+                <div className="grid grid-cols-3 gap-1 mb-2">
+                  <button
+                    onClick={() => handleQuickDeposit(0.01)}
+                    disabled={chainState.balance < 0.01}
+                    className={`p-1 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs`}
+                  >
+                    0.01
+                  </button>
+                  <button
+                    onClick={() => handleQuickDeposit(0.1)}
+                    disabled={chainState.balance < 0.1}
+                    className={`p-1 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs`}
+                  >
+                    0.1
+                  </button>
+                  <button
+                    onClick={() => handleQuickDeposit(0.5)}
+                    disabled={chainState.balance < 0.5}
+                    className={`p-1 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs`}
+                  >
+                    0.5
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <h5 className="text-xs text-gray-400 mb-2">Withdraw</h5>
+                <div className="grid grid-cols-3 gap-1 mb-2">
+                  <button
+                    onClick={() => onWithdrawEarnings(0.01)}
+                    disabled={chainState.savingsDeposit < 0.01}
+                    className={`p-1 ${colors.warning} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs`}
+                  >
+                    0.01
+                  </button>
+                  <button
+                    onClick={() => onWithdrawEarnings(0.1)}
+                    disabled={chainState.savingsDeposit < 0.1}
+                    className={`p-1 ${colors.warning} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs`}
+                  >
+                    0.1
+                  </button>
+                  <button
+                    onClick={() => onWithdrawEarnings(chainState.savingsDeposit)}
+                    disabled={chainState.savingsDeposit <= 0}
+                    className={`p-1 ${colors.warning} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs`}
+                  >
+                    All
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {/* Custom Amount */}
+            <div className="space-y-2">
+              <label className="block text-sm text-gray-300">Custom Amount (ETH)</label>
+              <div className="flex space-x-2">
+                <input
+                  type="number"
+                  value={amount}
+                  onChange={(e) => setAmount(e.target.value)}
+                  placeholder="0.000"
+                  min="0"
+                  step="0.001"
+                  className={`flex-1 p-2 ${colors.inputBackground} text-white rounded border`}
+                />
+                <button
+                  onClick={handleDepositEarnings}
+                  disabled={!amount || parseFloat(amount) <= 0}
+                  className={`px-3 py-2 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm`}
+                >
+                  💰 Deposit
+                </button>
+                <button
+                  onClick={handleWithdrawEarnings}
+                  disabled={!amount || parseFloat(amount) <= 0 || parseFloat(amount) > chainState.savingsDeposit}
+                  className={`px-3 py-2 ${colors.warning} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm`}
+                >
+                  📤 Withdraw
+                </button>
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+
+        {/* Placeholder when no action is selected */}
+        {!activeAction && (
+          <div className="w-full flex items-center justify-center text-gray-400">
+            <div className="text-center">
+              <div className="text-4xl mb-2">⚡</div>
+              <div className="text-sm">Select an action above to get started</div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

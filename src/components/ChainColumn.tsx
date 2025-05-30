@@ -12,7 +12,10 @@ interface ChainColumnProps {
   onSendMoney: (recipient: Recipient, amount: number) => void
   onPurchaseNFT: (nftId: string, price: number, emoji: string) => void
   onSellNFT: (nftId: string) => void
-  onDepositSavings: (amount: number) => void
+  onDepositEarnings: (amount: number) => void
+  onWithdrawEarnings: (amount: number) => void
+  onClaimEarnings: () => void
+  currentEarnings: number
   transactionHistory: Transaction[]
   theme: ColorTheme
   className?: string
@@ -24,7 +27,10 @@ const ChainColumn: React.FC<ChainColumnProps> = ({
   onSendMoney,
   onPurchaseNFT,
   onSellNFT,
-  onDepositSavings,
+  onDepositEarnings,
+  onWithdrawEarnings,
+  onClaimEarnings,
+  currentEarnings,
   transactionHistory,
   theme,
   className = ''
@@ -43,15 +49,17 @@ const ChainColumn: React.FC<ChainColumnProps> = ({
       {/* Content Grid */}
       <div className="flex-1 space-y-6">
         {/* Balance Display */}
-        <BalanceDisplay chainState={chainState} title={title} theme={theme} />
+        <BalanceDisplay chainState={chainState} title={title} theme={theme} onSellNFT={onSellNFT} />
 
         {/* Action Buttons */}
         <ActionButtons
           chainState={chainState}
           onSendMoney={onSendMoney}
           onPurchaseNFT={onPurchaseNFT}
-          onSellNFT={onSellNFT}
-          onDepositSavings={onDepositSavings}
+          onDepositEarnings={onDepositEarnings}
+          onWithdrawEarnings={onWithdrawEarnings}
+          onClaimEarnings={onClaimEarnings}
+          currentEarnings={currentEarnings}
           theme={theme}
         />
 

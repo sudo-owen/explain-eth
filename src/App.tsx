@@ -10,7 +10,10 @@ function App() {
     sendMoney,
     purchaseNFT,
     sellNFT,
-    depositSavings,
+    depositEarnings,
+    withdrawEarnings,
+    claimEarnings,
+    calculateCurrentEarnings,
     transactionHistory,
     modalState,
     closeModal
@@ -28,7 +31,10 @@ function App() {
           onSendMoney={(recipient: Recipient, amount: number) => sendMoney('ethereum', recipient, amount)}
           onPurchaseNFT={(nftId: string, price: number, emoji: string) => purchaseNFT('ethereum', nftId, price, emoji)}
           onSellNFT={(nftId: string) => sellNFT('ethereum', nftId)}
-          onDepositSavings={(amount: number) => depositSavings('ethereum', amount)}
+          onDepositEarnings={(amount: number) => depositEarnings('ethereum', amount)}
+          onWithdrawEarnings={(amount: number) => withdrawEarnings('ethereum', amount)}
+          onClaimEarnings={() => claimEarnings('ethereum')}
+          currentEarnings={calculateCurrentEarnings(ethereumState)}
           transactionHistory={transactionHistory.filter(tx => tx.chain === 'ethereum')}
           theme="ethereum"
           className="lg:w-1/2 border-r border-gray-700"
@@ -41,7 +47,10 @@ function App() {
           onSendMoney={(recipient: Recipient, amount: number) => sendMoney('rollup', recipient, amount)}
           onPurchaseNFT={(nftId: string, price: number, emoji: string) => purchaseNFT('rollup', nftId, price, emoji)}
           onSellNFT={(nftId: string) => sellNFT('rollup', nftId)}
-          onDepositSavings={(amount: number) => depositSavings('rollup', amount)}
+          onDepositEarnings={(amount: number) => depositEarnings('rollup', amount)}
+          onWithdrawEarnings={(amount: number) => withdrawEarnings('rollup', amount)}
+          onClaimEarnings={() => claimEarnings('rollup')}
+          currentEarnings={calculateCurrentEarnings(rollupState)}
           transactionHistory={transactionHistory.filter(tx => tx.chain === 'rollup')}
           theme="rollup"
           className="lg:w-1/2 bg-gradient-to-br from-purple-950/20 to-indigo-950/20"

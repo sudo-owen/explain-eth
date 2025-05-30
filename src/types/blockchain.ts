@@ -17,13 +17,15 @@ export interface ChainState {
   savingsLastUpdate: Date
   pendingTransactions: number
   recipientBalances: Record<Recipient, number>
+  pendingSells: Set<string> // NFT IDs that have pending sell transactions
 }
 
 export interface Transaction {
   id: string
   chain: ChainType
-  type: 'send' | 'purchase_nft' | 'sell_nft' | 'deposit_savings'
+  type: 'send' | 'purchase_nft' | 'sell_nft' | 'deposit_earnings' | 'withdraw_earnings' | 'claim_earnings'
   amount: number
+  fee: number // Transaction fee in ETH
   recipient?: Recipient
   nftId?: string
   status: 'pending' | 'confirmed' | 'failed'

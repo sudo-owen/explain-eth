@@ -1,7 +1,7 @@
 import React from 'react'
 import { Transaction } from '../types/blockchain'
 import CircularCountdown from './CircularCountdown'
-import { TRANSACTION_DURATION } from '../utils/transactions'
+import { TRANSACTION_DURATION, formatETH } from '../utils/transactions'
 import { ColorTheme } from './ChainColumn'
 
 interface TransactionHistoryProps {
@@ -12,12 +12,7 @@ interface TransactionHistoryProps {
 
 const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transactions, title, theme }) => {
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(amount)
+    return formatETH(amount)
   }
 
   const getThemeColors = () => {
@@ -93,15 +88,19 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transactions, t
   const getTransactionDescription = (tx: Transaction) => {
     switch (tx.type) {
       case 'send':
-        return `Sent ${formatCurrency(tx.amount)} to ${tx.recipient}`
+        return `Sent ${formatCurrency(tx.amount)} to ${tx.recipient} (Fee: ${formatCurrency(tx.fee)})`
       case 'purchase_nft':
-        return `Purchased NFT for ${formatCurrency(tx.amount)}`
+        return `Purchased NFT for ${formatCurrency(tx.amount)} (Fee: ${formatCurrency(tx.fee)})`
       case 'sell_nft':
-        return `Sold NFT for ${formatCurrency(tx.amount)}`
-      case 'deposit_savings':
-        return `Deposited ${formatCurrency(tx.amount)} to savings`
+        return `Sold NFT for ${formatCurrency(tx.amount)} (Fee: ${formatCurrency(tx.fee)})`
+      case 'deposit_earnings':
+        return `Deposited ${formatCurrency(tx.amount)} to earn (Fee: ${formatCurrency(tx.fee)})`
+      case 'withdraw_earnings':
+        return `Withdrew ${formatCurrency(tx.amount)} from earn (Fee: ${formatCurrency(tx.fee)})`
+      case 'claim_earnings':
+        return `Claimed ${formatCurrency(tx.amount)} interest (Fee: ${formatCurrency(tx.fee)})`
       default:
-        return `Transaction: ${formatCurrency(tx.amount)}`
+        return `Transaction: ${formatCurrency(tx.amount)} (Fee: ${formatCurrency(tx.fee)})`
     }
   }
 
