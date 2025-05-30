@@ -22,6 +22,7 @@ import {
   updateNFTPrices,
   getNFTCurrentPrice,
   markNFTAsSold,
+  formatETH,
   TRANSACTION_DURATION,
   ROLLUP_TRANSACTION_DURATION,
   EARNINGS_INTERVAL
@@ -137,7 +138,29 @@ export const useBlockchain = () => {
         pendingTransactions: prev.pendingTransactions - 1
       }))
 
-      showModal('success', `Confirmed: ${transaction.type.replace('_', ' ')}`)
+      // Generate detailed confirmation message
+      const getConfirmationMessage = (tx: Transaction) => {
+        switch (tx.type) {
+          case 'send':
+            return `Sent ${formatETH(tx.amount)} to ${tx.recipient}`
+          case 'purchase_nft':
+            return `Purchased NFT for ${formatETH(tx.amount)}`
+          case 'sell_nft':
+            return `Sold NFT for ${formatETH(tx.amount)}`
+          case 'deposit_earnings':
+            return `Deposited ${formatETH(tx.amount)} to earn`
+          case 'withdraw_earnings':
+            return `Withdrew ${formatETH(tx.amount)} from earn`
+          case 'claim_earnings':
+            return `Claimed ${formatETH(tx.amount)} interest`
+          case 'bridge':
+            return `Bridged ${formatETH(tx.amount)} to Rollup`
+          default:
+            return `Confirmed: ${String(tx.type).replace('_', ' ')}`
+        }
+      }
+
+      showModal('success', getConfirmationMessage(transaction))
     }, duration)
   }, [updateChainState, showModal])
 

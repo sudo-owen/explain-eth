@@ -5,6 +5,35 @@ import ProfileCards from '../components/ProfileCards'
 import TransactionModal from '../components/TransactionModal'
 import TransactionHistoryOverlay from '../components/TransactionHistoryOverlay'
 
+// Dummy Transaction Confirmation Modal Component for illustration
+const DummyTransactionModal: React.FC = () => {
+  return (
+    <div className="max-w-sm mx-auto my-8 bg-gray-800 rounded-lg shadow-xl p-4 border-2 border-green-500">
+      <div className="flex items-center space-x-3">
+        {/* Icon */}
+        <div className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center bg-green-500">
+          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+
+        {/* Message */}
+        <div className="flex-1">
+          <h3 className="text-sm font-medium text-green-400">
+            Transaction Successful
+          </h3>
+          <p className="text-gray-300 text-sm mt-1">Sent 0.1 ETH to Alice 👩‍💼</p>
+        </div>
+      </div>
+
+      {/* Progress bar */}
+      <div className="mt-4 w-full bg-gray-700 rounded-full h-1">
+        <div className="h-1 rounded-full bg-green-500 w-full" />
+      </div>
+    </div>
+  )
+}
+
 const HomePage: React.FC = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
   
@@ -28,11 +57,11 @@ const HomePage: React.FC = () => {
             <h1 className="text-4xl font-bold text-white mb-8">Intro</h1>
             
             <p className="text-gray-300 leading-relaxed mb-6">
-              Hi, this is an interactive essay that tries to explain the very basics of <strong>Ethereum</strong>, <strong>blockchains</strong>, and <strong>rollups</strong>.
+              Hi, if you have no idea what <strong>Ethereum</strong>, <strong>blockchains</strong>, and <strong>rollups</strong> are, this essay is for you!
             </p>
             
             <p className="text-gray-300 leading-relaxed mb-6">
-              If you have no idea what any of those words mean, or you just want to play around with some interactive animations, then keep reading.
+              If you already have some idea of what any/all of those words mean, or you just want to play around with some interactive animations, then feel free keep reading as well.
             </p>
             
             <p className="text-gray-300 leading-relaxed">
@@ -61,7 +90,11 @@ const HomePage: React.FC = () => {
             </p>
             
             <p className="text-gray-300 leading-relaxed mb-8">
-              Like a social media network, we'll need an account to get started. And we'll also need some <strong>money</strong>. On Ethereum, the money that we can send around is called ETH. Here, let's give you 1 ETH to get started:
+              Like a social media network, we'll need an <strong>account</strong> to get started. And we'll also need some <strong>money</strong>. On Ethereum, the money that we can send around is called ETH.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-8">
+               Here, let's give you 1 ETH to get started below. Now you can send it around, or maybe even receive some more.
             </p>
 
             {/* Balance Component */}
@@ -91,9 +124,27 @@ const HomePage: React.FC = () => {
               />
             </div>
 
-            <p className="text-gray-300 leading-relaxed">
+            <p className="text-gray-300 leading-relaxed mb-8">
               Okay, a lot of things just happened. We got a pop-up, we got a countdown, we got this other panel, what does all of this mean?
             </p>
+
+            <p className="text-gray-300 leading-relaxed mb-8">
+              Let's start with that pop-up you saw on the top right.
+            </p>
+
+            {/* Dummy Transaction Modal */}
+            <div className="my-12">
+              <DummyTransactionModal />
+            </div>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              One thing that may have stood out to you is that it takes a little bit of time to finish sending someone ETH. Not a day like a bank or Venmo transfer, but definitely a few seconds. Specifically, on Ethereum, it takes <b>around 12 seconds</b> to complete a transaction.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed">
+              This delay is called the <strong>block time</strong>. For a blockchain, the block time describes about how long you have to wait from when you do something (like send someone money) until when it's <b>confirmed</b>.
+            </p>
+
           </section>
 
         </article>
