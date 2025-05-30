@@ -16,8 +16,7 @@ import {
   validateSellNFT,
   validateDepositSavings,
   validateBridge,
-  calculateSellPrice,
-  updateEarningsBalance,
+
   calculateCurrentEarnings,
   updateNFTPrices,
   getNFTCurrentPrice,

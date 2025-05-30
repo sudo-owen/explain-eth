@@ -194,7 +194,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
             {/* Quick Send Buttons */}
             <div>
               <label className="block text-sm text-gray-300 mb-2">Quick Send to {selectedRecipient}</label>
-              <div className="grid grid-cols-3 gap-2 mb-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
                 <button
                   onClick={() => handleQuickSend(0.01)}
                   disabled={chainState.balance < 0.01}
@@ -297,7 +297,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <h5 className="text-xs text-gray-400 mb-2">Deposit</h5>
-                <div className="grid grid-cols-3 gap-1 mb-2">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-1 mb-2">
                   <button
                     onClick={() => handleQuickDeposit(0.01)}
                     disabled={chainState.balance < 0.01}

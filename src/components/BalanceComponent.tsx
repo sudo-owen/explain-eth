@@ -107,7 +107,7 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
           {/* Quick Send Buttons */}
           <div>
             <label className="block text-sm text-gray-300 mb-2">Quick Send:</label>
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               {quickSendAmounts.map((amount) => {
                 const isLoading = isPendingSendToRecipient(selectedRecipient)
                 const canAfford = amount <= ethereumState.balance

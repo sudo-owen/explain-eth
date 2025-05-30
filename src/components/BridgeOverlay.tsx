@@ -87,7 +87,7 @@ const BridgeOverlay: React.FC<BridgeOverlayProps> = ({
           {/* Quick Bridge Buttons */}
           <div>
             <label className="block text-sm text-gray-300 mb-2">Quick Bridge</label>
-            <div className="grid grid-cols-3 gap-2 mb-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-3">
               <button
                 onClick={() => handleQuickBridge(0.1)}
                 disabled={ethereumState.balance < 0.1}

@@ -125,7 +125,7 @@ const TransactionHistoryOverlay: React.FC<TransactionHistoryOverlayProps> = ({
     <>
       {/* Transaction History Panel */}
       <div className={`
-        fixed bottom-4 right-4 w-96 bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-50 transition-all duration-300 ease-in-out
+        fixed bottom-4 right-4 w-full max-w-sm sm:w-96 mx-4 sm:mx-0 bg-gray-800 border border-gray-700 rounded-lg shadow-xl z-50 transition-all duration-300 ease-in-out
         ${isOpen ? 'translate-y-0 opacity-100' : 'translate-y-full opacity-0 pointer-events-none'}
       `}>
         {/* Header */}

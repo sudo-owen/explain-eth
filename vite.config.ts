@@ -8,4 +8,18 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: undefined,
+      },
+    },
+  },
+  // Configure for SPA routing
+  preview: {
+    port: 4173,
+    strictPort: true,
+  },
+  // This ensures that all routes fallback to index.html for client-side routing
+  appType: 'spa'
 })
