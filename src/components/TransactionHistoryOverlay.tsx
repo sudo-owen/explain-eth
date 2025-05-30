@@ -98,21 +98,21 @@ const TransactionHistoryOverlay: React.FC<TransactionHistoryOverlayProps> = ({
   const getTransactionDescription = (tx: Transaction) => {
     switch (tx.type) {
       case 'send':
-        return `Sent ${formatETH(tx.amount)} to ${tx.recipient} (Fee: ${formatETH(tx.fee)})`
+        return `Sent ${formatETH(tx.amount)} to ${tx.recipient}`
       case 'purchase_nft':
-        return `Purchased NFT for ${formatETH(tx.amount)} (Fee: ${formatETH(tx.fee)})`
+        return `Purchased NFT for ${formatETH(tx.amount)}`
       case 'sell_nft':
-        return `Sold NFT for ${formatETH(tx.amount)} (Fee: ${formatETH(tx.fee)})`
+        return `Sold NFT for ${formatETH(tx.amount)}`
       case 'deposit_earnings':
-        return `Deposited ${formatETH(tx.amount)} to earn (Fee: ${formatETH(tx.fee)})`
+        return `Deposited ${formatETH(tx.amount)} to earn`
       case 'withdraw_earnings':
-        return `Withdrew ${formatETH(tx.amount)} from earn (Fee: ${formatETH(tx.fee)})`
+        return `Withdrew ${formatETH(tx.amount)} from earn`
       case 'claim_earnings':
-        return `Claimed ${formatETH(tx.amount)} interest (Fee: ${formatETH(tx.fee)})`
+        return `Claimed ${formatETH(tx.amount)} interest`
       case 'bridge':
-        return `Bridged ${formatETH(tx.amount)} to Rollup (Fee: ${formatETH(tx.fee)})`
+        return `Bridged ${formatETH(tx.amount)} to Rollup`
       default:
-        return `Transaction: ${formatETH(tx.amount)} (Fee: ${formatETH(tx.fee)})`
+        return `Transaction: ${formatETH(tx.amount)}`
     }
   }
 
@@ -217,18 +217,18 @@ const TransactionHistoryOverlay: React.FC<TransactionHistoryOverlayProps> = ({
                           {tx.status}
                         </span>
                       </div>
-                      
+
                       <div className="flex items-center justify-between mt-1">
+                        <p className="text-xs text-gray-400">
+                          Fee: {formatETH(tx.fee)}
+                        </p>
                         <p className="text-xs text-gray-400">
                           {formatTime(tx.timestamp)}
                         </p>
-                        {tx.completionTime && (
-                          <p className="text-xs text-gray-500">
-                            Completed: {formatTime(tx.completionTime)}
-                          </p>
-                        )}
                       </div>
-                      
+
+
+
                       {tx.errorMessage && (
                         <p className="text-xs text-red-400 mt-1">
                           Error: {tx.errorMessage}
@@ -245,14 +245,23 @@ const TransactionHistoryOverlay: React.FC<TransactionHistoryOverlayProps> = ({
 
       {/* Floating Action Button */}
       {!isOpen && (
-        <button
-          onClick={onToggle}
-          className="fixed bottom-4 right-4 w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition-all duration-300 ease-in-out hover:scale-110 z-40 cursor-pointer"
-        >
-          <svg className="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-          </svg>
-        </button>
+        <div className="fixed bottom-4 right-4 z-40">
+          <button
+            onClick={onToggle}
+            className="relative w-14 h-14 bg-blue-600 hover:bg-blue-700 text-white rounded-full shadow-lg transition-all duration-300 ease-in-out hover:scale-110 cursor-pointer"
+          >
+            <svg className="w-6 h-6 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+
+            {/* Pending Transaction Badge */}
+            {ethereumPendingCount > 0 && (
+              <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
+                {ethereumPendingCount}
+              </div>
+            )}
+          </button>
+        </div>
       )}
     </>
   )

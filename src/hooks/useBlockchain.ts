@@ -34,6 +34,7 @@ const initialEthereumState: ChainState = {
   savingsLastUpdate: new Date(),
   pendingTransactions: 0,
   recipientBalances: {
+    Alice: 0,
     Bob: 0,
     Carol: 0,
     Eve: 0
@@ -48,6 +49,7 @@ const initialRollupState: ChainState = {
   savingsLastUpdate: new Date(),
   pendingTransactions: 0,
   recipientBalances: {
+    Alice: 0,
     Bob: 0,
     Carol: 0,
     Eve: 0
@@ -135,7 +137,7 @@ export const useBlockchain = () => {
         pendingTransactions: prev.pendingTransactions - 1
       }))
 
-      showModal('success', `Transaction confirmed: ${transaction.type.replace('_', ' ')}`)
+      showModal('success', `Confirmed: ${transaction.type.replace('_', ' ')}`)
     }, duration)
   }, [updateChainState, showModal])
 
