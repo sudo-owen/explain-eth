@@ -23,7 +23,7 @@ export interface ChainState {
 export interface Transaction {
   id: string
   chain: ChainType
-  type: 'send' | 'purchase_nft' | 'sell_nft' | 'deposit_earnings' | 'withdraw_earnings' | 'claim_earnings'
+  type: 'send' | 'purchase_nft' | 'sell_nft' | 'deposit_earnings' | 'withdraw_earnings' | 'claim_earnings' | 'bridge'
   amount: number
   fee: number // Transaction fee in ETH
   recipient?: Recipient

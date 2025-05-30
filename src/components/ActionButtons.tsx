@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { ChainState, Recipient } from '../types/blockchain'
-import { getAvailableNFTs, formatETH } from '../utils/transactions'
+import { getAvailableNFTs, formatETH, calculateCurrentEarnings } from '../utils/transactions'
 import { ColorTheme } from './ChainColumn'
 import { getRecipientEmoji, recipients } from '../utils/recipients'
 
@@ -13,6 +13,7 @@ interface ActionButtonsProps {
   onClaimEarnings: () => void
   currentEarnings: number
   theme: ColorTheme
+  onBridgeToggle?: () => void
 }
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({
@@ -23,11 +24,22 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   onWithdrawEarnings,
   onClaimEarnings,
   currentEarnings,
-  theme
+  theme,
+  onBridgeToggle
 }) => {
-  const [activeAction, setActiveAction] = useState<string | null>(null)
+  const [activeAction, setActiveAction] = useState<string>('send')
   const [amount, setAmount] = useState('')
   const [selectedRecipient, setSelectedRecipient] = useState<Recipient>('Bob')
+  const [realTimeEarnings, setRealTimeEarnings] = useState(currentEarnings)
+
+  // Update earnings display in real-time
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setRealTimeEarnings(calculateCurrentEarnings(chainState))
+    }, 100) // Update every 100ms for smooth animation
+
+    return () => clearInterval(interval)
+  }, [chainState])
 
   const availableNFTs = getAvailableNFTs()
 
@@ -73,7 +85,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
     if (amountNum > 0) {
       onSendMoney(selectedRecipient, amountNum)
       setAmount('')
-      setActiveAction(null)
+      // Keep the send tab active
     }
   }
 
@@ -84,7 +96,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
     if (amountNum > 0) {
       onDepositEarnings(amountNum)
       setAmount('')
-      setActiveAction(null)
+      // Keep the earnings tab active
     }
   }
 
@@ -93,13 +105,13 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
     if (amountNum > 0) {
       onWithdrawEarnings(amountNum)
       setAmount('')
-      setActiveAction(null)
+      // Keep the earnings tab active
     }
   }
 
   const handleClaimEarnings = () => {
     onClaimEarnings()
-    setActiveAction(null)
+    // Keep the earnings tab active
   }
 
   return (
@@ -107,30 +119,41 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
       <h3 className="text-lg font-semibold text-gray-100 mb-4">Actions</h3>
 
       {/* Compact Action Buttons Row */}
-      <div className="grid grid-cols-3 gap-2 mb-4">
+      <div className={`grid ${theme === 'ethereum' ? 'grid-cols-4' : 'grid-cols-3'} gap-2 mb-4`}>
         <button
-          onClick={() => setActiveAction(activeAction === 'send' ? null : 'send')}
-          className={`p-2 ${colors.primary} text-white rounded-lg transition-colors font-medium text-sm flex items-center justify-center space-x-1 cursor-pointer`}
+          onClick={() => setActiveAction('send')}
+          className={`p-2 ${activeAction === 'send' ? colors.primary + ' ring-2 ring-white/30' : colors.primary} text-white rounded-lg transition-colors font-medium text-sm flex items-center justify-center space-x-1 cursor-pointer`}
         >
           <span>💸</span>
           <span>Send</span>
         </button>
 
         <button
-          onClick={() => setActiveAction(activeAction === 'purchase' ? null : 'purchase')}
-          className={`p-2 ${colors.secondary} text-white rounded-lg transition-colors font-medium text-sm flex items-center justify-center space-x-1 cursor-pointer`}
+          onClick={() => setActiveAction('purchase')}
+          className={`p-2 ${activeAction === 'purchase' ? colors.secondary + ' ring-2 ring-white/30' : colors.secondary} text-white rounded-lg transition-colors font-medium text-sm flex items-center justify-center space-x-1 cursor-pointer`}
         >
           <span>🎨</span>
           <span>Buy NFT</span>
         </button>
 
         <button
-          onClick={() => setActiveAction(activeAction === 'earnings' ? null : 'earnings')}
-          className={`p-2 ${colors.success} text-white rounded-lg transition-colors font-medium text-sm flex items-center justify-center space-x-1 cursor-pointer`}
+          onClick={() => setActiveAction('earnings')}
+          className={`p-2 ${activeAction === 'earnings' ? colors.success + ' ring-2 ring-white/30' : colors.success} text-white rounded-lg transition-colors font-medium text-sm flex items-center justify-center space-x-1 cursor-pointer`}
         >
           <span>💰</span>
           <span>Earn</span>
         </button>
+
+        {/* Bridge Button - Only show on Ethereum */}
+        {theme === 'ethereum' && (
+          <button
+            onClick={onBridgeToggle}
+            className="p-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg transition-all duration-300 font-medium text-sm flex items-center justify-center space-x-1 cursor-pointer transform hover:scale-105 ring-2 ring-blue-400/50 shadow-lg"
+          >
+            <span>🌉</span>
+            <span>Bridge</span>
+          </button>
+        )}
       </div>
       {/* Action Forms */}
       <div className="h-[320px] flex items-start">
@@ -146,7 +169,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
                     key={recipient}
                     onClick={() => setSelectedRecipient(recipient)}
                     className={`
-                      flex items-center space-x-2 p-3 rounded-lg border-2 transition-all
+                      flex items-center space-x-2 p-3 rounded-lg border-2 transition-all cursor-pointer
                       ${selectedRecipient === recipient
                         ? `${colors.primary} border-white/30`
                         : `${colors.inputBackground} border-transparent hover:border-white/20`
@@ -212,7 +235,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
                 <button
                   onClick={handleSendMoney}
                   disabled={!amount || parseFloat(amount) <= 0}
-                  className={`px-4 py-2 ${colors.success} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors`}
+                  className={`px-4 py-2 ${colors.success} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors cursor-pointer`}
                 >
                   💸 Send
                 </button>
@@ -232,7 +255,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
                 onClick={() => handlePurchaseNFT(nft)}
                 disabled={chainState.balance < nft.price}
                 className={`
-                  p-3 rounded-lg border-2 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed
+                  p-3 rounded-lg border-2 transition-all hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer
                   ${chainState.balance >= nft.price
                     ? `${colors.secondary} border-transparent hover:border-white/30`
                     : 'bg-gray-600 border-gray-500'
@@ -258,13 +281,13 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-300">Accrued Interest:</span>
                 <span className="text-lg font-semibold text-green-400">
-                  {formatETH(currentEarnings)}
+                  {formatETH(realTimeEarnings)}
                 </span>
               </div>
               <button
                 onClick={handleClaimEarnings}
-                disabled={currentEarnings <= 0}
-                className={`w-full mt-2 p-2 ${colors.success} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm`}
+                disabled={realTimeEarnings <= 0}
+                className={`w-full mt-2 p-2 ${colors.success} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm cursor-pointer`}
               >
                 🎯 Claim Interest
               </button>
@@ -278,23 +301,23 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
                   <button
                     onClick={() => handleQuickDeposit(0.01)}
                     disabled={chainState.balance < 0.01}
-                    className={`p-1 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs`}
+                    className={`p-1 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs cursor-pointer`}
                   >
-                    0.01
+                    0.01 ETH
                   </button>
                   <button
                     onClick={() => handleQuickDeposit(0.1)}
                     disabled={chainState.balance < 0.1}
-                    className={`p-1 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs`}
+                    className={`p-1 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs cursor-pointer`}
                   >
-                    0.1
+                    0.1 ETH
                   </button>
                   <button
                     onClick={() => handleQuickDeposit(0.5)}
                     disabled={chainState.balance < 0.5}
-                    className={`p-1 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs`}
+                    className={`p-1 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs cursor-pointer`}
                   >
-                    0.5
+                    0.5 ETH
                   </button>
                 </div>
               </div>
@@ -305,21 +328,21 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
                   <button
                     onClick={() => onWithdrawEarnings(0.01)}
                     disabled={chainState.savingsDeposit < 0.01}
-                    className={`p-1 ${colors.warning} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs`}
+                    className={`p-1 ${colors.warning} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs cursor-pointer`}
                   >
-                    0.01
+                    0.01 ETH
                   </button>
                   <button
                     onClick={() => onWithdrawEarnings(0.1)}
                     disabled={chainState.savingsDeposit < 0.1}
-                    className={`p-1 ${colors.warning} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs`}
+                    className={`p-1 ${colors.warning} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs cursor-pointer`}
                   >
-                    0.1
+                    0.1 ETH
                   </button>
                   <button
                     onClick={() => onWithdrawEarnings(chainState.savingsDeposit)}
                     disabled={chainState.savingsDeposit <= 0}
-                    className={`p-1 ${colors.warning} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs`}
+                    className={`p-1 ${colors.warning} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-xs cursor-pointer`}
                   >
                     All
                   </button>
@@ -343,14 +366,14 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
                 <button
                   onClick={handleDepositEarnings}
                   disabled={!amount || parseFloat(amount) <= 0}
-                  className={`px-3 py-2 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm`}
+                  className={`px-3 py-2 ${colors.primary} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm cursor-pointer`}
                 >
                   💰 Deposit
                 </button>
                 <button
                   onClick={handleWithdrawEarnings}
                   disabled={!amount || parseFloat(amount) <= 0 || parseFloat(amount) > chainState.savingsDeposit}
-                  className={`px-3 py-2 ${colors.warning} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm`}
+                  className={`px-3 py-2 ${colors.warning} disabled:bg-gray-600 disabled:cursor-not-allowed text-white rounded transition-colors text-sm cursor-pointer`}
                 >
                   📤 Withdraw
                 </button>
@@ -359,15 +382,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
           </div>
         )}
 
-        {/* Placeholder when no action is selected */}
-        {!activeAction && (
-          <div className="w-full flex items-center justify-center text-gray-400">
-            <div className="text-center">
-              <div className="text-4xl mb-2">⚡</div>
-              <div className="text-sm">Select an action above to get started</div>
-            </div>
-          </div>
-        )}
+
       </div>
     </div>
   )

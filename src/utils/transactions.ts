@@ -1,21 +1,31 @@
-import { ChainState, Transaction, NFT, Recipient } from '../types/blockchain'
+import { ChainState, NFT } from '../types/blockchain'
 
 export const TRANSACTION_DURATION = 12000 // 12 seconds in milliseconds
+export const ROLLUP_TRANSACTION_DURATION = 400 // 400ms for rollup
 export const EARNINGS_RATE = 0.01 // 1% per second
 export const EARNINGS_INTERVAL = 1000 // 1 second in milliseconds
 
 // Transaction fee range in ETH
 export const MIN_TRANSACTION_FEE = 0.001
 export const MAX_TRANSACTION_FEE = 0.002
+export const MIN_ROLLUP_FEE = 0.0001 // 1/10th of mainnet
+export const MAX_ROLLUP_FEE = 0.0002
 
-export const generateTransactionFee = (): number => {
-  // Generate random fee between 0.001 and 0.002 ETH
-  const fee = MIN_TRANSACTION_FEE + Math.random() * (MAX_TRANSACTION_FEE - MIN_TRANSACTION_FEE)
-  return Math.round(fee * 1000) / 1000 // Round to 3 decimal places
+export const generateTransactionFee = (isRollup: boolean = false): number => {
+  let fee;
+  if (isRollup) {
+    // Generate random fee between 0.0001 and 0.0002 ETH for rollup
+    fee = MIN_ROLLUP_FEE + Math.random() * (MAX_ROLLUP_FEE - MIN_ROLLUP_FEE)
+  } else {
+    // Generate random fee between 0.001 and 0.002 ETH for mainnet
+    fee = MIN_TRANSACTION_FEE + Math.random() * (MAX_TRANSACTION_FEE - MIN_TRANSACTION_FEE)
+  }
+  return Math.round(fee * 10000) / 10000 // Round to 4 decimal places
+
 }
 
 export const formatETH = (amount: number): string => {
-  return `${amount.toFixed(3)} ETH`
+  return `${amount.toFixed(4)} ETH`
 }
 
 export const generateTransactionId = (): string => {
@@ -68,6 +78,21 @@ export const validateSellNFT = (
 }
 
 export const validateDepositSavings = (
+  chainState: ChainState,
+  amount: number,
+  fee: number
+): { isValid: boolean; error?: string } => {
+  if (amount <= 0) {
+    return { isValid: false, error: 'Amount must be greater than 0' }
+  }
+  const totalCost = amount + fee
+  if (totalCost > chainState.balance) {
+    return { isValid: false, error: `Insufficient balance. Need ${formatETH(totalCost)} (${formatETH(amount)} + ${formatETH(fee)} fee)` }
+  }
+  return { isValid: true }
+}
+
+export const validateBridge = (
   chainState: ChainState,
   amount: number,
   fee: number

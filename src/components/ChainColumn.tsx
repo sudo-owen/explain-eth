@@ -1,8 +1,7 @@
 import React from 'react'
-import { ChainState, Transaction, Recipient } from '../types/blockchain'
+import { ChainState, Recipient } from '../types/blockchain'
 import BalanceDisplay from './BalanceDisplay'
 import ActionButtons from './ActionButtons'
-import TransactionHistory from './TransactionHistory'
 
 export type ColorTheme = 'ethereum' | 'rollup'
 
@@ -16,9 +15,9 @@ interface ChainColumnProps {
   onWithdrawEarnings: (amount: number) => void
   onClaimEarnings: () => void
   currentEarnings: number
-  transactionHistory: Transaction[]
   theme: ColorTheme
   className?: string
+  onBridgeToggle?: () => void
 }
 
 const ChainColumn: React.FC<ChainColumnProps> = ({
@@ -31,9 +30,9 @@ const ChainColumn: React.FC<ChainColumnProps> = ({
   onWithdrawEarnings,
   onClaimEarnings,
   currentEarnings,
-  transactionHistory,
   theme,
-  className = ''
+  className = '',
+  onBridgeToggle
 }) => {
   return (
     <div className={`flex flex-col p-6 ${className}`}>
@@ -61,10 +60,8 @@ const ChainColumn: React.FC<ChainColumnProps> = ({
           onClaimEarnings={onClaimEarnings}
           currentEarnings={currentEarnings}
           theme={theme}
+          onBridgeToggle={onBridgeToggle}
         />
-
-        {/* Transaction History */}
-        <TransactionHistory transactions={transactionHistory} title={title} theme={theme} />
       </div>
     </div>
   )

@@ -15,6 +15,7 @@ import {
   validatePurchaseNFT,
   validateSellNFT,
   validateDepositSavings,
+  validateBridge,
   calculateSellPrice,
   updateEarningsBalance,
   calculateCurrentEarnings,
@@ -22,6 +23,7 @@ import {
   getNFTCurrentPrice,
   markNFTAsSold,
   TRANSACTION_DURATION,
+  ROLLUP_TRANSACTION_DURATION,
   EARNINGS_INTERVAL
 } from '../utils/transactions'
 
@@ -102,7 +104,7 @@ export const useBlockchain = () => {
     }
   }, [])
 
-  const processTransaction = useCallback((transaction: Transaction, stateUpdater?: (prev: ChainState) => ChainState) => {
+  const processTransaction = useCallback((transaction: Transaction, stateUpdater?: (prev: ChainState) => ChainState, duration: number = TRANSACTION_DURATION) => {
     // Add transaction to history as pending
     setTransactionHistory(prev => [...prev, transaction])
 
@@ -134,12 +136,12 @@ export const useBlockchain = () => {
       }))
 
       showModal('success', `Transaction confirmed: ${transaction.type.replace('_', ' ')}`)
-    }, TRANSACTION_DURATION)
+    }, duration)
   }, [updateChainState, showModal])
 
   const sendMoney = useCallback((chain: ChainType, recipient: Recipient, amount: number) => {
     const chainState = chain === 'ethereum' ? ethereumState : rollupState
-    const fee = generateTransactionFee()
+    const fee = generateTransactionFee(chain === 'rollup')
     const validation = validateSendMoney(chainState, amount, fee)
 
     if (!validation.isValid) {
@@ -168,12 +170,12 @@ export const useBlockchain = () => {
       }
     })
 
-    processTransaction(transaction, stateUpdater)
+    processTransaction(transaction, stateUpdater, chain === 'rollup' ? ROLLUP_TRANSACTION_DURATION : TRANSACTION_DURATION)
   }, [ethereumState, rollupState, showModal, processTransaction])
 
   const purchaseNFT = useCallback((chain: ChainType, nftId: string, price: number, emoji: string) => {
     const chainState = chain === 'ethereum' ? ethereumState : rollupState
-    const fee = generateTransactionFee()
+    const fee = generateTransactionFee(chain === 'rollup')
     const validation = validatePurchaseNFT(chainState, price, fee)
 
     if (!validation.isValid) {
@@ -207,7 +209,7 @@ export const useBlockchain = () => {
       nfts: [...prev.nfts, newNFT]
     })
 
-    processTransaction(transaction, stateUpdater)
+    processTransaction(transaction, stateUpdater, chain === 'rollup' ? ROLLUP_TRANSACTION_DURATION : TRANSACTION_DURATION)
   }, [ethereumState, rollupState, showModal, processTransaction])
 
   const sellNFT = useCallback((chain: ChainType, nftId: string) => {
@@ -228,7 +230,7 @@ export const useBlockchain = () => {
     // Get current market price for the NFT
     const nft = validation.nft!
     const sellPrice = Math.round(getNFTCurrentPrice(nft.name) * 1000) / 1000 // Round to 3 decimal places for ETH
-    const fee = generateTransactionFee()
+    const fee = generateTransactionFee(chain === 'rollup')
 
     const transaction: Transaction = {
       id: generateTransactionId(),
@@ -263,12 +265,12 @@ export const useBlockchain = () => {
       }
     }
 
-    processTransaction(transaction, stateUpdater)
+    processTransaction(transaction, stateUpdater, chain === 'rollup' ? ROLLUP_TRANSACTION_DURATION : TRANSACTION_DURATION)
   }, [ethereumState, rollupState, updateChainState, showModal, processTransaction])
 
   const depositEarnings = useCallback((chain: ChainType, amount: number) => {
     const chainState = chain === 'ethereum' ? ethereumState : rollupState
-    const fee = generateTransactionFee()
+    const fee = generateTransactionFee(chain === 'rollup')
     const validation = validateDepositSavings(chainState, amount, fee)
 
     if (!validation.isValid) {
@@ -294,12 +296,12 @@ export const useBlockchain = () => {
       savingsLastUpdate: new Date()
     })
 
-    processTransaction(transaction, stateUpdater)
+    processTransaction(transaction, stateUpdater, chain === 'rollup' ? ROLLUP_TRANSACTION_DURATION : TRANSACTION_DURATION)
   }, [ethereumState, rollupState, showModal, processTransaction])
 
   const withdrawEarnings = useCallback((chain: ChainType, amount: number) => {
     const chainState = chain === 'ethereum' ? ethereumState : rollupState
-    const fee = generateTransactionFee()
+    const fee = generateTransactionFee(chain === 'rollup')
 
     if (amount <= 0) {
       showModal('error', 'Amount must be greater than 0')
@@ -329,13 +331,13 @@ export const useBlockchain = () => {
       savingsLastUpdate: new Date()
     })
 
-    processTransaction(transaction, stateUpdater)
+    processTransaction(transaction, stateUpdater, chain === 'rollup' ? ROLLUP_TRANSACTION_DURATION : TRANSACTION_DURATION)
   }, [ethereumState, rollupState, showModal, processTransaction])
 
   const claimEarnings = useCallback((chain: ChainType) => {
     const chainState = chain === 'ethereum' ? ethereumState : rollupState
     const accruedInterest = calculateCurrentEarnings(chainState)
-    const fee = generateTransactionFee()
+    const fee = generateTransactionFee(chain === 'rollup')
 
     if (accruedInterest <= 0) {
       showModal('error', 'No accrued interest to claim')
@@ -359,8 +361,46 @@ export const useBlockchain = () => {
       savingsLastUpdate: new Date()
     })
 
-    processTransaction(transaction, stateUpdater)
+    processTransaction(transaction, stateUpdater, chain === 'rollup' ? ROLLUP_TRANSACTION_DURATION : TRANSACTION_DURATION)
   }, [ethereumState, rollupState, showModal, processTransaction])
+
+  const bridgeToRollup = useCallback((amount: number) => {
+    const fee = generateTransactionFee(false) // Mainnet fee for bridge transaction
+    const validation = validateBridge(ethereumState, amount, fee)
+
+    if (!validation.isValid) {
+      showModal('error', validation.error!)
+      return
+    }
+
+    const transaction: Transaction = {
+      id: generateTransactionId(),
+      chain: 'ethereum',
+      type: 'bridge',
+      amount,
+      fee,
+      status: 'pending',
+      timestamp: new Date()
+    }
+
+    // Define the state update to apply when transaction is confirmed
+    const stateUpdater = (prev: ChainState) => ({
+      ...prev,
+      balance: prev.balance - amount - fee // Deduct both amount and fee from mainnet
+    })
+
+    // Process the mainnet transaction
+    processTransaction(transaction, stateUpdater, TRANSACTION_DURATION)
+
+    // After mainnet confirmation, add the amount to rollup (minus the mainnet fee)
+    setTimeout(() => {
+      setRollupState(prev => ({
+        ...prev,
+        balance: prev.balance + amount // Add the bridged amount to rollup
+      }))
+      showModal('success', `Bridged ${amount.toFixed(4)} ETH to Rollup`)
+    }, TRANSACTION_DURATION + 100) // Slight delay after mainnet confirmation
+  }, [ethereumState, showModal, processTransaction])
 
   return {
     ethereumState,
@@ -373,6 +413,7 @@ export const useBlockchain = () => {
     depositEarnings,
     withdrawEarnings,
     claimEarnings,
+    bridgeToRollup,
     calculateCurrentEarnings,
     showModal,
     closeModal

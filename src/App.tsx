@@ -1,9 +1,16 @@
+import { useState, useEffect, useRef } from 'react'
 import ChainColumn from './components/ChainColumn'
 import TransactionModal from './components/TransactionModal'
+import TransactionHistoryOverlay from './components/TransactionHistoryOverlay'
+import BridgeOverlay from './components/BridgeOverlay'
 import { useBlockchain } from './hooks/useBlockchain'
 import { Recipient } from './types/blockchain'
 
 function App() {
+  const [isHistoryOpen, setIsHistoryOpen] = useState(true)
+  const [isBridgeOpen, setIsBridgeOpen] = useState(false)
+  const previousTransactionCount = useRef(0)
+
   const {
     ethereumState,
     rollupState,
@@ -13,11 +20,20 @@ function App() {
     depositEarnings,
     withdrawEarnings,
     claimEarnings,
+    bridgeToRollup,
     calculateCurrentEarnings,
     transactionHistory,
     modalState,
     closeModal
   } = useBlockchain()
+
+  // Auto-open overlay when new transaction is submitted
+  useEffect(() => {
+    if (transactionHistory.length > previousTransactionCount.current) {
+      setIsHistoryOpen(true)
+    }
+    previousTransactionCount.current = transactionHistory.length
+  }, [transactionHistory.length])
 
   return (
     <div className="min-h-screen bg-gray-900 text-white">
@@ -35,9 +51,9 @@ function App() {
           onWithdrawEarnings={(amount: number) => withdrawEarnings('ethereum', amount)}
           onClaimEarnings={() => claimEarnings('ethereum')}
           currentEarnings={calculateCurrentEarnings(ethereumState)}
-          transactionHistory={transactionHistory.filter(tx => tx.chain === 'ethereum')}
           theme="ethereum"
           className="lg:w-1/2 border-r border-gray-700"
+          onBridgeToggle={() => setIsBridgeOpen(!isBridgeOpen)}
         />
 
         {/* Rollup */}
@@ -51,7 +67,6 @@ function App() {
           onWithdrawEarnings={(amount: number) => withdrawEarnings('rollup', amount)}
           onClaimEarnings={() => claimEarnings('rollup')}
           currentEarnings={calculateCurrentEarnings(rollupState)}
-          transactionHistory={transactionHistory.filter(tx => tx.chain === 'rollup')}
           theme="rollup"
           className="lg:w-1/2 bg-gradient-to-br from-purple-950/20 to-indigo-950/20"
         />
@@ -66,6 +81,25 @@ function App() {
           onClose={closeModal}
         />
       )}
+
+      {/* Transaction History Overlay */}
+      <TransactionHistoryOverlay
+        ethereumTransactions={transactionHistory.filter(tx => tx.chain === 'ethereum')}
+        rollupTransactions={transactionHistory.filter(tx => tx.chain === 'rollup')}
+        ethereumPendingCount={ethereumState.pendingTransactions}
+        rollupPendingCount={rollupState.pendingTransactions}
+        isOpen={isHistoryOpen}
+        onToggle={() => setIsHistoryOpen(!isHistoryOpen)}
+      />
+
+      {/* Bridge Overlay */}
+      <BridgeOverlay
+        ethereumState={ethereumState}
+        rollupState={rollupState}
+        onBridge={bridgeToRollup}
+        isOpen={isBridgeOpen}
+        onToggle={() => setIsBridgeOpen(!isBridgeOpen)}
+      />
     </div>
   )
 }

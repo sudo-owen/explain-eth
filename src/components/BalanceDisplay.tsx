@@ -58,11 +58,6 @@ const BalanceDisplay: React.FC<BalanceDisplayProps> = ({ chainState, title, them
           {formatCurrency(chainState.balance)}
         </div>
         <div className="text-sm text-gray-400">Available Balance</div>
-        {chainState.pendingTransactions > 0 && (
-          <div className={`text-xs ${colors.pending} mt-1`}>
-            {chainState.pendingTransactions} transaction(s) pending...
-          </div>
-        )}
       </div>
 
       {/* Earnings */}
