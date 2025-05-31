@@ -6,6 +6,112 @@ import TransactionModal from '../components/TransactionModal'
 import TransactionHistoryOverlay from '../components/TransactionHistoryOverlay'
 import CircularCountdown from '../components/CircularCountdown'
 
+// Train Animation Component
+const TrainAnimation: React.FC = () => {
+  const [animationPhase, setAnimationPhase] = useState<'waiting' | 'loading' | 'moving'>('waiting')
+  const [cycleCount, setCycleCount] = useState(0)
+
+  useEffect(() => {
+    const runCycle = () => {
+      // Phase 1: Waiting (2 seconds)
+      setAnimationPhase('waiting')
+
+      setTimeout(() => {
+        // Phase 2: Loading boxes (2 seconds)
+        setAnimationPhase('loading')
+
+        setTimeout(() => {
+          // Phase 3: Moving (3 seconds)
+          setAnimationPhase('moving')
+
+          setTimeout(() => {
+            // Reset and start next cycle
+            setCycleCount(prev => prev + 1)
+            runCycle()
+          }, 3000)
+        }, 2000)
+      }, 2000)
+    }
+
+    runCycle()
+  }, [])
+
+  return (
+    <div className="w-full max-w-4xl mx-auto my-12 p-8 bg-gray-800 rounded-lg">
+      <div className="relative h-32 overflow-hidden bg-gradient-to-b from-blue-900 to-blue-800 rounded-lg">
+        {/* Track */}
+        <div className="absolute bottom-4 left-0 right-0 h-1 bg-gray-600"></div>
+
+        {/* Boxes */}
+        {animationPhase !== 'waiting' && (
+          <>
+            {[0, 1, 2].map((index) => (
+              <div
+                key={`${cycleCount}-${index}`}
+                className={`absolute w-8 h-8 transition-all duration-2000 ease-in-out ${
+                  animationPhase === 'loading'
+                    ? 'bottom-12'
+                    : 'bottom-8'
+                }`}
+                style={{
+                  left: animationPhase === 'loading'
+                    ? `${20 + index * 40}px`
+                    : animationPhase === 'moving'
+                    ? `${120 + index * 20}px`
+                    : `${20 + index * 40}px`,
+                  transform: animationPhase === 'moving' ? 'translateX(300px)' : 'translateX(0)',
+                  transition: animationPhase === 'moving' ? 'transform 3s ease-in-out' : 'all 2s ease-in-out'
+                }}
+              >
+                <img
+                  src="/img/box.svg"
+                  alt="Package"
+                  className="w-full h-full"
+                  style={{ filter: 'brightness(1.2)' }}
+                />
+              </div>
+            ))}
+          </>
+        )}
+
+        {/* Train */}
+        <div
+          className={`absolute bottom-4 w-24 h-16 transition-all duration-3000 ease-in-out ${
+            animationPhase === 'moving' ? 'transform translate-x-full' : ''
+          }`}
+          style={{
+            left: '100px',
+            transform: animationPhase === 'moving' ? 'translateX(300px)' : 'translateX(0)',
+            transition: animationPhase === 'moving' ? 'transform 3s ease-in-out' : 'none'
+          }}
+        >
+          <img
+            src="/img/train.svg"
+            alt="Train"
+            className="w-full h-full"
+            style={{ filter: 'brightness(1.2)' }}
+          />
+        </div>
+
+        {/* Labels */}
+        <div className="absolute top-2 left-4 text-white text-sm font-medium">
+          Train Station
+        </div>
+        <div className="absolute top-2 right-4 text-white text-sm font-medium">
+          Next Stop
+        </div>
+
+        {/* Status */}
+        <div className="absolute mt-1 left-1/2 transform -translate-x-1/2 text-white text-s">
+          {animationPhase === 'waiting' && 'Waiting for packages...'}
+          {animationPhase === 'loading' && 'Loading packages onto train...'}
+          {animationPhase === 'moving' && 'Train departing!'}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // Animated Dummy Transaction Modal Component for illustration
 const DummyTransactionModal: React.FC = () => {
   const [phase, setPhase] = useState<'pending' | 'confirmed'>('pending')
@@ -77,7 +183,7 @@ const DummyTransactionModal: React.FC = () => {
 
 const HomePage: React.FC = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
-  
+
   const {
     ethereumState,
     rollupState,
@@ -86,6 +192,11 @@ const HomePage: React.FC = () => {
     currentPendingTransaction,
     closeModal
   } = useBlockchainContext()
+
+  // Calculate total amount sent from confirmed send transactions
+  const totalAmountSent = transactionHistory
+    .filter(tx => tx.type === 'send' && tx.status === 'confirmed')
+    .reduce((total, tx) => total + tx.amount, 0)
 
   return (
     <div className="min-h-screen bg-gray-900 text-white home-page">
@@ -171,7 +282,7 @@ const HomePage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Nice! You'll notice that after sending ETH, we get this pop-up:
+              So far you have sent {totalAmountSent.toFixed(4)} ETH. You'll notice that after sending ETH, we get this pop-up:
             </p>
 
             {/* Dummy Transaction Modal */}
@@ -184,15 +295,56 @@ const HomePage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              You may have noticed it takes a bit of time to finish sending someone ETH. It's not as long as a bank transfer, but it's definitely a bit slower than for example a Venmo transfer.
+              Sending money on Ethereum isn't instant. It's faster than a bank transfer of course, no need to wait 1-2 business days. But it's also a little slower than Venmo or Zelle.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
               Specifically, on Ethereum, it takes <b>around 12 seconds</b> to complete a transaction.
             </p>
 
-            <p className="text-gray-300 leading-relaxed">
-              This delay is called the <strong>block time</strong>. For a blockchain, the block time describes about how long you have to wait from when you take an action until when it's <b>confirmed</b>.
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Does this mean we can only take one action on Ethereum every 12 seconds? If so, that would be inconvenient.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              What if we have to send money to multiple people? Do we need to send first to Alice, wait a full 12 seconds, then send to Bob, wait, and so on?
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Thankfully, not exactly.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              On Ethereum, we can send out multiple transactions to different accounts, all one after another. Then, in around 12 seconds, they'll all happen one after another in quick succession.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-8">
+              Imagine that we're at a train station and we want to deliver some packages to the next stop. If we have multiple packages to deliver, we can put them all on the same train, and they'll all get delivered together at the next stop.
+            </p>
+
+            {/* Train Animation */}
+            <div className="my-12">
+              <TrainAnimation />
+            </div>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Of course, instead of packages we are sending ETH, and instead of waiting for the next train, we are waiting 12 seconds for confirmation.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              But why is it 12 seconds at all? Why isn't it instant?
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              The Ethereum block time is 12 seconds because this is how long it takes the Ethereum network to make a <strong>block</strong>. This is the same "block" that makes up part of the word blockchain.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-8">
+              But what <strong>is</strong> a block?
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-8">
+              Here, let's try another demo. Let's say that you have to pay Alice, Bob, <em>and</em> Carol.
             </p>
 
           </section>
