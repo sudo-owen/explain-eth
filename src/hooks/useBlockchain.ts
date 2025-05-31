@@ -66,6 +66,8 @@ export const useBlockchain = () => {
     type: 'success',
     message: ''
   })
+  const [currentPendingTransaction, setCurrentPendingTransaction] = useState<Transaction | null>(null)
+  const [transactionNonce, setTransactionNonce] = useState<number>(1)
 
   // Update earnings timestamp every second (but don't auto-claim)
   useEffect(() => {
@@ -94,8 +96,36 @@ export const useBlockchain = () => {
     }, 3000) // Auto-close after 3 seconds
   }, [])
 
+  const showPendingModal = useCallback((transaction: Transaction) => {
+    setCurrentPendingTransaction(transaction)
+    const pendingMessage = getPendingMessage(transaction)
+    setModalState({ isOpen: true, type: 'success', message: pendingMessage })
+  }, [])
+
+  const getPendingMessage = (transaction: Transaction): string => {
+    switch (transaction.type) {
+      case 'send':
+        return `Sending ${formatETH(transaction.amount)} to ${transaction.recipient}...`
+      case 'purchase_nft':
+        return `Purchasing NFT for ${formatETH(transaction.amount)}...`
+      case 'sell_nft':
+        return `Selling NFT for ${formatETH(transaction.amount)}...`
+      case 'deposit_earnings':
+        return `Depositing ${formatETH(transaction.amount)} to earn...`
+      case 'withdraw_earnings':
+        return `Withdrawing ${formatETH(transaction.amount)} from earn...`
+      case 'claim_earnings':
+        return `Claiming ${formatETH(transaction.amount)} interest...`
+      case 'bridge':
+        return `Bridging ${formatETH(transaction.amount)} to Rollup...`
+      default:
+        return `Processing ${String(transaction.type).replace('_', ' ')}...`
+    }
+  }
+
   const closeModal = useCallback(() => {
     setModalState(prev => ({ ...prev, isOpen: false }))
+    setCurrentPendingTransaction(null)
   }, [])
 
   const updateChainState = useCallback((chain: ChainType, updater: (prev: ChainState) => ChainState) => {
@@ -107,20 +137,27 @@ export const useBlockchain = () => {
   }, [])
 
   const processTransaction = useCallback((transaction: Transaction, stateUpdater?: (prev: ChainState) => ChainState, duration: number = TRANSACTION_DURATION) => {
+    // Assign nonce and increment counter
+    const transactionWithNonce = { ...transaction, nonce: transactionNonce }
+    setTransactionNonce(prev => prev + 1)
+
     // Add transaction to history as pending
-    setTransactionHistory(prev => [...prev, transaction])
+    setTransactionHistory(prev => [...prev, transactionWithNonce])
 
     // Increment pending transactions count
-    updateChainState(transaction.chain, prev => ({
+    updateChainState(transactionWithNonce.chain, prev => ({
       ...prev,
       pendingTransactions: prev.pendingTransactions + 1
     }))
+
+    // Show pending modal immediately
+    showPendingModal(transactionWithNonce)
 
     // Process transaction after delay
     setTimeout(() => {
       setTransactionHistory(prev =>
         prev.map(tx =>
-          tx.id === transaction.id
+          tx.id === transactionWithNonce.id
             ? { ...tx, status: 'confirmed' as const, completionTime: new Date() }
             : tx
         )
@@ -128,11 +165,11 @@ export const useBlockchain = () => {
 
       // Apply the state changes when transaction is confirmed
       if (stateUpdater) {
-        updateChainState(transaction.chain, stateUpdater)
+        updateChainState(transactionWithNonce.chain, stateUpdater)
       }
 
       // Decrement pending transactions count
-      updateChainState(transaction.chain, prev => ({
+      updateChainState(transactionWithNonce.chain, prev => ({
         ...prev,
         pendingTransactions: prev.pendingTransactions - 1
       }))
@@ -159,9 +196,11 @@ export const useBlockchain = () => {
         }
       }
 
-      showModal('success', getConfirmationMessage(transaction))
+      // Update modal to show confirmation and clear pending transaction
+      setCurrentPendingTransaction(null)
+      showModal('success', getConfirmationMessage(transactionWithNonce))
     }, duration)
-  }, [updateChainState, showModal])
+  }, [updateChainState, showModal, showPendingModal, transactionNonce])
 
   const sendMoney = useCallback((chain: ChainType, recipient: Recipient, amount: number) => {
     const chainState = chain === 'ethereum' ? ethereumState : rollupState
@@ -181,7 +220,8 @@ export const useBlockchain = () => {
       fee,
       recipient,
       status: 'pending',
-      timestamp: new Date()
+      timestamp: new Date(),
+      nonce: 0 // Will be assigned in processTransaction
     }
 
     // Define the state update to apply when transaction is confirmed
@@ -223,7 +263,8 @@ export const useBlockchain = () => {
       fee,
       nftId: newNFT.id,
       status: 'pending',
-      timestamp: new Date()
+      timestamp: new Date(),
+      nonce: 0 // Will be assigned in processTransaction
     }
 
     // Define the state update to apply when transaction is confirmed
@@ -264,7 +305,8 @@ export const useBlockchain = () => {
       fee,
       nftId,
       status: 'pending',
-      timestamp: new Date()
+      timestamp: new Date(),
+      nonce: 0 // Will be assigned in processTransaction
     }
 
     // Add to pending sells immediately
@@ -309,7 +351,8 @@ export const useBlockchain = () => {
       amount,
       fee,
       status: 'pending',
-      timestamp: new Date()
+      timestamp: new Date(),
+      nonce: 0 // Will be assigned in processTransaction
     }
 
     // Define the state update to apply when transaction is confirmed
@@ -344,7 +387,8 @@ export const useBlockchain = () => {
       amount,
       fee,
       status: 'pending',
-      timestamp: new Date()
+      timestamp: new Date(),
+      nonce: 0 // Will be assigned in processTransaction
     }
 
     // Define the state update to apply when transaction is confirmed
@@ -375,7 +419,8 @@ export const useBlockchain = () => {
       amount: accruedInterest,
       fee,
       status: 'pending',
-      timestamp: new Date()
+      timestamp: new Date(),
+      nonce: 0 // Will be assigned in processTransaction
     }
 
     // Define the state update to apply when transaction is confirmed
@@ -404,7 +449,8 @@ export const useBlockchain = () => {
       amount,
       fee,
       status: 'pending',
-      timestamp: new Date()
+      timestamp: new Date(),
+      nonce: 0 // Will be assigned in processTransaction
     }
 
     // Define the state update to apply when transaction is confirmed
@@ -431,6 +477,7 @@ export const useBlockchain = () => {
     rollupState,
     transactionHistory,
     modalState,
+    currentPendingTransaction,
     sendMoney,
     purchaseNFT,
     sellNFT,

@@ -32,6 +32,7 @@ export interface Transaction {
   timestamp: Date
   completionTime?: Date
   errorMessage?: string
+  nonce: number // Transaction nonce for ordering
 }
 
 export interface ModalState {

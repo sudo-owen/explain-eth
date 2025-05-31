@@ -49,12 +49,12 @@ const CircularCountdown: React.FC<CircularCountdownProps> = ({
     if (theme === 'rollup') {
       return {
         progress: 'text-amber-400',
-        text: 'text-amber-400'
+        text: 'text-gray-800'
       }
     }
     return {
       progress: 'text-yellow-400',
-      text: 'text-yellow-400'
+      text: 'text-gray-800'
     }
   }
 

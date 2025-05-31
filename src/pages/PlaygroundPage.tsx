@@ -24,6 +24,7 @@ function PlaygroundPage() {
     calculateCurrentEarnings,
     transactionHistory,
     modalState,
+    currentPendingTransaction,
     closeModal
   } = useBlockchainContext()
 
@@ -79,6 +80,7 @@ function PlaygroundPage() {
           type={modalState.type}
           message={modalState.message}
           onClose={closeModal}
+          pendingTransaction={currentPendingTransaction}
         />
       )}
 

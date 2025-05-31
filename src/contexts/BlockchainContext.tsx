@@ -15,6 +15,7 @@ interface BlockchainContextType {
   calculateCurrentEarnings: (chainState: ChainState) => number
   transactionHistory: Transaction[]
   modalState: ModalState
+  currentPendingTransaction: Transaction | null
   closeModal: () => void
 }
 

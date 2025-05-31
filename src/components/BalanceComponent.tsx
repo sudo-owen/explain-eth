@@ -1,10 +1,9 @@
 import React, { useState } from 'react'
 import { useBlockchainContext } from '../contexts/BlockchainContext'
 import { Recipient } from '../types/blockchain'
-import { formatETH, TRANSACTION_DURATION } from '../utils/transactions'
+import { formatETH } from '../utils/transactions'
 import { getRecipientEmoji } from '../utils/recipients'
 import FlashAnimation from './FlashAnimation'
-import CircularCountdown from './CircularCountdown'
 
 interface BalanceComponentProps {
   showSendAction?: boolean
@@ -26,16 +25,6 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
   // Check if there's a pending send transaction to a specific recipient
   const isPendingSendToRecipient = (recipient: Recipient) => {
     return transactionHistory.some(tx =>
-      tx.type === 'send' &&
-      tx.recipient === recipient &&
-      tx.status === 'pending' &&
-      tx.chain === 'ethereum'
-    )
-  }
-
-  // Get the pending transaction for a specific recipient
-  const getPendingSendTransaction = (recipient: Recipient) => {
-    return transactionHistory.find(tx =>
       tx.type === 'send' &&
       tx.recipient === recipient &&
       tx.status === 'pending' &&
@@ -106,7 +95,6 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
 
           {/* Quick Send Buttons */}
           <div>
-            <label className="block text-sm text-gray-300 mb-2">Quick Send:</label>
             <div className="w-full">
               {quickSendAmounts.map((amount) => {
                 const isLoading = isPendingSendToRecipient(selectedRecipient)
@@ -120,37 +108,16 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
                     className={`
                       w-full relative px-6 py-3 rounded-lg font-medium transition-all cursor-pointer
                       ${canAfford && !isLoading
-                        ? 'bg-blue-600 hover:bg-blue-700 text-white animate-wiggle'
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white animate-pulse-glow'
                         : 'bg-gray-600 text-gray-400 cursor-not-allowed'
                       }
                     `}
                   >
-                    {formatETH(amount)} (Click me!)
+                    Send {formatETH(amount)} (Click me!)
                   </button>
                 )
               })}
             </div>
-
-            {isPendingSendToRecipient(selectedRecipient) && (
-              <p className="text-xs text-yellow-400 mt-2 flex items-center">
-                {(() => {
-                  const pendingTx = getPendingSendTransaction(selectedRecipient)
-                  return pendingTx ? (
-                    <CircularCountdown
-                      duration={TRANSACTION_DURATION}
-                      startTime={pendingTx.timestamp}
-                      size={20}
-                      strokeWidth={2}
-                      theme="ethereum"
-                      className="mr-2"
-                    />
-                  ) : (
-                    <div className="w-3 h-3 border border-yellow-400 border-t-transparent rounded-full animate-spin mr-2"></div>
-                  )
-                })()}
-                Transaction pending
-              </p>
-            )}
           </div>
         </div>
       )}
