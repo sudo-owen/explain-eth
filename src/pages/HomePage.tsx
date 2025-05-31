@@ -129,11 +129,7 @@ const HomePage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Nice! 
-            </p>
-
-            <p className="text-gray-300 leading-relaxed mb-8">
-              Let's start with this pop-up that showed up:
+              Nice! If you sent some money, you probably saw a pop-up after the send went through:
             </p>
 
             {/* Dummy Transaction Modal */}
@@ -141,12 +137,16 @@ const HomePage: React.FC = () => {
               <DummyTransactionModal />
             </div>
 
+            <p className="text-gray-300 leading-relaxed mb-8">
+              This lets you know that the action you took (sending money) was successful.
+            </p>
+
             <p className="text-gray-300 leading-relaxed mb-6">
-              One thing that may have stood out to you is that it takes a little bit of time to finish sending someone ETH. Not a day like a bank or Venmo transfer, but definitely a few seconds. Specifically, on Ethereum, it takes <b>around 12 seconds</b> to complete a transaction.
+              One thing that may have stood out to you is that it takes a little bit of time to finish sending someone ETH. It's not as long as a bank transfer, but it's definitely a bit slower than a Venmo transfer. Specifically, on Ethereum, it takes <b>around 12 seconds</b> to complete a transaction.
             </p>
 
             <p className="text-gray-300 leading-relaxed">
-              This delay is called the <strong>block time</strong>. For a blockchain, the block time describes about how long you have to wait from when you do something (like send someone money) until when it's <b>confirmed</b>.
+              This delay is called the <strong>block time</strong>. For a blockchain, the block time describes about how long you have to wait from when you take an action until when it's <b>confirmed</b>.
             </p>
 
           </section>

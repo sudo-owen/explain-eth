@@ -125,7 +125,7 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
                       }
                     `}
                   >
-                    {formatETH(amount)}
+                    {formatETH(amount)} (Click me!)
                   </button>
                 )
               })}
