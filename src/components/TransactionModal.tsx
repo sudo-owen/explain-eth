@@ -25,7 +25,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
   if (!isOpen) return null
 
   return (
-    <div className="fixed top-4 right-4 z-50 max-w-sm w-full">
+    <div className="fixed top-4 right-4 z-50 max-w-sm w-7/8 sm:w-full">
       {/* Modal */}
       <div className={`
         bg-gray-800 rounded-lg shadow-xl p-4 border-2
