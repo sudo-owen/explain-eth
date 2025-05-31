@@ -21,7 +21,7 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
   const [selectedRecipient, setSelectedRecipient] = useState<Recipient>(allowedRecipients[0] || 'Bob')
 
   // Quick send amounts
-  const quickSendAmounts = [0.01, 0.05, 0.1]
+  const quickSendAmounts = [0.01]
 
   // Check if there's a pending send transaction to a specific recipient
   const isPendingSendToRecipient = (recipient: Recipient) => {
@@ -107,7 +107,7 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
           {/* Quick Send Buttons */}
           <div>
             <label className="block text-sm text-gray-300 mb-2">Quick Send:</label>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div className="w-full">
               {quickSendAmounts.map((amount) => {
                 const isLoading = isPendingSendToRecipient(selectedRecipient)
                 const canAfford = amount <= ethereumState.balance
@@ -118,9 +118,9 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
                     onClick={() => handleQuickSend(amount)}
                     disabled={isLoading || !canAfford}
                     className={`
-                      relative px-4 py-3 rounded-lg font-medium transition-all cursor-pointer
+                      w-full relative px-6 py-3 rounded-lg font-medium transition-all cursor-pointer
                       ${canAfford && !isLoading
-                        ? 'bg-blue-600 hover:bg-blue-700 text-white'
+                        ? 'bg-blue-600 hover:bg-blue-700 text-white animate-wiggle'
                         : 'bg-gray-600 text-gray-400 cursor-not-allowed'
                       }
                     `}
@@ -148,7 +148,7 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
                     <div className="w-3 h-3 border border-yellow-400 border-t-transparent rounded-full animate-spin mr-2"></div>
                   )
                 })()}
-                Transaction pending to {selectedRecipient}...
+                Transaction pending
               </p>
             )}
           </div>

@@ -61,11 +61,11 @@ const HomePage: React.FC = () => {
             </p>
             
             <p className="text-gray-300 leading-relaxed mb-6">
-              If you already have some idea of what any/all of those words mean, or you just want to play around with some interactive animations, then feel free keep reading as well.
+              If you already have some idea of what any/all of those words mean, or you just want to play around with some interactive animations, by all means feel free to keep reading.
             </p>
             
             <p className="text-gray-300 leading-relaxed">
-              Many ideas presented here will be simplified, so please keep in mind that the actual concepts <em>will</em> be more detailed. (For all the experts in the room, please don't complain about all the ways that things will be wrong and just enjoy the fun animations.)
+              Many ideas presented here will be simplified, so please keep in mind that the actual concepts <em>will</em> be more detailed. (For all the experts in the room, just enjoy the animations.)
             </p>
           </section>
 
@@ -94,7 +94,7 @@ const HomePage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-               Here, let's give you 1 ETH to get started below. Now you can send it around, or maybe even receive some more.
+               Here, let's give you 1 ETH to get started below:
             </p>
 
             {/* Balance Component */}
@@ -103,7 +103,11 @@ const HomePage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Ah, you also need some friends to send money to. Meet Alice, Bob, and Carol.
+              Now that you have ETH, you'll be able to send it around to other people and even try some apps (more on this later).
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-8">
+              Of course, you also need some friends to send money to. Meet Alice, Bob, and Carol. You can click on them to learn a bit more about each friend and decide who you want to send money to.
             </p>
 
             {/* Profile Cards */}
@@ -112,7 +116,7 @@ const HomePage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Try sending them some ETH!
+              Now try sending them some ETH!
             </p>
 
             {/* Balance Component with Send */}
@@ -125,11 +129,11 @@ const HomePage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Okay, a lot of things just happened. We got a pop-up, we got a countdown, we got this other panel, what does all of this mean?
+              Nice! 
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Let's start with that pop-up you saw on the top right.
+              Let's start with this pop-up that showed up:
             </p>
 
             {/* Dummy Transaction Modal */}
