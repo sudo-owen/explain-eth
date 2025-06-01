@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useBlockchainContext } from '../contexts/BlockchainContext'
 import { Recipient } from '../types/blockchain'
 import { formatETH } from '../utils/transactions'
-import { getRecipientEmoji, getRecipientDescription, getRecipientBackgroundColor } from '../utils/recipients'
+import { getRecipientEmoji, getRecipientDescription, getRecipientBackgroundColor, getRecipientAddress } from '../utils/recipients'
 import FlashAnimation from './FlashAnimation'
 import CharacterDialogue from './CharacterDialogue'
 
@@ -66,8 +66,10 @@ const ProfileCards: React.FC<ProfileCardsProps> = ({
                 >
                   <div className="text-4xl mb-2">{getRecipientEmoji(recipient)}</div>
                   <div className="text-lg font-semibold text-gray-100 mb-1">{recipient}</div>
-                  <div className="text-sm text-gray-400 mb-2">{getRecipientDescription(recipient)}</div>
-                  <div className="text-sm font-medium text-green-400">
+                  <div className="text-xs text-gray-400 break-all mb-1">
+                    {getRecipientAddress(recipient)}
+                  </div>
+                  <div className="text-sm font-medium text-green-400 mb-2">
                     {formatETH(balance)}
                   </div>
                 </div>

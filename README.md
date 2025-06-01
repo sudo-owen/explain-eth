@@ -1,3 +1,3 @@
-# explaining evm to new ppl
+# ETH Explained
 
-hmmm
+An interactive article series designed to illustrate some parts of how Ethereum works.

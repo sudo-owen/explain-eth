@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useBlockchainContext } from '../contexts/BlockchainContext'
 import { Recipient } from '../types/blockchain'
 import { formatETH } from '../utils/transactions'
-import { getRecipientEmoji } from '../utils/recipients'
+import { getRecipientAddress, getRecipientEmoji } from '../utils/recipients'
 import FlashAnimation from './FlashAnimation'
 
 interface BalanceComponentProps {
@@ -114,8 +114,17 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
 
   return (
     <div className={`bg-gray-800 border border-gray-700 rounded-lg p-6 ${className}`}>
-      <h3 className="text-lg font-semibold text-gray-100 mb-4">Your ETH Balance</h3>
-      
+
+      <h3 className="text-lg font-semibold text-gray-100 mb-4">Your Account</h3>
+
+      {/* User Address */}
+      <div className="mb-4">
+        <div className="text-sm font-mono break-all">
+          0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
+        </div>
+      </div>
+
+
       {/* Main Balance */}
       <div className="mb-6">
         <div className="text-3xl font-bold text-green-400 mb-2">
@@ -131,7 +140,9 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
           
           {/* Recipient Selection */}
           <div>
-            <label className="block text-sm text-gray-300 mb-2">To:</label>
+            <label className="block text-sm text-gray-400 mb-2">
+              To: {getRecipientAddress(selectedRecipient)}
+            </label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
               {allowedRecipients.map((recipient) => {
                 const recipientBalance = ethereumState.recipientBalances[recipient] || 0

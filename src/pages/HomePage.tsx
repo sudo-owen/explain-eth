@@ -177,9 +177,9 @@ const DummyTransactionModal: React.FC = () => {
           }`}>
             {isPending ? 'Transaction Pending' : 'Transaction Successful'}
           </h3>
-          <p className="text-gray-300 text-sm mt-1">
+          <div className="text-gray-300 text-sm mt-1">
             {isPending ? 'Sending 0.01 ETH to Alice 👩‍💼...' : 'Sent 0.01 ETH to Alice 👩‍💼'}
-          </p>
+          </div>
         </div>
       </div>
 
@@ -250,7 +250,20 @@ const HomePage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-               Here, let's give you 1 ETH to get started below. (Of course it's not real money, it's just for the demo.)
+              Let's give you an account.
+            </p>
+
+            {/* Balance Component - Account Only */}
+            <div className="my-12">
+              <BalanceComponent className="max-w-md mx-auto" />
+            </div>
+
+            <p className="text-gray-300 leading-relaxed mb-8">
+              Every account has a unique identifier, called an <strong>address</strong>. Your simulated address is <code>0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2</code>. Just like how an email address lets you receive emails on the internet, your Ethereum address lets you receive ETH on the Ethereum network.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-8">
+               Here, let's give you 1 (simulated) ETH to get started below.
             </p>
 
             {/* Balance Component */}
@@ -285,7 +298,7 @@ const HomePage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              So far you have sent {totalAmountSent.toFixed(4)} ETH. Nice! You'll notice that after sending ETH, we get this pop-up:
+              So far you have sent {totalAmountSent.toFixed(4)} ETH. Nice! After sending ETH, we get the pop-up below. What does it mean?
             </p>
 
             {/* Dummy Transaction Modal */}
@@ -347,11 +360,15 @@ const HomePage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              To explain, let's try another demo. Let's say that you have to pay Alice, Bob, <em>and</em> Carol. All of them. Maybe they each took you out to dinner last week.
+              A block serves the same purpose as the train in the above animation. It arrives regularly, loads up on transactions, and then leaves for its destination.            
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Try sending them ETH. (The send button will automatically load the next recipient.)
+              Let's say that you have to pay Alice, Bob, <em>and</em> Carol. All of them. Maybe they each took you out to dinner last week.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-8">
+              Try sending each of them ETH. (The send button will automatically load the next recipient.)
             </p>
 
             {/* Balance Component with Auto-Cycling Recipients */}
@@ -368,7 +385,7 @@ const HomePage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              When we send out all these different transactions, they get collected into a **block**. So a block is a list of all the transactions that have happened, and a new one gets published every 12 seconds.
+              When we send out all these different transactions, they get collected into a <b>block</b>. So a block is a list of all the transactions that have happened, and a new one gets published every 12 seconds.
             </p>
 
             {/* Block Animation */}
