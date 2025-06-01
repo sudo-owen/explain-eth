@@ -178,31 +178,29 @@ const BlockAnimation: React.FC = () => {
   const [phase, setPhase] = useState<'filling' | 'confirming' | 'moving'>('filling')
   const [blockStartTime, setBlockStartTime] = useState<Date | undefined>(undefined)
 
-  // Use a ref to track the current block for reliable state transitions
-  const currentBlockRef = React.useRef<Transaction[]>([])
-
   useEffect(() => {
     const runBlockCycle = () => {
-      // Phase 1: Fill the block with transactions (staggered over 8 seconds)
+      // Phase 1: Fill the block with transactions
       setPhase('filling')
       setCurrentBlock([])
-      currentBlockRef.current = []
       setIsConfirmed(false)
       setIsMoving(false)
       setBlockStartTime(undefined)
 
       // Generate 1-4 random transactions
       const numTransactions = Math.floor(Math.random() * 4) + 1
-      const newTransactions: Transaction[] = []
+      
+      // Use a closure variable to track transactions across all setTimeout callbacks
+      const allTransactions: Transaction[] = []
       let firstTransactionAdded = false
 
       for (let i = 0; i < numTransactions; i++) {
         setTimeout(() => {
           const newTx = generateTestTransaction()
-          newTransactions.push(newTx)
-          const updatedBlock = [...newTransactions]
-          setCurrentBlock(updatedBlock)
-          currentBlockRef.current = updatedBlock
+          allTransactions.push(newTx)
+          
+          // Update state with a copy of the transactions
+          setCurrentBlock([...allTransactions])
 
           // Set block start time when first transaction is added
           if (!firstTransactionAdded) {
@@ -218,7 +216,7 @@ const BlockAnimation: React.FC = () => {
         setIsConfirmed(true)
       }, 12000)
 
-      // Phase 3: Move block to the right (after 14 seconds)
+      // Phase 3: Move block to the right (after 13 seconds)
       setTimeout(() => {
         setPhase('moving')
         setIsMoving(true)
@@ -226,23 +224,18 @@ const BlockAnimation: React.FC = () => {
 
       // Phase 4: Complete the move and update previous block (after 15 seconds)
       setTimeout(() => {
-        // Use ref to get current block value reliably
-        const blockToMove = currentBlockRef.current
-
-        // Move current block to previous block
-        setPreviousBlock(blockToMove)
-
+        // Use the allTransactions array directly - it has all the transactions
+        setPreviousBlock([...allTransactions])
+        
         // Clear current block for next cycle
         setCurrentBlock([])
-        currentBlockRef.current = []
-
         setIsMoving(false)
         setBlockNumber(prev => prev + 1)
 
         // Start next cycle after a brief pause
         setTimeout(() => {
           runBlockCycle()
-        }, 100)
+        }, 1000)
       }, 15000)
     }
 
