@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Transaction, Recipient } from '../types/blockchain'
-import { generateTransactionId, generateTransactionFee, formatETH } from '../utils/transactions'
+import { generateTransactionId, generateTransactionFee, formatETHTruncated } from '../utils/transactions'
 import CircularCountdown from './CircularCountdown'
 
 // Test transaction generation
@@ -77,7 +77,7 @@ const BlockSlot: React.FC<BlockSlotProps> = ({ transaction, isEmpty, isConfirmed
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between">
             <p className="text-xs font-medium text-gray-200 truncate">
-              Sent {formatETH(transaction.amount)} to {transaction.recipient}
+              Sent {formatETHTruncated(transaction.amount)} to {transaction.recipient}
             </p>
           </div>
         </div>
@@ -143,7 +143,7 @@ const BlockContainer: React.FC<BlockContainerProps> = ({
   return (
     <div
       className={`w-full max-w-sm bg-gray-800 border border-gray-700 rounded-lg p-4 transition-all duration-1000 ${
-        isMoving ? 'transform translate-x-full opacity-50' : ''
+        isMoving ? 'transform translate-x-[calc(100%+34px)] opacity-50' : ''
       }`}
     >
       <div className="flex items-center justify-between mb-4">
@@ -257,7 +257,7 @@ const BlockAnimation: React.FC = () => {
 
   return (
     <div className="w-full max-w-6xl mx-auto my-12 pb-4 bg-gray-800 rounded-lg">
-      <div className="p-6">
+      <div className="p-6 pb-1">
         {/* Header */}
         <div className="text-center mb-6">
           <h2 className="text-2xl font-bold text-white mb-2">Block Building</h2>
@@ -281,12 +281,12 @@ const BlockAnimation: React.FC = () => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold text-gray-200 text-center">Previous Block</h3>
             {previousBlock.length > 0 ? (
-              <BlockContainer
-                transactions={previousBlock}
-                isConfirmed={true}
-                isMoving={false}
-                blockNumber={blockNumber-1}
-              />
+                <BlockContainer
+                  transactions={previousBlock}
+                  isConfirmed={true}
+                  isMoving={false}
+                  blockNumber={blockNumber-1}
+                />
             ) : (
               <div className="w-full max-w-sm bg-gray-700/50 border border-gray-600 border-dashed rounded-lg p-4 h-74 flex items-center justify-center">
                 <span className="text-gray-500">No previous block</span>

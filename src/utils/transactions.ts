@@ -28,6 +28,10 @@ export const formatETH = (amount: number): string => {
   return `${amount.toFixed(4)} ETH`
 }
 
+export const formatETHTruncated = (amount: number): string => {
+  return `${amount.toFixed(2)} ETH`
+}
+
 export const generateTransactionId = (): string => {
   return `tx_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
 }
