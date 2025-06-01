@@ -28,7 +28,7 @@ import {
 } from '../utils/transactions'
 
 const initialEthereumState: ChainState = {
-  balance: 1.0, // 1 ETH starting balance
+  balance: 0.0, // 0 ETH starting balance
   nfts: [],
   savingsDeposit: 0,
   savingsLastUpdate: new Date(),
@@ -472,6 +472,16 @@ export const useBlockchain = () => {
     }, TRANSACTION_DURATION + 100) // Slight delay after mainnet confirmation
   }, [ethereumState, showModal, processTransaction])
 
+  const receiveETH = useCallback(() => {
+    const amount = 1.0 // Always receive 1 ETH
+
+    // Privileged action: Update balance immediately without transaction processing or popups
+    setEthereumState(prev => ({
+      ...prev,
+      balance: prev.balance + amount
+    }))
+  }, [])
+
   return {
     ethereumState,
     rollupState,
@@ -485,6 +495,7 @@ export const useBlockchain = () => {
     withdrawEarnings,
     claimEarnings,
     bridgeToRollup,
+    receiveETH,
     calculateCurrentEarnings,
     showModal,
     closeModal

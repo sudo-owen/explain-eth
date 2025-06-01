@@ -12,6 +12,7 @@ interface BlockchainContextType {
   withdrawEarnings: (chain: 'ethereum' | 'rollup', amount: number) => void
   claimEarnings: (chain: 'ethereum' | 'rollup') => void
   bridgeToRollup: (amount: number) => void
+  receiveETH: () => void
   calculateCurrentEarnings: (chainState: ChainState) => number
   transactionHistory: Transaction[]
   modalState: ModalState

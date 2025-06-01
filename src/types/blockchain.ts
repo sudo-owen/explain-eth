@@ -33,6 +33,7 @@ export interface Transaction {
   completionTime?: Date
   errorMessage?: string
   nonce: number // Transaction nonce for ordering
+  componentId?: string // Optional identifier for which component initiated the transaction
 }
 
 export interface ModalState {

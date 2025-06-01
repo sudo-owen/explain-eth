@@ -5,6 +5,7 @@ import ProfileCards from '../components/ProfileCards'
 import TransactionModal from '../components/TransactionModal'
 import TransactionHistoryOverlay from '../components/TransactionHistoryOverlay'
 import CircularCountdown from '../components/CircularCountdown'
+import BlockAnimation from '../components/BlockAnimation'
 
 // Train Animation Component
 const TrainAnimation: React.FC = () => {
@@ -219,10 +220,6 @@ const HomePage: React.FC = () => {
               Hi, if you have no idea what <strong>Ethereum</strong>, <strong>blockchains</strong>, and <strong>rollups</strong> are, this essay is for you!
             </p>
             
-            <p className="text-gray-300 leading-relaxed mb-6">
-              If you already have some idea of what any/all of those words mean, or you just want to play around with some interactive animations, by all means feel free to keep reading.
-            </p>
-            
             <p className="text-gray-300 leading-relaxed">
               Many ideas presented here will be simplified, so please keep in mind that the actual concepts <em>will</em> be more detailed. (For all the experts in the room, just enjoy the animations.)
             </p>
@@ -233,7 +230,7 @@ const HomePage: React.FC = () => {
             <h1 className="text-4xl font-bold text-white mb-8">Ethereum</h1>
             
             <p className="text-gray-300 leading-relaxed mb-6">
-              Let's get started. What is Ethereum? Ethereum is a <strong>blockchain network for sending money and running apps</strong>.
+              Let's get started. What is Ethereum? Ethereum is a <strong>blockchain network</strong> for <b>sending money</b> and <strong>running apps</strong>.
             </p>
             
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -241,7 +238,7 @@ const HomePage: React.FC = () => {
             </p>
             
             <p className="text-gray-300 leading-relaxed mb-6">
-              Well, a <strong>network</strong> is a group of connected things, like a social network. As long as someone is in the network, you can reach them. Just like how on the Facebook network, you can send a message to anyone as long as they have an account.
+              Well, a <strong>network</strong> is a group of connected things, like a social network. As long as something is in the network, you can reach it. Just like how on the Facebook network, you can send a message to anyone as long as they have an account.
             </p>
             
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -249,24 +246,24 @@ const HomePage: React.FC = () => {
             </p>
             
             <p className="text-gray-300 leading-relaxed mb-8">
-              Like a social media network, we'll need an <strong>account</strong> to get started. And we'll also need some <strong>money</strong>. On Ethereum, the money that we can send around is called ETH.
+              Like a social media network, we'll need an <strong>account</strong> to get started using Ethereum. An account will let you receive <strong>money</strong>. You can receive many types of digital assets with your account, but we will start with ETH, which is the native currency of the Ethereum network.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-               Here, let's give you 1 ETH to get started below. (Self-evident, but I have to say it: All of this isn't real money of course, it's just for the demo)
+               Here, let's give you 1 ETH to get started below. (Of course it's not real money, it's just for the demo.)
             </p>
 
             {/* Balance Component */}
             <div className="my-12">
-              <BalanceComponent className="max-w-md mx-auto" />
+              <BalanceComponent className="max-w-md mx-auto" showReceiveAction={true} />
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Now that you have ETH, you'll be able to send it around to other people and even try some apps (more on this later)!
+              Now that you have some ETH, you'll be able to send it around to other people.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Of course, you also need some friends to send money to. Meet Alice, Bob, and Carol. You can click on them to learn a bit more about each friend and decide who you want to send money to.
+              You also need some friends to send money to. Meet Alice, Bob, and Carol.
             </p>
 
             {/* Profile Cards */}
@@ -288,7 +285,7 @@ const HomePage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              So far you have sent {totalAmountSent.toFixed(4)} ETH. You'll notice that after sending ETH, we get this pop-up:
+              So far you have sent {totalAmountSent.toFixed(4)} ETH. Nice! You'll notice that after sending ETH, we get this pop-up:
             </p>
 
             {/* Dummy Transaction Modal */}
@@ -297,11 +294,11 @@ const HomePage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Once it turns green, this lets you know that the action you took was successful.
+              Once it turns green, your send transaction has been <b>confirmed</b>. This lets you know that it was successful, i.e. that it went through.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Sending money on Ethereum isn't instant. It's faster than a bank transfer of course, no need to wait 1-2 business days. But it's also a little slower than Venmo or Zelle.
+              Sending money on Ethereum isn't instant. It's faster than a bank transfer; no need to wait 1-2 business days. But it's also a little slower than Venmo or Zelle.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -317,15 +314,15 @@ const HomePage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Thankfully, not exactly.
+              Thankfully, not quite.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              On Ethereum, we can send out multiple transactions to different accounts, all one after another. Then, in around 12 seconds, they'll all happen one after another in quick succession.
+              On Ethereum, we can send out multiple transactions to different accounts. Then, in around 12 seconds, they'll all happen one after another in quick succession.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Imagine that we're at a train station and we want to deliver some packages to the next stop. If we have multiple packages to deliver, we can put them all on the same train, and they'll all get delivered together at the next stop.
+              Imagine that we're at a train station, and we want to deliver some packages to the next stop. If we have multiple packages to deliver, we can still put them all on the same train, and they'll all get delivered together at the next stop.
             </p>
 
             {/* Train Animation */}
@@ -334,7 +331,7 @@ const HomePage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Of course, instead of packages we are sending ETH, and instead of waiting for the next train, we are waiting 12 seconds for confirmation.
+              Of course, instead of packages we are sending ETH. And instead of waiting for the next train, we're waiting 12 seconds for the transactions to be confirmed.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -342,16 +339,42 @@ const HomePage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              The Ethereum block time is 12 seconds because this is how long it takes the Ethereum network to make a <strong>block</strong>. This is the same "block" that makes up part of the word blockchain.
+              12 second is about how long Ethereum's block time is. This is how long it takes the Ethereum network to make a <strong>block</strong>. This is the same "block" that makes up part of the word "blockchain".
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              But what <strong>is</strong> a block?
+              But what <i>is</i> a block?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Here, let's try another demo. Let's say that you have to pay Alice, Bob, <em>and</em> Carol.
+              To explain, let's try another demo. Let's say that you have to pay Alice, Bob, <em>and</em> Carol. All of them. Maybe they each took you out to dinner last week.
             </p>
+
+            <p className="text-gray-300 leading-relaxed mb-8">
+              Try sending them ETH. (The send button will automatically load the next recipient.)
+            </p>
+
+            {/* Balance Component with Auto-Cycling Recipients */}
+            <div className="my-12">
+              <BalanceComponent
+                showSendAction={true}
+                allowedRecipients={['Alice', 'Bob', 'Carol']}
+                className="max-w-md mx-auto"
+                disableButtonsOnPending={false}
+                autoCycleRecipients={true}
+                showSentCheckmarks={true}
+                componentId="homepage-cycling-balance"
+              />
+            </div>
+
+            <p className="text-gray-300 leading-relaxed mb-8">
+              When we send out all these different transactions, they get collected into a **block**. So a block is a list of all the transactions that have happened, and a new one gets published every 12 seconds.
+            </p>
+
+            {/* Block Animation */}
+            <div className="my-12">
+              <BlockAnimation />
+            </div>
 
           </section>
 
