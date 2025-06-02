@@ -7,6 +7,7 @@ interface CircularCountdownProps {
   strokeWidth?: number
   className?: string
   theme?: 'ethereum' | 'rollup'
+  hideValue?: boolean // Option to hide the countdown number
 }
 
 const CircularCountdown: React.FC<CircularCountdownProps> = ({
@@ -15,7 +16,8 @@ const CircularCountdown: React.FC<CircularCountdownProps> = ({
   size = 24,
   strokeWidth = 2,
   className = '',
-  theme = 'ethereum'
+  theme = 'ethereum',
+  hideValue = false
 }) => {
   const [progress, setProgress] = useState(0)
   const [timeLeft, setTimeLeft] = useState(duration)
@@ -92,11 +94,13 @@ const CircularCountdown: React.FC<CircularCountdownProps> = ({
         />
       </svg>
       {/* Timer text */}
-      <div className="absolute inset-0 flex items-center justify-center">
-        <span className={`text-xs font-medium ${colors.text}`}>
-          {seconds}
-        </span>
-      </div>
+      {!hideValue && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <span className={`text-xs font-medium ${colors.text}`}>
+            {seconds}
+          </span>
+        </div>
+      )}
     </div>
   )
 }

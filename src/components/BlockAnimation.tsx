@@ -69,7 +69,7 @@ const BlockSlot: React.FC<BlockSlotProps> = ({ transaction, isEmpty, isConfirmed
 
   return (
     <div
-      className={`p-1.5 sm:p-2 rounded-lg border transition-all duration-500 ${
+      className={`h-9 sm:h-9 p-1.5 sm:p-2 rounded-lg border transition-all duration-500 ${
         isConfirmed
           ? 'bg-green-900/20 border-green-500/30'
           : 'bg-yellow-900/20 border-yellow-500/30'
@@ -78,7 +78,7 @@ const BlockSlot: React.FC<BlockSlotProps> = ({ transaction, isEmpty, isConfirmed
         animationDelay: `${slotIndex * 200}ms`
       }}
     >
-      <div className="flex items-center space-x-2 sm:space-x-3">
+      <div className="flex items-center space-x-2 sm:space-x-3 h-full">
         <div className="flex-shrink-0">
           {getTransactionIcon()}
         </div>
@@ -159,7 +159,7 @@ const BlockContainer: React.FC<BlockContainerProps> = ({
 
   return (
     <div
-      className={`w-full max-w-[180px] sm:max-w-sm bg-gray-800 border border-gray-700 rounded-lg p-2 sm:p-4 transition-all duration-1000 ${
+      className={`w-full max-w-[180px] sm:max-w-sm h-[200px] sm:h-[240px] bg-gray-800 border border-gray-700 rounded-lg p-2 sm:p-4 transition-all duration-1000 ${
         isMoving ? 'transform translate-x-[calc(100%+16px)] sm:translate-x-[calc(100%+34px)] opacity-50' : ''
       } ${shouldFadeOut ? 'opacity-0' : ''}`}
     >
@@ -331,7 +331,7 @@ const BlockAnimation: React.FC = () => {
                     shouldFadeOut={isMoving}
                   />
               ) : (
-                <div className="w-full max-w-[180px] sm:max-w-sm bg-gray-700/50 border border-gray-600 border-dashed rounded-lg p-2 sm:p-4 h-32 sm:h-74 flex items-center justify-center">
+                <div className="w-full max-w-[180px] sm:max-w-sm h-[200px] sm:h-[240px] bg-gray-700/50 border border-gray-600 border-dashed rounded-lg p-2 sm:p-4 flex items-center justify-center">
                   <span className="text-gray-500 text-xs sm:text-sm text-center">No previous block</span>
                 </div>
               )}

@@ -9,6 +9,7 @@ import CodeBlock from '../components/CodeBlock'
 import TrainAnimation from '../components/TrainAnimation'
 import StaticBlockchain from '../components/StaticBlockchain'
 import DummyTransactionModal from '../components/DummyTransactionModal'
+import SplitAnimation from '../components/SplitAnimation'
 
 const HomePage: React.FC = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
@@ -275,9 +276,9 @@ const HomePage: React.FC = () => {
                 code={`PAYMENT SPLITTER PROGRAM
 ADDRESS: 0x3f81D81e0884abD8Cc4583a704a9397972623214\n
 WHENEVER THIS PROGRAM RECEIVES ETH:
-  SEND 1/3 OF THE TOTAL TO 0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb (ALICE)
-  SEND 1/3 OF THE TOTAL TO 0x6b175474e89094c44da98b954eedeac495271d0f (BOB)
-  SEND 1/3 OF THE TOTAL TO 0xcA11bde05977b3631167028862bE2a173976CA11 (CAROL)
+  SEND 1/3 TO 0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb (ALICE)
+  SEND 1/3 TO 0x6b175474e89094c44da98b954eedeac495271d0f (BOB)
+  SEND 1/3 TO 0xcA11bde05977b3631167028862bE2a173976CA11 (CAROL)
 END`}
                 className="max-w-2xl mx-auto"
               />
@@ -303,7 +304,10 @@ END`}
               On Ethereum, all smart contracts have their own address. So to "run" this program, we just can send ETH to it, just like how we sent ETH to Alice or Bob. Once the program receives ETH, it will automatically do its thing.
             </p>
 
-            {`{SPLIT ANIMATION}`}
+            {/* Split Animation */}
+            <div className="my-12">
+              <SplitAnimation />
+            </div>
 
           </section>
 
