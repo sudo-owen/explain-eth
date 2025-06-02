@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Recipient } from '../types/blockchain'
 import { formatETH } from '../utils/transactions'
-import { getRecipientEmoji, getRecipientBackgroundColor, getRecipientAddress } from '../utils/recipients'
+import { getRecipientEmoji, getRecipientBackgroundColor, getRecipientAddress, getRecipientAddressTruncated } from '../utils/recipients'
 import CircularCountdown from './CircularCountdown'
 
 // Local state interface for the animation
@@ -82,7 +82,7 @@ const SplitAnimation: React.FC = () => {
   const recipients: Recipient[] = ['Alice', 'Bob', 'Carol']
 
   return (
-    <div className="w-full max-w-4xl mx-auto bg-gray-800 rounded-lg p-6">
+    <div className="w-full max-w-4xl mx-auto bg-gray-800 rounded-lg p-3 sm:p-6">
       {/* Pending Transaction Component */}
       <div className="mb-8">
         <div className={`
@@ -136,26 +136,30 @@ const SplitAnimation: React.FC = () => {
       </div>
 
       {/* Main Animation Area */}
-      <div className="relative h-96 bg-gray-900 rounded-lg overflow-hidden">
+      <div className="relative h-80 sm:h-96 bg-gray-900 rounded-lg overflow-hidden">
         {/* Two Column Layout */}
-        <div className="absolute inset-0 grid grid-cols-2 gap-8 p-6">
+        <div className="absolute inset-0 grid grid-cols-2 gap-3 sm:gap-8 p-3 sm:p-6">
           
           {/* Left Column - Payment Splitter */}
           <div className="flex items-center justify-center">
             <div className={`
-              bg-purple-600/40 rounded-lg p-6 text-center w-full max-w-xs transition-all duration-500
+              bg-purple-600/40 rounded-lg p-3 sm:p-6 text-center w-full max-w-xs transition-all duration-500
               ${splitterCharged ? 'border-2 border-white shadow-lg shadow-white/20' : 'border border-purple-500/60'}
             `}>
-              <div className="text-2xl mb-2">⚡</div>
-              <div className="text-lg font-semibold text-gray-100 mb-2">Payment Splitter</div>
-              <div className="text-xs text-gray-400 break-all">
+              <div className="text-xl sm:text-2xl mb-1 sm:mb-2">⚡</div>
+              <div className="text-sm sm:text-lg font-semibold text-gray-100 mb-1 sm:mb-2">Payment Splitter</div>
+              {/* Full address on desktop, truncated on mobile */}
+              <div className="text-xs text-gray-400 break-all sm:hidden">
+                0x3f81...3214
+              </div>
+              <div className="text-xs text-gray-400 break-all hidden sm:block">
                 0x3f81D81e0884abD8Cc4583a704a9397972623214
               </div>
             </div>
           </div>
 
           {/* Right Column - Profile Cards */}
-          <div className="flex flex-col justify-center space-y-3">
+          <div className="flex flex-col justify-center space-y-1 sm:space-y-3">
             {recipients.map((recipient) => {
               const balance = recipientBalances[recipient as keyof LocalRecipientBalances]
               const isCharging = recipientCharging[recipient]
@@ -163,14 +167,18 @@ const SplitAnimation: React.FC = () => {
                 <div
                   key={`${recipient}-${cycleCount}`}
                   className={`
-                    ${getRecipientBackgroundColor(recipient)} rounded-lg p-3 flex items-center space-x-3 transition-all duration-300
+                    ${getRecipientBackgroundColor(recipient)} rounded-lg p-2 sm:p-3 flex items-center space-x-2 sm:space-x-3 transition-all duration-300
                     ${isCharging ? 'border-2 border-white shadow-lg shadow-white/20' : 'border border-transparent'}
                   `}
                 >
-                  <div className="text-2xl">{getRecipientEmoji(recipient)}</div>
-                  <div className="flex-1">
-                    <div className="text-sm font-semibold text-gray-100">{recipient}</div>
-                    <div className="text-xs text-gray-400 break-all mb-1">
+                  <div className="text-lg sm:text-2xl">{getRecipientEmoji(recipient)}</div>
+                  <div className="flex-1 min-w-0">
+                    <div className="text-xs sm:text-sm font-semibold text-gray-100">{recipient}</div>
+                    {/* Truncated address on mobile, full on desktop */}
+                    <div className="text-xs text-gray-400 mb-1 sm:hidden">
+                      {getRecipientAddressTruncated(recipient)}
+                    </div>
+                    <div className="text-xs text-gray-400 break-all mb-1 hidden sm:block">
                       {getRecipientAddress(recipient)}
                     </div>
                     <div className="text-xs font-medium text-green-400">
@@ -201,9 +209,9 @@ const SplitAnimation: React.FC = () => {
       {/* Status Message */}
       <div className="mt-4 text-center">
         <div className="text-white text-sm bg-black bg-opacity-50 px-3 py-1 rounded inline-block">
-          {phase === 'pending' && 'Sending 0.3 ETH to Payment Splitter...'}
-          {phase === 'splitting' && 'Payment Splitter executing...'}
-          {phase === 'distributing' && 'Automatically distributing 0.1 ETH to Alice, Bob, and Carol...'}
+          {phase === 'pending' && 'Sending 0.3 ETH to Payment Splitter'}
+          {phase === 'splitting' && 'Payment Splitter executing'}
+          {phase === 'distributing' && 'Automatically sending 0.1 ETH to Alice, Bob, and Carol'}
           {phase === 'resetting' && 'Transaction complete!'}
         </div>
       </div>

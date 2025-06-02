@@ -50,4 +50,9 @@ export const getRecipientAddress = (name: string): string => {
   return recipientData[name]?.address || '0x0000000000000000000000000000000000000000'
 }
 
+export const getRecipientAddressTruncated = (name: string): string => {
+  const address = getRecipientAddress(name)
+  return `${address.slice(0, 6)}...${address.slice(-4)}`
+}
+
 export const recipients: Recipient[] = ['Alice', 'Bob', 'Carol', 'Eve']
