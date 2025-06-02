@@ -29,10 +29,16 @@ const SplitAnimation: React.FC = () => {
   })
   
   // Animation elements visibility
+  const [splitterCharged, setSplitterCharged] = useState(false)
+  const [recipientCharging, setRecipientCharging] = useState<Record<string, boolean>>({
+    Alice: false,
+    Bob: false,
+    Carol: false
+  })
   const [showMainDot, setShowMainDot] = useState(false)
-  const [mainDotPosition, setMainDotPosition] = useState('left') // 'left', 'splitter', 'splitting'
+  const [mainDotPosition, setMainDotPosition] = useState('left') // 'left', 'moving', 'hidden'
   const [showSplitDots, setShowSplitDots] = useState(false)
-  const [splitDotsPosition, setSplitDotsPosition] = useState('splitter') // 'splitter', 'moving', 'arrived'
+  const [splitDotsPosition, setSplitDotsPosition] = useState('center') // 'center', 'moving', 'hidden'
 
   useEffect(() => {
     const runAnimationCycle = () => {
@@ -40,48 +46,59 @@ const SplitAnimation: React.FC = () => {
       setPhase('pending')
       setTransactionStatus('pending')
       setTransactionStartTime(new Date())
+      setSplitterCharged(false)
+      setRecipientCharging({ Alice: false, Bob: false, Carol: false })
+      setRecipientBalances({ Alice: 0, Bob: 0, Carol: 0 })
       setShowMainDot(false)
       setMainDotPosition('left')
       setShowSplitDots(false)
-      setSplitDotsPosition('splitter')
-      setRecipientBalances({ Alice: 0, Bob: 0, Carol: 0 })
+      setSplitDotsPosition('center')
 
-      // Phase 1: Pending transaction, dot enters and goes to splitter (0-4s)
+      // Phase 1: Dot appears and moves to splitter (0.5-1.5s)
       setTimeout(() => {
         setShowMainDot(true)
       }, 500)
 
       setTimeout(() => {
-        setMainDotPosition('splitter')
+        setMainDotPosition('moving')
+        setSplitterCharged(true)
       }, 1500)
 
-      // Phase 2: Transaction confirms, dot splits (4-5s)
+      // Phase 2: Hide dot when it reaches splitter, transaction confirms (4s)
       setTimeout(() => {
         setPhase('splitting')
         setTransactionStatus('confirmed')
-        setMainDotPosition('splitting')
+        setMainDotPosition('hidden')
         setShowMainDot(false)
-        setShowSplitDots(true)
       }, 4000)
 
-      // Phase 3: Split dots move to recipients, balances update (5-6s)
+      // Phase 3: Split dots appear and move to recipients (5-5.5s)
       setTimeout(() => {
         setPhase('distributing')
+        setShowSplitDots(true)
         setSplitDotsPosition('moving')
+        // Charge recipients sequentially as dots "arrive"
+        setTimeout(() => setRecipientCharging(prev => ({ ...prev, Alice: true })), 0)
+        setTimeout(() => setRecipientCharging(prev => ({ ...prev, Bob: true })), 100)
+        setTimeout(() => setRecipientCharging(prev => ({ ...prev, Carol: true })), 200)
       }, 5000)
 
+      // Phase 4: Hide split dots, update balances and reset charging (5.5s)
       setTimeout(() => {
-        setSplitDotsPosition('arrived')
+        setSplitDotsPosition('hidden')
         setShowSplitDots(false)
-        // Update balances to show the split
         setRecipientBalances({
           Alice: 0.1,
           Bob: 0.1,
           Carol: 0.1
         })
+        // Reset charging after a brief moment
+        setTimeout(() => {
+          setRecipientCharging({ Alice: false, Bob: false, Carol: false })
+        }, 500)
       }, 5500)
 
-      // Phase 4: Reset and restart (6s)
+      // Phase 5: Reset and restart (6s)
       setTimeout(() => {
         setPhase('resetting')
         setCycleCount(prev => prev + 1)
@@ -127,7 +144,7 @@ const SplitAnimation: React.FC = () => {
             {/* Content */}
             <div className="flex-1">
               <div className="text-white font-medium">
-                Transaction #{cycleCount + 1}
+                Transaction
               </div>
               <div className="text-gray-300 text-sm">
                 Send 0.3 ETH to Payment Splitter
@@ -155,7 +172,10 @@ const SplitAnimation: React.FC = () => {
           
           {/* Left Column - Payment Splitter */}
           <div className="flex items-center justify-center">
-            <div className="bg-purple-600/40 border border-purple-500/60 rounded-lg p-6 text-center w-full max-w-xs">
+            <div className={`
+              bg-purple-600/40 rounded-lg p-6 text-center w-full max-w-xs transition-all duration-500
+              ${splitterCharged ? 'border-2 border-white shadow-lg shadow-white/20' : 'border border-purple-500/60'}
+            `}>
               <div className="text-2xl mb-2">⚡</div>
               <div className="text-lg font-semibold text-gray-100 mb-2">Payment Splitter</div>
               <div className="text-xs text-gray-400 break-all">
@@ -168,8 +188,15 @@ const SplitAnimation: React.FC = () => {
           <div className="flex flex-col justify-center space-y-3">
             {recipients.map((recipient) => {
               const balance = recipientBalances[recipient as keyof LocalRecipientBalances]
+              const isCharging = recipientCharging[recipient]
               return (
-                <div key={`${recipient}-${cycleCount}`} className={`${getRecipientBackgroundColor(recipient)} rounded-lg p-3 flex items-center space-x-3`}>
+                <div
+                  key={`${recipient}-${cycleCount}`}
+                  className={`
+                    ${getRecipientBackgroundColor(recipient)} rounded-lg p-3 flex items-center space-x-3 transition-all duration-300
+                    ${isCharging ? 'border-2 border-white shadow-lg shadow-white/20' : 'border border-transparent'}
+                  `}
+                >
                   <div className="text-2xl">{getRecipientEmoji(recipient)}</div>
                   <div className="flex-1">
                     <div className="text-sm font-semibold text-gray-100">{recipient}</div>
@@ -186,41 +213,38 @@ const SplitAnimation: React.FC = () => {
           </div>
         </div>
 
-        {/* Main White Dot Animation */}
-        {showMainDot && (
+        {/* Main White Dot Animation - visible only when not overlapping components */}
+        {showMainDot && mainDotPosition !== 'hidden' && (
           <div
-            className="absolute w-4 h-4 bg-white rounded-full transition-all duration-2000 ease-in-out z-10"
+            className="absolute w-4 h-4 bg-white rounded-full transition-all duration-1000 ease-in-out z-10"
             style={{
               top: '50%',
               transform: 'translateY(-50%)',
-              left: mainDotPosition === 'left' ? '-20px' : 
-                   mainDotPosition === 'splitter' ? 'calc(25% - 8px)' : 
-                   'calc(25% - 8px)',
-              opacity: mainDotPosition === 'splitting' ? 0 : 1
+              left: mainDotPosition === 'left' ? '-20px' : 'calc(40% - 8px)', // Stop before splitter component
+              opacity: 1
             }}
           />
         )}
 
-        {/* Split Dots Animation */}
-        {showSplitDots && (
+        {/* Split Dots Animation - visible only when not overlapping components */}
+        {showSplitDots && splitDotsPosition !== 'hidden' && (
           <>
             {recipients.map((recipient, index) => (
               <div
                 key={`split-dot-${recipient}-${cycleCount}`}
-                className="absolute w-3 h-3 bg-white rounded-full transition-all duration-1000 ease-in-out z-10"
+                className="absolute w-3 h-3 bg-white rounded-full transition-all duration-500 ease-in-out z-10"
                 style={{
-                  top: splitDotsPosition === 'splitter' ? '50%' : `${30 + index * 30}%`,
-                  left: splitDotsPosition === 'splitter' ? 'calc(25% - 6px)' : 
-                       splitDotsPosition === 'moving' ? 'calc(75% - 6px)' : 
-                       'calc(75% - 6px)',
+                  top: `${35 + index * 20}%`, // Spread vertically to match recipient positions
+                  left: splitDotsPosition === 'center' ? 'calc(50% - 6px)' : 'calc(60% - 6px)', // Stop before recipient components
                   transform: 'translateY(-50%)',
-                  opacity: splitDotsPosition === 'arrived' ? 0 : 1,
+                  opacity: 1,
                   transitionDelay: `${index * 100}ms`
                 }}
               />
             ))}
           </>
         )}
+
       </div>
 
       {/* Status Message */}
