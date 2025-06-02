@@ -167,7 +167,7 @@ const HomePage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Of course, instead of packages we are sending ETH. And instead of waiting for the next train, we're waiting 12 seconds for the transactions to be confirmed.
+              Of course, instead of packages we're sending ETH. And instead of waiting for the next train, we're waiting 12 seconds for the transactions to be confirmed.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -261,11 +261,11 @@ const HomePage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Remember that example earlier, where we had to pay Alice, Bob, <em>and</em> Carol? What if we could automatically split payments?
+              Remember that example earlier, where we had to pay Alice, Bob, <em>and</em> Carol one at a time? What if we could automate that?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Here is an example of a sample smart contract we could write:
+              Here is an example of a sample smart contract we could write to help with that:
             </p>
 
 
@@ -273,12 +273,11 @@ const HomePage: React.FC = () => {
             <div className="my-12">
               <CodeBlock
                 title="PaymentSplitter.sol"
-                code={`PAYMENT SPLITTER PROGRAM
-ADDRESS: 0x3f81D81e0884abD8Cc4583a704a9397972623214\n
+                code={`PAYMENT SPLITTER PROGRAM\n
 WHENEVER THIS PROGRAM RECEIVES ETH:
-  SEND 1/3 TO 0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb (ALICE)
-  SEND 1/3 TO 0x6b175474e89094c44da98b954eedeac495271d0f (BOB)
-  SEND 1/3 TO 0xcA11bde05977b3631167028862bE2a173976CA11 (CAROL)
+  SEND 1/3 TO ALICE (0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb)
+  SEND 1/3 TO BOB (0x6b175474e89094c44da98b954eedeac495271d0f)
+  SEND 1/3 TO CAROL (0xcA11bde05977b3631167028862bE2a173976CA11)
 END`}
                 className="max-w-2xl mx-auto"
               />
@@ -297,11 +296,11 @@ END`}
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              How do we "run" this program?
+              But how do we "run" this program?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              On Ethereum, all smart contracts have their own address. So to "run" this program, we just can send ETH to it, just like how we sent ETH to Alice or Bob. Once the program receives ETH, it will automatically do its thing.
+              On Ethereum, all smart contracts have their own address. So to "run" this program, we can send ETH to it, just like how we sent ETH to Alice or Bob. Once the program receives ETH, it will automatically do its thing.
             </p>
 
             {/* Split Animation */}
