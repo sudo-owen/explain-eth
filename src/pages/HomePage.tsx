@@ -1,264 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useBlockchainContext } from '../contexts/BlockchainContext'
 import BalanceComponent from '../components/BalanceComponent'
 import ProfileCards from '../components/ProfileCards'
 import TransactionModal from '../components/TransactionModal'
 import TransactionHistoryOverlay from '../components/TransactionHistoryOverlay'
-import CircularCountdown from '../components/CircularCountdown'
 import BlockAnimation from '../components/BlockAnimation'
-
-// IDE-like Code Block Component
-interface CodeBlockProps {
-  title: string
-  code: string
-  className?: string
-}
-
-const CodeBlock: React.FC<CodeBlockProps> = ({ title, code, className = '' }) => {
-  return (
-    <div className={`bg-gray-900 border border-gray-700 rounded-lg overflow-hidden shadow-lg ${className}`}>
-      {/* IDE Header */}
-      <div className="bg-gray-800 px-4 py-2 border-b border-gray-700 flex items-center space-x-2">
-        <div className="flex space-x-1">
-          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-        </div>
-        <div className="text-gray-300 text-sm font-medium ml-4">{title}</div>
-      </div>
-
-      {/* Code Content */}
-      <div className="p-4 font-mono text-sm">
-        <pre className="text-gray-300 leading-relaxed whitespace-pre-wrap">
-          {code.split('\n').map((line, index) => {
-            // Simple syntax highlighting for our pseudocode
-            let highlightedLine = line
-
-            // Highlight keywords
-            highlightedLine = highlightedLine.replace(
-              /(WHENEVER|THIS PROGRAM|RECEIVES|ETH|SEND|OF THE TOTAL|TO|END)/g,
-              '<span class="text-blue-400 font-semibold">$1</span>'
-            )
-
-            // Highlight program name
-            highlightedLine = highlightedLine.replace(
-              /(PAYMENT SPLITTER PROGRAM)/g,
-              '<span class="text-pink-400 font-bold">$1</span>'
-            )
-
-            // Highlight fractions
-            highlightedLine = highlightedLine.replace(
-              /(1\/3)/g,
-              '<span class="text-green-400">$1</span>'
-            )
-
-            // Highlight addresses (0x...)
-            highlightedLine = highlightedLine.replace(
-              /(0x[a-fA-F0-9]+)/g,
-              '<span class="text-purple-400 break-all">$1</span>'
-            )
-
-            // Highlight names in parentheses
-            highlightedLine = highlightedLine.replace(
-              /\((ALICE|BOB|CAROL)\)/g,
-              '(<span class="text-yellow-400">$1</span>)'
-            )
-
-            return (
-              <div key={index} className="flex">
-                <span className="text-gray-500 select-none w-8 text-right mr-4">
-                  {index + 1}
-                </span>
-                <span dangerouslySetInnerHTML={{ __html: highlightedLine }} />
-              </div>
-            )
-          })}
-        </pre>
-      </div>
-    </div>
-  )
-}
-
-// Train Animation Component
-const TrainAnimation: React.FC = () => {
-  const [animationPhase, setAnimationPhase] = useState<'loading' | 'moving'>('loading')
-  const [cycleCount, setCycleCount] = useState(0)
-  const [visibleBoxes, setVisibleBoxes] = useState<number[]>([])
-  const [isMoving, setIsMoving] = useState(false)
-
-  useEffect(() => {
-    const runCycle = () => {
-      // Phase 1: Loading boxes (1.5 seconds total, staggered)
-      setAnimationPhase('loading')
-      setVisibleBoxes([])
-      setIsMoving(false)
-
-      // Show boxes one by one with 0.5 second delays
-      setTimeout(() => setVisibleBoxes([0]), 200)
-      setTimeout(() => setVisibleBoxes([0, 1]), 700)
-      setTimeout(() => setVisibleBoxes([0, 1, 2]), 1200)
-
-      setTimeout(() => {
-        // Phase 2: Moving (4 seconds)
-        setAnimationPhase('moving')
-        
-        // Use requestAnimationFrame to ensure the DOM is ready before triggering animation
-        requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            setIsMoving(true)
-          })
-        })
-
-        setTimeout(() => {
-          // Reset and start next cycle
-          setCycleCount(prev => prev + 1)
-          runCycle()
-        }, 4000)
-      }, 1500)
-    }
-
-    runCycle()
-  }, [])
-
-  return (
-    <div className="w-full max-w-4xl mx-auto my-12 pb-2 bg-gray-800 rounded-lg">
-      <div className="relative h-32 overflow-hidden bg-gradient-to-b from-blue-900 to-blue-800 rounded-lg">
-        {/* Track */}
-        <div className="absolute bottom-4 left-0 right-0 h-1 bg-gray-600"></div>
-
-        {/* Train Unit - moves as one piece */}
-        <div
-          className="absolute bottom-4 flex items-end space-x-2"
-          style={{
-            left: '20px',
-            transform: isMoving ? 'translateX(calc(100vw + 100px))' : 'translateX(0px)',
-            opacity: 1,
-            transition: isMoving
-              ? 'transform 4000ms ease-in'
-              : 'opacity 500ms ease-in-out'
-          }}
-        >
-          {/* Boxes */}
-          {visibleBoxes.map((index) => (
-            <div
-              key={`${cycleCount}-${index}`}
-              className="w-8 h-8 transition-all duration-500 ease-out"
-              style={{
-                opacity: 1,
-                transform: 'translateY(-10px)',
-                transitionDelay: `${index * 0.5}s`
-              }}
-            >
-              <img
-                src="/img/box.svg"
-                alt="Package"
-                className="w-full h-full"
-                style={{ filter: 'brightness(1.2)' }}
-              />
-            </div>
-          ))}
-
-          {/* Train */}
-          <div className="w-24 h-16">
-            <img
-              src="/img/train.svg"
-              alt="Train"
-              className="w-full h-full"
-              style={{ filter: 'brightness(1.2)' }}
-            />
-          </div>
-        </div>
-
-        {/* Labels */}
-        <div className="absolute top-2 left-4 text-white text-sm font-bold">
-          Train Station
-        </div>
-        <div className="absolute top-2 right-4 text-white text-sm font-bold">
-          Next Stop
-        </div>
-
-      </div>
-      
-      {/* Status */}
-      <div className="flex justify-center mt-4">
-        <div className="text-white text-sm bg-black bg-opacity-50 px-3 py-1 rounded">
-          {animationPhase === 'loading' && 'Loading packages onto train...'}
-          {animationPhase === 'moving' && 'Train departing!'}
-        </div>
-      </div>
-    </div>
-  )
-}
-
-
-// Animated Dummy Transaction Modal Component for illustration
-const DummyTransactionModal: React.FC = () => {
-  const [phase, setPhase] = useState<'pending' | 'confirmed'>('pending')
-  const [startTime, setStartTime] = useState(new Date())
-
-  useEffect(() => {
-    const cycle = () => {
-      // Start with pending
-      setPhase('pending')
-      setStartTime(new Date())
-
-      // After 12 seconds, show confirmed
-      setTimeout(() => {
-        setPhase('confirmed')
-      }, 12000)
-
-      // After 3 more seconds, restart the cycle
-      setTimeout(() => {
-        cycle()
-      }, 15000)
-    }
-
-    cycle()
-  }, [])
-
-  const isPending = phase === 'pending'
-
-  return (
-    <div className={`max-w-sm mx-auto my-8 bg-gray-800 rounded-lg shadow-xl p-4 border-2 transition-all duration-300 ${
-      isPending ? 'border-yellow-500' : 'border-green-500'
-    }`}>
-      <div className="flex items-center space-x-3">
-        {/* Icon */}
-        <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
-          isPending ? 'bg-yellow-500' : 'bg-green-500'
-        }`}>
-          {isPending ? (
-            <CircularCountdown
-              duration={12000}
-              startTime={startTime}
-              size={32}
-              strokeWidth={3}
-              theme="ethereum"
-            />
-          ) : (
-            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-            </svg>
-          )}
-        </div>
-
-        {/* Message */}
-        <div className="flex-1">
-          <h3 className={`text-sm font-medium transition-all duration-300 ${
-            isPending ? 'text-yellow-400' : 'text-green-400'
-          }`}>
-            {isPending ? 'Transaction Pending' : 'Transaction Successful'}
-          </h3>
-          <div className="text-gray-300 text-sm mt-1">
-            {isPending ? 'Sending 0.01 ETH to Alice 👩‍💼...' : 'Sent 0.01 ETH to Alice 👩‍💼'}
-          </div>
-        </div>
-      </div>
-
-
-    </div>
-  )
-}
+import CodeBlock from '../components/CodeBlock'
+import TrainAnimation from '../components/TrainAnimation'
+import StaticBlockchain from '../components/StaticBlockchain'
+import DummyTransactionModal from '../components/DummyTransactionModal'
 
 const HomePage: React.FC = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
@@ -466,20 +216,30 @@ const HomePage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              So a <strong>blockchain</strong> is a chain of blocks. Each block contains a list of transactions, and they get published one after another, forming a chain.
+              And once we have more than one block, we have a <b>blockchain</b>. As the name suggests, it's a chain of blocks, or an ordered list of transactions.
+            </p>
+
+            {/* Static Blockchain Component */}
+            <div className="my-12">
+              <StaticBlockchain />
+            </div>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              But what other types of transactions are there?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              {`{STATIC BLOCK ANIMATION, 4 BLOCKS}`}
+              In addition to sending ETH around, we can also interact with <b>apps</b> on the Ethereum network. 
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              This is why it's called a <strong>blockchain</strong>. It's a chain of blocks, where each block contains transactions.
+              What does that mean? What does an app look like? 
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              But wait, we said that Ethereum is for <strong>sending money</strong> and <strong>running apps</strong>. We've covered sending money. What about running apps?
+              Let's explore deeper.
             </p>
+
 
           </section>
 
@@ -488,26 +248,32 @@ const HomePage: React.FC = () => {
             <h1 className="text-4xl font-bold text-white mb-8">Apps</h1>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              On Ethereum, you can run <strong>apps</strong>. These apps are called <strong>smart contracts</strong>.
+              On the Ethereum network, we can receive ETH once we have an account. And once someone else has an account, you can send them ETH. Hopefully the above examples have illustrated that.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              A smart contract is a program that runs on the Ethereum network. It can receive ETH, send ETH, and do computations.
+              An app on Ethereum is a program that can also send or receive ETH according to its own rules. In blockchain jargon, this type of program is called a <strong>smart contract</strong>.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              For example, let's say you want to create a program that automatically splits any ETH it receives between Alice, Bob, and Carol.
+              What does this program look like? What kinds of rules can we set? How can it be useful?
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Remember that example earlier, where we had to pay Alice, Bob, <em>and</em> Carol? What if we could automatically split payments?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Here's what that program might look like:
+              Here is an example of a sample smart contract we could write:
             </p>
+
 
             {/* Payment Splitter Code Block */}
             <div className="my-12">
               <CodeBlock
                 title="PaymentSplitter.sol"
                 code={`PAYMENT SPLITTER PROGRAM
+ADDRESS: 0x3f81D81e0884abD8Cc4583a704a9397972623214\n
 WHENEVER THIS PROGRAM RECEIVES ETH:
   SEND 1/3 OF THE TOTAL TO 0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb (ALICE)
   SEND 1/3 OF THE TOTAL TO 0x6b175474e89094c44da98b954eedeac495271d0f (BOB)
@@ -518,24 +284,26 @@ END`}
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              This is a simple smart contract. When you send ETH to this program, it automatically splits the ETH three ways and sends it to Alice, Bob, and Carol.
+              What does it do?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Let's see this in action. Try sending some ETH to the payment splitter below:
+              As you might have guessed, it's a payment splitter! Whenever our Payment Splitter smart contract receives ETH, it'll automatically send the right proportion (1/3) to each person.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              {`{SPLIT ANIMATION}`}
+              Now, instead of having to manually send money to every person individually, we can use this simple program.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Smart contracts like this one are useful because they're <strong>automatic</strong> and <strong>trustless</strong>. Once the program is deployed, it will always split payments exactly as programmed, without requiring any human intervention.
+              How do we "run" this program?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              This is just one example. Smart contracts can do much more complex things, like creating digital tokens, running decentralized exchanges, or managing insurance policies.
+              On Ethereum, all smart contracts have their own address. So to "run" this program, we just can send ETH to it, just like how we sent ETH to Alice or Bob. Once the program receives ETH, it will automatically do its thing.
             </p>
+
+            {`{SPLIT ANIMATION}`}
 
           </section>
 
