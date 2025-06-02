@@ -140,7 +140,7 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
           
           {/* Recipient Selection */}
           <div>
-            <label className="block text-sm text-gray-400 mb-2">
+            <label className="block text-sm text-gray-400 mb-2 break-all">
               To: {getRecipientAddress(selectedRecipient)}
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">

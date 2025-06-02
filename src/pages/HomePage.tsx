@@ -7,6 +7,78 @@ import TransactionHistoryOverlay from '../components/TransactionHistoryOverlay'
 import CircularCountdown from '../components/CircularCountdown'
 import BlockAnimation from '../components/BlockAnimation'
 
+// IDE-like Code Block Component
+interface CodeBlockProps {
+  title: string
+  code: string
+  className?: string
+}
+
+const CodeBlock: React.FC<CodeBlockProps> = ({ title, code, className = '' }) => {
+  return (
+    <div className={`bg-gray-900 border border-gray-700 rounded-lg overflow-hidden shadow-lg ${className}`}>
+      {/* IDE Header */}
+      <div className="bg-gray-800 px-4 py-2 border-b border-gray-700 flex items-center space-x-2">
+        <div className="flex space-x-1">
+          <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+          <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+          <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+        </div>
+        <div className="text-gray-300 text-sm font-medium ml-4">{title}</div>
+      </div>
+
+      {/* Code Content */}
+      <div className="p-4 font-mono text-sm">
+        <pre className="text-gray-300 leading-relaxed whitespace-pre-wrap">
+          {code.split('\n').map((line, index) => {
+            // Simple syntax highlighting for our pseudocode
+            let highlightedLine = line
+
+            // Highlight keywords
+            highlightedLine = highlightedLine.replace(
+              /(WHENEVER|THIS PROGRAM|RECEIVES|ETH|SEND|OF THE TOTAL|TO|END)/g,
+              '<span class="text-blue-400 font-semibold">$1</span>'
+            )
+
+            // Highlight program name
+            highlightedLine = highlightedLine.replace(
+              /(PAYMENT SPLITTER PROGRAM)/g,
+              '<span class="text-pink-400 font-bold">$1</span>'
+            )
+
+            // Highlight fractions
+            highlightedLine = highlightedLine.replace(
+              /(1\/3)/g,
+              '<span class="text-green-400">$1</span>'
+            )
+
+            // Highlight addresses (0x...)
+            highlightedLine = highlightedLine.replace(
+              /(0x[a-fA-F0-9]+)/g,
+              '<span class="text-purple-400 break-all">$1</span>'
+            )
+
+            // Highlight names in parentheses
+            highlightedLine = highlightedLine.replace(
+              /\((ALICE|BOB|CAROL)\)/g,
+              '(<span class="text-yellow-400">$1</span>)'
+            )
+
+            return (
+              <div key={index} className="flex">
+                <span className="text-gray-500 select-none w-8 text-right mr-4">
+                  {index + 1}
+                </span>
+                <span dangerouslySetInnerHTML={{ __html: highlightedLine }} />
+              </div>
+            )
+          })}
+        </pre>
+      </div>
+    </div>
+  )
+}
+
 // Train Animation Component
 const TrainAnimation: React.FC = () => {
   const [animationPhase, setAnimationPhase] = useState<'loading' | 'moving'>('loading')
@@ -259,7 +331,7 @@ const HomePage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Every account has a unique identifier, called an <strong>address</strong>. Your simulated address is <code>0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2</code>. Just like how an email address lets you receive emails on the internet, your Ethereum address lets you receive ETH on the Ethereum network.
+              Every account has a unique identifier, called an <strong>address</strong>. Your simulated address is <code><span className="break-all">0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2</span></code>. Just like how an email address lets you receive emails on the internet, your Ethereum address lets you receive ETH on the Ethereum network.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
@@ -392,6 +464,78 @@ const HomePage: React.FC = () => {
             <div className="my-12">
               <BlockAnimation />
             </div>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              So a <strong>blockchain</strong> is a chain of blocks. Each block contains a list of transactions, and they get published one after another, forming a chain.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              {`{STATIC BLOCK ANIMATION, 4 BLOCKS}`}
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              This is why it's called a <strong>blockchain</strong>. It's a chain of blocks, where each block contains transactions.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              But wait, we said that Ethereum is for <strong>sending money</strong> and <strong>running apps</strong>. We've covered sending money. What about running apps?
+            </p>
+
+          </section>
+
+          {/* Apps Section */}
+          <section className="mb-16">
+            <h1 className="text-4xl font-bold text-white mb-8">Apps</h1>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              On Ethereum, you can run <strong>apps</strong>. These apps are called <strong>smart contracts</strong>.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              A smart contract is a program that runs on the Ethereum network. It can receive ETH, send ETH, and do computations.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              For example, let's say you want to create a program that automatically splits any ETH it receives between Alice, Bob, and Carol.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-8">
+              Here's what that program might look like:
+            </p>
+
+            {/* Payment Splitter Code Block */}
+            <div className="my-12">
+              <CodeBlock
+                title="PaymentSplitter.sol"
+                code={`PAYMENT SPLITTER PROGRAM
+WHENEVER THIS PROGRAM RECEIVES ETH:
+  SEND 1/3 OF THE TOTAL TO 0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb (ALICE)
+  SEND 1/3 OF THE TOTAL TO 0x6b175474e89094c44da98b954eedeac495271d0f (BOB)
+  SEND 1/3 OF THE TOTAL TO 0xcA11bde05977b3631167028862bE2a173976CA11 (CAROL)
+END`}
+                className="max-w-2xl mx-auto"
+              />
+            </div>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              This is a simple smart contract. When you send ETH to this program, it automatically splits the ETH three ways and sends it to Alice, Bob, and Carol.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Let's see this in action. Try sending some ETH to the payment splitter below:
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              {`{SPLIT ANIMATION}`}
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Smart contracts like this one are useful because they're <strong>automatic</strong> and <strong>trustless</strong>. Once the program is deployed, it will always split payments exactly as programmed, without requiring any human intervention.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              This is just one example. Smart contracts can do much more complex things, like creating digital tokens, running decentralized exchanges, or managing insurance policies.
+            </p>
 
           </section>
 

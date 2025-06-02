@@ -31,8 +31,8 @@ interface BlockSlotProps {
 const BlockSlot: React.FC<BlockSlotProps> = ({ transaction, isEmpty, isConfirmed, slotIndex }) => {
   if (isEmpty) {
     return (
-      <div className="h-12 border-2 border-dashed border-gray-600 rounded-lg flex items-center justify-center">
-        <span className="text-gray-500 text-sm">Empty Slot</span>
+      <div className="h-9 sm:h-9 border-2 border-dashed border-gray-600 rounded-lg flex items-center justify-center">
+        <span className="text-gray-500 text-xs sm:text-sm">Empty Slot</span>
       </div>
     )
   }
@@ -42,8 +42,8 @@ const BlockSlot: React.FC<BlockSlotProps> = ({ transaction, isEmpty, isConfirmed
   const getTransactionIcon = () => {
     if (isConfirmed) {
       return (
-        <div className="w-5 h-5 bg-green-500 rounded-full flex items-center justify-center">
-          <svg className="w-3 h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="w-4 h-4 sm:w-5 sm:h-5 bg-green-500 rounded-full flex items-center justify-center">
+          <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
@@ -52,15 +52,24 @@ const BlockSlot: React.FC<BlockSlotProps> = ({ transaction, isEmpty, isConfirmed
 
     // For pending transactions, just show a simple pending icon
     return (
-      <div className="w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center">
-        <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+      <div className="w-4 h-4 sm:w-5 sm:h-5 bg-yellow-500 rounded-full flex items-center justify-center">
+        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-white rounded-full animate-pulse"></div>
       </div>
     )
   }
 
+  // Mobile-optimized transaction text
+  const getMobileText = () => {
+    return `${formatETHTruncated(transaction.amount)} → ${transaction.recipient}`
+  }
+
+  const getDesktopText = () => {
+    return `Sent ${formatETHTruncated(transaction.amount)} to ${transaction.recipient}`
+  }
+
   return (
     <div
-      className={`p-2 rounded-lg border transition-all duration-500 ${
+      className={`p-1.5 sm:p-2 rounded-lg border transition-all duration-500 ${
         isConfirmed
           ? 'bg-green-900/20 border-green-500/30'
           : 'bg-yellow-900/20 border-yellow-500/30'
@@ -69,16 +78,21 @@ const BlockSlot: React.FC<BlockSlotProps> = ({ transaction, isEmpty, isConfirmed
         animationDelay: `${slotIndex * 200}ms`
       }}
     >
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-2 sm:space-x-3">
         <div className="flex-shrink-0">
           {getTransactionIcon()}
         </div>
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between">
-            <p className="text-xs font-medium text-gray-200 truncate">
-              Sent {formatETHTruncated(transaction.amount)} to {transaction.recipient}
-            </p>
+            {/* Mobile text (shorter) */}
+            <div className="text-xs font-medium text-gray-200 truncate sm:hidden">
+              {getMobileText()}
+            </div>
+            {/* Desktop text (full) */}
+            <div className="hidden sm:block text-xs font-medium text-gray-200 truncate">
+              {getDesktopText()}
+            </div>
           </div>
         </div>
       </div>
@@ -92,6 +106,7 @@ interface BlockContainerProps {
   isMoving: boolean
   blockNumber: number
   blockStartTime?: Date
+  shouldFadeOut?: boolean
 }
 
 const BlockContainer: React.FC<BlockContainerProps> = ({
@@ -99,7 +114,8 @@ const BlockContainer: React.FC<BlockContainerProps> = ({
   isConfirmed,
   isMoving,
   blockNumber,
-  blockStartTime
+  blockStartTime,
+  shouldFadeOut = false
 }) => {
   const slots = Array.from({ length: 4 }, (_, index) => {
     const transaction = transactions[index]
@@ -117,8 +133,8 @@ const BlockContainer: React.FC<BlockContainerProps> = ({
   const getBlockIcon = () => {
     if (isConfirmed) {
       return (
-        <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-          <svg className="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="w-5 h-5 sm:w-6 sm:h-6 bg-green-500 rounded-full flex items-center justify-center">
+          <svg className="w-3 h-3 sm:w-4 sm:h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
@@ -130,9 +146,10 @@ const BlockContainer: React.FC<BlockContainerProps> = ({
         <CircularCountdown
           duration={12000}
           startTime={blockStartTime}
-          size={24}
+          size={20}
           strokeWidth={2}
           theme="ethereum"
+          className="sm:w-6 sm:h-6"
         />
       )
     }
@@ -142,11 +159,31 @@ const BlockContainer: React.FC<BlockContainerProps> = ({
 
   return (
     <div
-      className={`w-full max-w-sm bg-gray-800 border border-gray-700 rounded-lg p-4 transition-all duration-1000 ${
-        isMoving ? 'transform translate-x-[calc(100%+34px)] opacity-50' : ''
-      }`}
+      className={`w-full max-w-[180px] sm:max-w-sm bg-gray-800 border border-gray-700 rounded-lg p-2 sm:p-4 transition-all duration-1000 ${
+        isMoving ? 'transform translate-x-[calc(100%+16px)] sm:translate-x-[calc(100%+34px)] opacity-50' : ''
+      } ${shouldFadeOut ? 'opacity-0' : ''}`}
     >
-      <div className="flex items-center justify-between mb-4">
+      {/* Mobile layout - Block # on its own line */}
+      <div className="sm:hidden mb-2">
+        <h3 className="text-sm font-semibold text-gray-100 text-center mb-2">
+          Block #{blockNumber}
+        </h3>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center justify-center flex-1">
+            {getBlockIcon()}
+          </div>
+          <span className={`text-xs px-1.5 py-0.5 rounded-full ${
+            isConfirmed
+              ? 'bg-green-500/20 text-green-400'
+              : 'bg-yellow-500/20 text-yellow-400'
+          }`}>
+            {isConfirmed ? 'Confirmed' : 'Pending'}
+          </span>
+        </div>
+      </div>
+
+      {/* Desktop layout - everything in one line */}
+      <div className="hidden sm:flex items-center justify-between mb-4">
         <div className="flex items-center space-x-3">
           <h3 className="text-lg font-semibold text-gray-100">
             Block #{blockNumber}
@@ -162,7 +199,7 @@ const BlockContainer: React.FC<BlockContainerProps> = ({
         </span>
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-1 sm:space-y-2">
         {slots}
       </div>
     </div>
@@ -230,10 +267,12 @@ const BlockAnimation: React.FC = () => {
         // Clear current block for next cycle
         setCurrentBlock([])
         setIsMoving(false)
-        setBlockNumber(prev => prev + 1)
+        // ✅ REMOVED: Don't increment block number here
 
         // Start next cycle after a brief pause
         setTimeout(() => {
+          // ✅ FIXED: Increment block number only when starting new cycle
+          setBlockNumber(prev => prev + 1)
           runBlockCycle()
         }, 1000)
       }, 15000)
@@ -257,47 +296,52 @@ const BlockAnimation: React.FC = () => {
 
   return (
     <div className="w-full max-w-6xl mx-auto my-12 pb-4 bg-gray-800 rounded-lg">
-      <div className="p-6 pb-1">
+      <div className="p-3 sm:p-6 pb-1">
         {/* Header */}
-        <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold text-white mb-2">Block Building</h2>
+        <div className="text-center mb-4 sm:mb-6">
+          <h2 className="text-xl sm:text-2xl font-bold text-white mb-2">Block Building</h2>
         </div>
 
-        {/* Two-column layout for blocks */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-6">
+        {/* Two-column layout for blocks - always 2 columns, but smaller on mobile */}
+        <div className="grid grid-cols-2 gap-3 sm:gap-8 mb-4 sm:mb-6">
           {/* Current Block */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-200 text-center">Current Block</h3>
-            <BlockContainer
-              transactions={currentBlock}
-              isConfirmed={isConfirmed}
-              isMoving={isMoving}
-              blockNumber={blockNumber}
-              blockStartTime={blockStartTime}
-            />
+          <div className="space-y-2 sm:space-y-4">
+            <h3 className="text-sm sm:text-lg font-semibold text-gray-200 text-center">Current Block</h3>
+            <div className="flex justify-center">
+              <BlockContainer
+                transactions={currentBlock}
+                isConfirmed={isConfirmed}
+                isMoving={isMoving}
+                blockNumber={blockNumber}
+                blockStartTime={blockStartTime}
+              />
+            </div>
           </div>
 
           {/* Previous Block (if exists) */}
-          <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-200 text-center">Previous Block</h3>
-            {previousBlock.length > 0 ? (
-                <BlockContainer
-                  transactions={previousBlock}
-                  isConfirmed={true}
-                  isMoving={false}
-                  blockNumber={blockNumber-1}
-                />
-            ) : (
-              <div className="w-full max-w-sm bg-gray-700/50 border border-gray-600 border-dashed rounded-lg p-4 h-74 flex items-center justify-center">
-                <span className="text-gray-500">No previous block</span>
-              </div>
-            )}
+          <div className="space-y-2 sm:space-y-4">
+            <h3 className="text-sm sm:text-lg font-semibold text-gray-200 text-center">Previous Block</h3>
+            <div className="flex justify-center">
+              {previousBlock.length > 0 ? (
+                  <BlockContainer
+                    transactions={previousBlock}
+                    isConfirmed={true}
+                    isMoving={false}
+                    blockNumber={blockNumber-1}
+                    shouldFadeOut={isMoving}
+                  />
+              ) : (
+                <div className="w-full max-w-[180px] sm:max-w-sm bg-gray-700/50 border border-gray-600 border-dashed rounded-lg p-2 sm:p-4 h-32 sm:h-74 flex items-center justify-center">
+                  <span className="text-gray-500 text-xs sm:text-sm text-center">No previous block</span>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Status */}
         <div className="flex justify-center">
-          <div className="text-white text-sm bg-black bg-opacity-50 px-4 py-2 rounded">
+          <div className="text-white text-xs sm:text-sm bg-black bg-opacity-50 px-3 sm:px-4 py-1.5 sm:py-2 rounded">
             {getStatusMessage()}
           </div>
         </div>
