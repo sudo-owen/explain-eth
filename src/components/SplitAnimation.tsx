@@ -37,8 +37,7 @@ const SplitAnimation: React.FC = () => {
   })
   const [showMainDot, setShowMainDot] = useState(false)
   const [mainDotPosition, setMainDotPosition] = useState('left') // 'left', 'moving', 'hidden'
-  const [showSplitDots, setShowSplitDots] = useState(false)
-  const [splitDotsPosition, setSplitDotsPosition] = useState('center') // 'center', 'moving', 'hidden'
+
 
   useEffect(() => {
     const runAnimationCycle = () => {
@@ -51,59 +50,30 @@ const SplitAnimation: React.FC = () => {
       setRecipientBalances({ Alice: 0, Bob: 0, Carol: 0 })
       setShowMainDot(false)
       setMainDotPosition('left')
-      setShowSplitDots(false)
-      setSplitDotsPosition('center')
 
-      // Phase 1: Dot appears and moves to splitter (0.5-1.5s)
-      setTimeout(() => {
-        setShowMainDot(true)
-      }, 500)
+      // Single animation sequence with all timing
+      const animationSteps = [
+        { delay: 100, action: () => setShowMainDot(true) },
+        { delay: 200, action: () => { setMainDotPosition('moving'); setSplitterCharged(true) } },
+        { delay: 4000, action: () => { setPhase('splitting'); setTransactionStatus('confirmed') } },
+        { delay: 4500, action: () => {
+          setMainDotPosition('hidden')
+          setShowMainDot(false)
+          setPhase('distributing')
+          setSplitterCharged(false)
+        }},
+        { delay: 4700, action: () => setRecipientCharging(prev => ({ ...prev, Alice: true })) }, // 200ms after splitter uncharged
+        { delay: 4800, action: () => setRecipientCharging(prev => ({ ...prev, Bob: true })) },
+        { delay: 4900, action: () => setRecipientCharging(prev => ({ ...prev, Carol: true })) },
+        { delay: 5500, action: () => setRecipientBalances({ Alice: 0.1, Bob: 0.1, Carol: 0.1 }) },
+        { delay: 6000, action: () => setRecipientCharging({ Alice: false, Bob: false, Carol: false }) },
+        { delay: 8000, action: () => { setPhase('resetting'); setCycleCount(prev => prev + 1); runAnimationCycle() } }
+      ]
 
-      setTimeout(() => {
-        setMainDotPosition('moving')
-        setSplitterCharged(true)
-      }, 1500)
-
-      // Phase 2: Hide dot when it reaches splitter, transaction confirms (4s)
-      setTimeout(() => {
-        setPhase('splitting')
-        setTransactionStatus('confirmed')
-        setMainDotPosition('hidden')
-        setShowMainDot(false)
-      }, 4000)
-
-      // Phase 3: Split dots appear and move to recipients (5-5.5s)
-      setTimeout(() => {
-        setPhase('distributing')
-        setShowSplitDots(true)
-        setSplitDotsPosition('moving')
-        // Charge recipients sequentially as dots "arrive"
-        setTimeout(() => setRecipientCharging(prev => ({ ...prev, Alice: true })), 0)
-        setTimeout(() => setRecipientCharging(prev => ({ ...prev, Bob: true })), 100)
-        setTimeout(() => setRecipientCharging(prev => ({ ...prev, Carol: true })), 200)
-      }, 5000)
-
-      // Phase 4: Hide split dots, update balances and reset charging (5.5s)
-      setTimeout(() => {
-        setSplitDotsPosition('hidden')
-        setShowSplitDots(false)
-        setRecipientBalances({
-          Alice: 0.1,
-          Bob: 0.1,
-          Carol: 0.1
-        })
-        // Reset charging after a brief moment
-        setTimeout(() => {
-          setRecipientCharging({ Alice: false, Bob: false, Carol: false })
-        }, 500)
-      }, 5500)
-
-      // Phase 5: Reset and restart (6s)
-      setTimeout(() => {
-        setPhase('resetting')
-        setCycleCount(prev => prev + 1)
-        runAnimationCycle()
-      }, 6000)
+      // Execute all steps
+      animationSteps.forEach(step => {
+        setTimeout(step.action, step.delay)
+      })
     }
 
     runAnimationCycle()
@@ -224,25 +194,6 @@ const SplitAnimation: React.FC = () => {
               opacity: 1
             }}
           />
-        )}
-
-        {/* Split Dots Animation - visible only when not overlapping components */}
-        {showSplitDots && splitDotsPosition !== 'hidden' && (
-          <>
-            {recipients.map((recipient, index) => (
-              <div
-                key={`split-dot-${recipient}-${cycleCount}`}
-                className="absolute w-3 h-3 bg-white rounded-full transition-all duration-500 ease-in-out z-10"
-                style={{
-                  top: `${35 + index * 20}%`, // Spread vertically to match recipient positions
-                  left: splitDotsPosition === 'center' ? 'calc(50% - 6px)' : 'calc(60% - 6px)', // Stop before recipient components
-                  transform: 'translateY(-50%)',
-                  opacity: 1,
-                  transitionDelay: `${index * 100}ms`
-                }}
-              />
-            ))}
-          </>
         )}
 
       </div>
