@@ -40,7 +40,7 @@ const HomePage: React.FC = () => {
             <h1 className="text-4xl font-bold text-white mb-8">Intro</h1>
             
             <p className="text-gray-300 leading-relaxed mb-6">
-              Hi, if you have no idea what <strong>Ethereum</strong>, <strong>blockchains</strong>, and <strong>rollups</strong> are, this essay is for you!
+              Hi, if you have no idea what <strong>Ethereum</strong>, <strong>blockchains</strong>, and <strong>smart contracts</strong> are, this essay is for you!
             </p>
             
             <p className="text-gray-300 leading-relaxed">
@@ -50,7 +50,7 @@ const HomePage: React.FC = () => {
 
           {/* Ethereum Section */}
           <section className="mb-16">
-            <h1 className="text-4xl font-bold text-white mb-8">Ethereum</h1>
+            <h1 className="text-4xl font-bold text-white mb-8">What's Ethereum</h1>
             
             <p className="text-gray-300 leading-relaxed mb-6">
               Let's get started. What is Ethereum? Ethereum is a <strong>blockchain network</strong> for <b>sending money</b> and <strong>running apps</strong>.
@@ -69,11 +69,11 @@ const HomePage: React.FC = () => {
             </p>
             
             <p className="text-gray-300 leading-relaxed mb-8">
-              Like a social media network, we'll need an <strong>account</strong> to get started using Ethereum. An account will let you receive <strong>money</strong>. You can receive many types of digital assets with your account, but we will start with ETH, which is the native currency of the Ethereum network.
+              Like a social media network, you'll need an <strong>account</strong> to get started using Ethereum. An account will let you receive <strong>money</strong>. You can receive many types of digital assets with your account. week'll start with ETH, which is the native currency of the Ethereum network.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Let's give you an account.
+              Let's give you a test account to get started:
             </p>
 
             {/* Balance Component - Account Only */}
@@ -82,7 +82,7 @@ const HomePage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Every account has a unique identifier, called an <strong>address</strong>. Your simulated address is <code><span className="break-all">0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2</span></code>. Just like how an email address lets you receive emails on the internet, your Ethereum address lets you receive ETH on the Ethereum network.
+              Every account has a unique ID, called an <strong>address</strong>. Your simulated address is <code><span className="break-all">0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2</span></code>. Just like how an email address lets you receive emails on the internet, your Ethereum address lets you receive ETH on the Ethereum network.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
@@ -134,7 +134,7 @@ const HomePage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Sending money on Ethereum isn't instant. It's faster than a bank transfer; no need to wait 1-2 business days. But it's also a little slower than Venmo or Zelle.
+              Sending money on Ethereum isn't instant. It's faster than a bank transfer (no need to wait 1-2 business days), but it's also a little slower than Venmo or Zelle.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -167,15 +167,15 @@ const HomePage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Of course, instead of packages we're sending ETH. And instead of waiting for the next train, we're waiting 12 seconds for the transactions to be confirmed.
+              Of course, instead of packages we're sending ETH. And instead of waiting for the next train, we're waiting about 12 seconds for our transactions to go thorugh.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              But why is it 12 seconds at all? Why isn't it instant?
+              But why does it 12 seconds at all? Why isn't it instant?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              12 second is about how long Ethereum's block time is. This is how long it takes the Ethereum network to make a <strong>block</strong>. This is the same "block" that makes up part of the word "blockchain".
+              It's because of something called <b>block time</b>. On Ethereum, it takes about 12 seconds for the network to create a <b>block</b>. This “block” is what makes up the word “blockchain.”
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
@@ -183,7 +183,7 @@ const HomePage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              A block serves the same purpose as the train in the above animation. It arrives regularly, loads up on transactions, and then leaves for its destination.            
+              Think of a block like a train in the animation above. The train arrives on schedule, picks up everyone’s transactions, then leaves for its destination.       
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
