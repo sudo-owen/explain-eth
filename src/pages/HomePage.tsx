@@ -313,7 +313,7 @@ END`}
         </article>
 
         {/* Navigation */}
-        <div className="mt-16 pt-8 border-t border-gray-700">
+        {/* <div className="mt-16 pt-8 border-t border-gray-700">
           <div className="flex justify-between items-center">
             <a
               href="/playground"
@@ -322,7 +322,7 @@ END`}
               Go to Playground →
             </a>
           </div>
-        </div>
+        </div> */}
 
       </div>
 

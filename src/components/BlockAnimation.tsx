@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Transaction, Recipient } from '../types/blockchain'
 import { generateTransactionId, generateTransactionFee, formatETHTruncated } from '../utils/transactions'
 import CircularCountdown from './CircularCountdown'
@@ -160,7 +160,7 @@ const BlockContainer: React.FC<BlockContainerProps> = ({
   return (
     <div
       className={`w-full max-w-[180px] sm:max-w-sm h-[220px] sm:h-[240px] bg-gray-800 border border-gray-700 rounded-lg p-2 sm:p-4 transition-all duration-1000 ${
-        isMoving ? 'transform translate-x-[calc(100%+16px)] sm:translate-x-[calc(100%+34px)] opacity-50' : ''
+        isMoving ? 'transform translate-x-[calc(-100%-16px)] sm:translate-x-[calc(-100%-34px)] opacity-50' : ''
       } ${shouldFadeOut ? 'opacity-0' : ''}`}
     >
       {/* Mobile layout - Block # on its own line */}
@@ -212,10 +212,18 @@ const BlockAnimation: React.FC = () => {
   const [isConfirmed, setIsConfirmed] = useState(false)
   const [isMoving, setIsMoving] = useState(false)
   const [blockNumber, setBlockNumber] = useState(1)
+  const [previousBlockNumber, setPreviousBlockNumber] = useState(0)
   const [phase, setPhase] = useState<'filling' | 'confirming' | 'moving'>('filling')
   const [blockStartTime, setBlockStartTime] = useState<Date | undefined>(undefined)
+  
+  // Use useRef to prevent multiple effect runs
+  const isRunning = useRef(false)
 
   useEffect(() => {
+    // Prevent multiple simultaneous runs
+    if (isRunning.current) return
+    isRunning.current = true
+
     const runBlockCycle = () => {
       // Phase 1: Fill the block with transactions
       setPhase('filling')
@@ -261,17 +269,17 @@ const BlockAnimation: React.FC = () => {
 
       // Phase 4: Complete the move and update previous block (after 15 seconds)
       setTimeout(() => {
-        // Use the allTransactions array directly - it has all the transactions
+        // Move current block to previous
         setPreviousBlock([...allTransactions])
+        setPreviousBlockNumber(prev => prev + 1)
         
         // Clear current block for next cycle
         setCurrentBlock([])
         setIsMoving(false)
-        // ✅ REMOVED: Don't increment block number here
 
         // Start next cycle after a brief pause
         setTimeout(() => {
-          // ✅ FIXED: Increment block number only when starting new cycle
+          // Increment block number for the new cycle
           setBlockNumber(prev => prev + 1)
           runBlockCycle()
         }, 1000)
@@ -279,7 +287,12 @@ const BlockAnimation: React.FC = () => {
     }
 
     runBlockCycle()
-  }, [])
+
+    // Cleanup function
+    return () => {
+      isRunning.current = false
+    }
+  }, []) // Keep empty dependency array but add ref guard
 
   const getStatusMessage = () => {
     switch (phase) {
@@ -304,6 +317,26 @@ const BlockAnimation: React.FC = () => {
 
         {/* Two-column layout for blocks - always 2 columns, but smaller on mobile */}
         <div className="grid grid-cols-2 gap-3 sm:gap-8 mb-4 sm:mb-6">
+          {/* Previous Block (if exists) */}
+          <div className="space-y-2 sm:space-y-4">
+            <h3 className="text-sm sm:text-lg font-semibold text-gray-200 text-center">Previous Block</h3>
+            <div className="flex justify-center">
+              {previousBlock.length > 0 ? (
+                  <BlockContainer
+                    transactions={previousBlock}
+                    isConfirmed={true}
+                    isMoving={false}
+                    blockNumber={previousBlockNumber}
+                    shouldFadeOut={isMoving}
+                  />
+              ) : (
+                <div className="w-full max-w-[180px] sm:max-w-sm h-[220px] sm:h-[240px] bg-gray-700/50 border border-gray-600 border-dashed rounded-lg p-2 sm:p-4 flex items-center justify-center">
+                  <span className="text-gray-500 text-xs sm:text-sm text-center">No previous block</span>
+                </div>
+              )}
+            </div>
+          </div>
+
           {/* Current Block */}
           <div className="space-y-2 sm:space-y-4">
             <h3 className="text-sm sm:text-lg font-semibold text-gray-200 text-center">Current Block</h3>
@@ -315,26 +348,6 @@ const BlockAnimation: React.FC = () => {
                 blockNumber={blockNumber}
                 blockStartTime={blockStartTime}
               />
-            </div>
-          </div>
-
-          {/* Previous Block (if exists) */}
-          <div className="space-y-2 sm:space-y-4">
-            <h3 className="text-sm sm:text-lg font-semibold text-gray-200 text-center">Previous Block</h3>
-            <div className="flex justify-center">
-              {previousBlock.length > 0 ? (
-                  <BlockContainer
-                    transactions={previousBlock}
-                    isConfirmed={true}
-                    isMoving={false}
-                    blockNumber={blockNumber-1}
-                    shouldFadeOut={isMoving}
-                  />
-              ) : (
-                <div className="w-full max-w-[180px] sm:max-w-sm h-[220px] sm:h-[240px] bg-gray-700/50 border border-gray-600 border-dashed rounded-lg p-2 sm:p-4 flex items-center justify-center">
-                  <span className="text-gray-500 text-xs sm:text-sm text-center">No previous block</span>
-                </div>
-              )}
             </div>
           </div>
         </div>

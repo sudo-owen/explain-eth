@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Recipient } from '../types/blockchain'
-import { formatETH } from '../utils/transactions'
+import { formatETH, formatETHTruncated } from '../utils/transactions'
 import { getRecipientEmoji, getRecipientBackgroundColor, getRecipientAddress, getRecipientAddressTruncated } from '../utils/recipients'
 import CircularCountdown from './CircularCountdown'
 
@@ -181,8 +181,8 @@ const SplitAnimation: React.FC = () => {
                     <div className="text-xs text-gray-400 break-all mb-1 hidden sm:block">
                       {getRecipientAddress(recipient)}
                     </div>
-                    <div className="text-xs font-medium text-green-400">
-                      {formatETH(balance)}
+                    <div className="text-xs font-medium text-gray-200">
+                      {formatETHTruncated(balance)}
                     </div>
                   </div>
                 </div>
