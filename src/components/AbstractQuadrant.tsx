@@ -104,7 +104,7 @@ const VariableProportions = ({ isVisible }: AnimationComponentProps) => {
       // Arrive at targets and show recipient dots
       setTimeout(() => {
         setAnimationPhase('arrived')
-      }, 1500)
+      }, 1400)
 
       setTimeout(() => {
         setShowRecipientDots([true, true, true])
@@ -347,11 +347,10 @@ const DynamicRecipients = ({ isVisible }: AnimationComponentProps) => {
   )
 }
 
-// Bottom Left: Cashback/reverse flow (keeping original since it's different)
+// Bottom Left: Fee flow with splitting animation and cashback
 const CashbackFlow = ({ isVisible }: AnimationComponentProps) => {
-  const [mainDotPosition, setMainDotPosition] = useState<'sender' | 'moving' | 'hidden'>('sender')
+  const [animationPhase, setAnimationPhase] = useState<'reset' | 'moving' | 'splitting' | 'arrived' | 'cashback' | 'cashbackMoving'>('reset')
   const [showRecipientDots, setShowRecipientDots] = useState([false, false, false])
-  const [cashbackDotPosition, setCashbackDotPosition] = useState<'recipients' | 'moving' | 'hidden'>('hidden')
   const [showSenderCashback, setShowSenderCashback] = useState(false)
 
   useEffect(() => {
@@ -359,33 +358,119 @@ const CashbackFlow = ({ isVisible }: AnimationComponentProps) => {
 
     const runCycle = () => {
       // Reset
-      setMainDotPosition('sender')
+      setAnimationPhase('reset')
       setShowRecipientDots([false, false, false])
-      setCashbackDotPosition('hidden')
       setShowSenderCashback(false)
 
-      // Forward flow
-      setTimeout(() => setMainDotPosition('moving'), 500)
+      // Forward flow with splitting animation
+      setTimeout(() => setAnimationPhase('moving'), 500)
+      setTimeout(() => setAnimationPhase('splitting'), 1000)
       setTimeout(() => {
-        setMainDotPosition('hidden')
+        setAnimationPhase('arrived')
+      }, 1800)
+      setTimeout(() => {
         setShowRecipientDots([true, true, true])
-      }, 1500)
+      }, 2000)
 
       // Cashback flow
-      setTimeout(() => setCashbackDotPosition('recipients'), 2500)
-      setTimeout(() => setCashbackDotPosition('moving'), 3000)
       setTimeout(() => {
-        setCashbackDotPosition('hidden')
-        setShowSenderCashback(true)
+        setAnimationPhase('cashback')
         setShowRecipientDots([false, false, false])
-      }, 4000)
-      setTimeout(() => setShowSenderCashback(false), 4500)
+      }, 3000)
+      setTimeout(() => setAnimationPhase('cashbackMoving'), 3500)
+      setTimeout(() => {
+        setAnimationPhase('reset')
+        setShowSenderCashback(true)
+      }, 4500)
+      setTimeout(() => setShowSenderCashback(false), 5000)
     }
 
     runCycle()
-    const interval = setInterval(runCycle, 5500)
+    const interval = setInterval(runCycle, 6000)
     return () => clearInterval(interval)
   }, [isVisible])
+
+  // Calculate recipient positions
+  const getRecipientPosition = (index: number): number => {
+    const baseTop = 20 + (index * 30) // 20%, 50%, 80%
+    return baseTop
+  }
+
+  // Calculate dot positions based on animation phase
+  const getDotStyle = (index: number) => {
+    const targetTop = getRecipientPosition(index)
+    const dotSize = Math.max(8 * 0.375, 6) // Consistent size for fee flow
+
+    let left, top, width, height, opacity
+
+    switch (animationPhase) {
+      case 'reset':
+        left = '20px'
+        top = '50%'
+        width = height = '12px'
+        opacity = index === 0 ? 1 : 0 // Only show main dot initially
+        break
+      case 'moving':
+        left = '50%' // Move to center
+        top = '50%'
+        width = height = '12px'
+        opacity = index === 0 ? 1 : 0 // Still only main dot
+        break
+      case 'splitting':
+        left = '100%' // Continue to targets
+        top = `${targetTop}%` // Split to different Y positions
+        width = height = `${dotSize}px` // Change to target sizes
+        opacity = 1 // All dots become visible
+        break
+      case 'arrived':
+        left = '100%'
+        top = `${targetTop}%`
+        width = height = `${dotSize}px`
+        opacity = 0 // Hide animated dots, show recipient dots instead
+        break
+      default:
+        opacity = 0
+    }
+
+    return {
+      left,
+      top,
+      width,
+      height,
+      opacity,
+      transform: 'translateY(-50%)',
+      transition: animationPhase === 'reset' ? 'none' : 'all 1000ms cubic-bezier(0.4, 0, 0.2, 1)'
+    }
+  }
+
+  // Calculate cashback dot position
+  const getCashbackDotStyle = () => {
+    let left, opacity
+
+    switch (animationPhase) {
+      case 'cashback':
+        left = 'calc(100% - 60px)'
+        opacity = 1
+        break
+      case 'cashbackMoving':
+        left = '20px'
+        opacity = 1
+        break
+      default:
+        left = 'calc(100% - 60px)'
+        opacity = 0
+    }
+
+    return {
+      left,
+      top: '60%',
+      width: '8px',
+      height: '8px',
+      opacity,
+      transform: 'translateY(-50%)',
+      transition: 'all 1000ms cubic-bezier(0.4, 0, 0.2, 1)'
+    }
+  }
 
   return (
     <div className="flex items-center justify-between h-full relative">
@@ -412,30 +497,20 @@ const CashbackFlow = ({ isVisible }: AnimationComponentProps) => {
         ))}
       </div>
 
-      {/* Animated main dot (forward) */}
-      {mainDotPosition !== 'hidden' && (
+      {/* Animated splitting dots (forward flow) */}
+      {[0, 1, 2].map((index) => (
         <div
-          className="absolute w-3 h-3 bg-white rounded-full transition-all duration-1000 ease-in-out"
-          style={{
-            top: '50%',
-            transform: 'translateY(-50%)',
-            left: mainDotPosition === 'sender' ? '20px' : 'calc(100% - 60px)',
-          }}
+          key={index}
+          className="absolute bg-white rounded-full"
+          style={getDotStyle(index)}
         />
-      )}
+      ))}
 
-      {/* Animated cashback dot (reverse) */}
-      {cashbackDotPosition !== 'hidden' && (
-        <div
-          className="absolute w-2 h-2 bg-yellow-400 rounded-full transition-all duration-500 ease-in-out"
-          style={{
-            top: '60%',
-            transform: 'translateY(-50%)',
-            left: cashbackDotPosition === 'recipients' ? 'calc(100% - 60px)' :
-                  cashbackDotPosition === 'moving' ? '20px' : '20px',
-          }}
-        />
-      )}
+      {/* Animated cashback dot (reverse flow) */}
+      <div
+        className="absolute bg-yellow-400 rounded-full"
+        style={getCashbackDotStyle()}
+      />
     </div>
   )
 }
