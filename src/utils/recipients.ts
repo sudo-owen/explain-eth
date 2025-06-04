@@ -29,7 +29,7 @@ const recipientData: Record<string, RecipientData> = {
   'Eve': {
     emoji: '🕵️‍♀️',
     description: 'A mysterious stranger',
-    backgroundColor: 'bg-gray-800 border-gray-700',
+    backgroundColor: 'bg-yellow-800 border-yellow-700',
     address: '0x0000000000000000000000000000000000000000'
   }
 }

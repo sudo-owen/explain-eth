@@ -10,6 +10,7 @@ interface TransactionHistoryOverlayProps {
   rollupPendingCount: number
   isOpen: boolean
   onToggle: () => void
+  hideRollupTab?: boolean
 }
 
 const TransactionHistoryOverlay: React.FC<TransactionHistoryOverlayProps> = ({
@@ -18,7 +19,8 @@ const TransactionHistoryOverlay: React.FC<TransactionHistoryOverlayProps> = ({
   ethereumPendingCount,
   rollupPendingCount,
   isOpen,
-  onToggle
+  onToggle,
+  hideRollupTab = false
 }) => {
   const [activeTab, setActiveTab] = useState<'ethereum' | 'rollup'>('ethereum')
 
@@ -116,7 +118,7 @@ const TransactionHistoryOverlay: React.FC<TransactionHistoryOverlayProps> = ({
     }
   }
 
-  const currentTransactions = activeTab === 'ethereum' ? ethereumTransactions : rollupTransactions
+  const currentTransactions = (hideRollupTab || activeTab === 'ethereum') ? ethereumTransactions : rollupTransactions
   const sortedTransactions = [...currentTransactions].sort((a, b) => 
     new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
   )
@@ -142,38 +144,51 @@ const TransactionHistoryOverlay: React.FC<TransactionHistoryOverlayProps> = ({
         </div>
 
         {/* Tabs */}
-        <div className="flex border-b border-gray-700">
-          <button
-            onClick={() => setActiveTab('ethereum')}
-            className={`flex-1 px-4 py-3 text-sm font-medium transition-colors cursor-pointer ${
-              activeTab === 'ethereum'
-                ? 'text-blue-400 border-b-2 border-blue-400 bg-blue-900/20'
-                : 'text-gray-400 hover:text-gray-200'
-            }`}
-          >
-            <div>Ethereum Mainnet ({ethereumTransactions.length})</div>
-            {ethereumPendingCount > 0 && (
-              <div className="text-xs text-yellow-400 mt-1">
-                {ethereumPendingCount} pending...
-              </div>
-            )}
-          </button>
-          <button
-            onClick={() => setActiveTab('rollup')}
-            className={`flex-1 px-4 py-3 text-sm font-medium transition-colors cursor-pointer ${
-              activeTab === 'rollup'
-                ? 'text-purple-400 border-b-2 border-purple-400 bg-purple-900/20'
-                : 'text-gray-400 hover:text-gray-200'
-            }`}
-          >
-            <div>Rollup ({rollupTransactions.length})</div>
-            {rollupPendingCount > 0 && (
-              <div className="text-xs text-yellow-400 mt-1">
-                {rollupPendingCount} pending...
-              </div>
-            )}
-          </button>
-        </div>
+        {hideRollupTab ? (
+          <div className="border-b border-gray-700">
+            <div className="px-4 py-3 text-sm font-medium text-blue-400 border-b-2 border-blue-400 bg-blue-900/20">
+              <div>Ethereum Mainnet ({ethereumTransactions.length})</div>
+              {ethereumPendingCount > 0 && (
+                <div className="text-xs text-yellow-400 mt-1">
+                  {ethereumPendingCount} pending...
+                </div>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="flex border-b border-gray-700">
+            <button
+              onClick={() => setActiveTab('ethereum')}
+              className={`flex-1 px-4 py-3 text-sm font-medium transition-colors cursor-pointer ${
+                activeTab === 'ethereum'
+                  ? 'text-blue-400 border-b-2 border-blue-400 bg-blue-900/20'
+                  : 'text-gray-400 hover:text-gray-200'
+              }`}
+            >
+              <div>Ethereum Mainnet ({ethereumTransactions.length})</div>
+              {ethereumPendingCount > 0 && (
+                <div className="text-xs text-yellow-400 mt-1">
+                  {ethereumPendingCount} pending...
+                </div>
+              )}
+            </button>
+            <button
+              onClick={() => setActiveTab('rollup')}
+              className={`flex-1 px-4 py-3 text-sm font-medium transition-colors cursor-pointer ${
+                activeTab === 'rollup'
+                  ? 'text-purple-400 border-b-2 border-purple-400 bg-purple-900/20'
+                  : 'text-gray-400 hover:text-gray-200'
+              }`}
+            >
+              <div>Rollup ({rollupTransactions.length})</div>
+              {rollupPendingCount > 0 && (
+                <div className="text-xs text-yellow-400 mt-1">
+                  {rollupPendingCount} pending...
+                </div>
+              )}
+            </button>
+          </div>
+        )}
 
         {/* Transaction List */}
         <div className="h-96 overflow-y-auto p-4">
@@ -255,9 +270,9 @@ const TransactionHistoryOverlay: React.FC<TransactionHistoryOverlayProps> = ({
             </svg>
 
             {/* Pending Transaction Badge */}
-            {ethereumPendingCount > 0 && (
+            {(hideRollupTab ? ethereumPendingCount : ethereumPendingCount + rollupPendingCount) > 0 && (
               <div className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center animate-pulse">
-                {ethereumPendingCount}
+                {hideRollupTab ? ethereumPendingCount : ethereumPendingCount + rollupPendingCount}
               </div>
             )}
           </button>

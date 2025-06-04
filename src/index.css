@@ -26,8 +26,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Larger paragraph text for article content only */
-.home-page article.prose p, .home-page article.prose li {
+/* Larger paragraph text */
+p, li {
   font-size: 1.2rem;
   line-height: 1.75;
   font-weight: 400;
