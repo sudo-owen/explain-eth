@@ -88,6 +88,11 @@ const SplitAnimation: React.FC<SplitAnimationProps> = ({
   })
   const [showMainDot, setShowMainDot] = useState(false)
   const [mainDotPosition, setMainDotPosition] = useState('left') // 'left', 'moving', 'hidden'
+  const [recipientDots, setRecipientDots] = useState<Record<string, boolean>>({
+    Alice: false,
+    Bob: false,
+    Carol: false
+  })
 
 
   // Clear all timeouts
@@ -116,6 +121,7 @@ const SplitAnimation: React.FC<SplitAnimationProps> = ({
       setRecipientBalances({ Alice: 0, Bob: 0, Carol: 0 })
       setShowMainDot(false)
       setMainDotPosition('left')
+      setRecipientDots({ Alice: false, Bob: false, Carol: false })
 
       // Single animation sequence with all timing
       const animationSteps = [
@@ -128,10 +134,21 @@ const SplitAnimation: React.FC<SplitAnimationProps> = ({
           setPhase('distributing')
           setSplitterCharged(false)
         }},
-        { delay: 4700, action: () => setRecipientCharging(prev => ({ ...prev, Alice: true })) }, // 200ms after splitter uncharged
-        { delay: 4800, action: () => setRecipientCharging(prev => ({ ...prev, Bob: true })) },
-        { delay: 4900, action: () => setRecipientCharging(prev => ({ ...prev, Carol: true })) },
-        { delay: 5500, action: () => setRecipientBalances({ Alice: aliceAmount, Bob: bobAmount, Carol: carolAmount }) },
+        { delay: 4700, action: () => {
+          setRecipientCharging(prev => ({ ...prev, Alice: true }))
+          setRecipientBalances(prev => ({ ...prev, Alice: aliceAmount }))
+          setRecipientDots(prev => ({ ...prev, Alice: true }))
+        }}, // 200ms after splitter uncharged
+        { delay: 4800, action: () => {
+          setRecipientCharging(prev => ({ ...prev, Bob: true }))
+          setRecipientBalances(prev => ({ ...prev, Bob: bobAmount }))
+          setRecipientDots(prev => ({ ...prev, Bob: true }))
+        }},
+        { delay: 4900, action: () => {
+          setRecipientCharging(prev => ({ ...prev, Carol: true }))
+          setRecipientBalances(prev => ({ ...prev, Carol: carolAmount }))
+          setRecipientDots(prev => ({ ...prev, Carol: true }))
+        }},
         { delay: 6000, action: () => setRecipientCharging({ Alice: false, Bob: false, Carol: false }) },
         { delay: 8000, action: () => { setPhase('resetting'); setCycleCount(prev => prev + 1); runAnimationCycle() } }
       ]
@@ -152,6 +169,14 @@ const SplitAnimation: React.FC<SplitAnimationProps> = ({
   }, [isVisible])
 
   const recipients: Recipient[] = ['Alice', 'Bob', 'Carol']
+
+  // Calculate dot size based on amount (relative to total amount)
+  const getDotSize = (amount: number): number => {
+    const baseSize = 8 // minimum size in pixels
+    const maxSize = 16 // maximum size in pixels
+    const ratio = amount / totalAmount
+    return Math.max(baseSize, Math.min(maxSize, baseSize + (ratio * (maxSize - baseSize))))
+  }
 
   return (
     <div ref={ref} className="w-full max-w-4xl mx-auto bg-gray-800 rounded-lg p-3 sm:p-6">
@@ -235,11 +260,13 @@ const SplitAnimation: React.FC<SplitAnimationProps> = ({
             {recipients.map((recipient) => {
               const balance = recipientBalances[recipient as keyof LocalRecipientBalances]
               const isCharging = recipientCharging[recipient]
+              const showDot = recipientDots[recipient]
+              const dotSize = getDotSize(balance)
               return (
                 <div
                   key={`${recipient}-${cycleCount}`}
                   className={`
-                    ${getRecipientBackgroundColor(recipient)} rounded-lg p-2 sm:p-3 flex items-center space-x-2 sm:space-x-3 transition-all duration-300
+                    ${getRecipientBackgroundColor(recipient)} rounded-lg p-2 sm:p-3 flex items-center space-x-2 sm:space-x-3 transition-all duration-300 relative
                     ${isCharging ? 'border-2 border-white shadow-lg shadow-white/20' : 'border border-transparent'}
                   `}
                 >
@@ -257,6 +284,17 @@ const SplitAnimation: React.FC<SplitAnimationProps> = ({
                       {formatETHTruncated(balance)}
                     </div>
                   </div>
+
+                  {/* White dot representing received ETH */}
+                  {showDot && (
+                    <div
+                      className="bg-white rounded-full transition-all duration-500 ease-in-out"
+                      style={{
+                        width: `${dotSize}px`,
+                        height: `${dotSize}px`,
+                      }}
+                    />
+                  )}
                 </div>
               )
             })}

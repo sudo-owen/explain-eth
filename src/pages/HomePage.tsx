@@ -238,7 +238,7 @@ const HomePage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Let's explore deeper.
+              Let's explore the basics of <b>apps</b>...
             </p>
 
 
@@ -320,16 +320,15 @@ END`}
               How can we change the Payment Splitter program to instead send 50% to Alice, 25% to Bob, and 25% to Carol?
             </p>
 
-            {/* Payment Splitter Code Block */}
+            <p className="text-gray-300 leading-relaxed mb-6">
+              All we need to do is change the percentages we had for each person in our smart contract.
+            </p>
+
+            {/* Payment Splitter Code Block with Animation */}
             <div className="my-12">
               <CodeBlock
                 title="PaymentSplitter2.sol"
-                code={`PAYMENT SPLITTER 2 PROGRAM\n
-WHENEVER THIS PROGRAM RECEIVES ETH:
-  SEND 50% TO 👩 ALICE (0xb47...),
-  AND SEND 25% TO 👨 BOB (0x6b1...),
-  AND SEND 25% TO 👩‍🦰 CAROL (0xcA1...)
-END`}
+                animatePercentages={true}
                 className="max-w-2xl mx-auto"
               />
             </div>
@@ -347,6 +346,57 @@ END`}
                 totalAmount={0.3}
               />
             </div>
+          </section>
+
+          {/* Additional Smart Contract Capabilities */}
+          <section className="mb-16">
+            <p className="text-gray-300 leading-relaxed mb-6">
+              This is just the tip of the iceberg. There are many other types of smart contracts we could write just to handle payments.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              With smart contracts, we can:
+            </p>
+
+            <ul className="text-gray-300 leading-relaxed mb-6 list-disc list-inside">
+              <li>Change the split proportions (we already saw this one)</li>
+              <li>Add or remove recipients (e.g. remove 👩‍🦰 Carol, or we could add 🕵️‍♀️ Eve)</li>
+              <li>Charge a processing fee (e.g. send 1% to ourselves, then pass the rest along)</li>
+              <li>Take in money from 2 people, and pay it out to 1 person (e.g. to settle a bet)</li>
+            </ul>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              All of this can let us make very flexible and customizable programs to handle payments.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Let's go back to the bake sale example for a second. In a hypothetical world, we can sell cookies to people for ETH.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              In the real world, most people won't own the ETH token. They might not even know how to get it. But almost everyone will have US Dollars in some shape or form (cash, credit, debit, etc.)
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              How can the Ethereum network handle US Dollars?
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Thankfully, as I mentioned at the very beginning, we can use all sorts of currencies on the Ethereum network. Including digital dollars!
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Let's explore the basics of <strong>tokens</strong>...
+            </p>
+          </section>
+
+          {/* Tokens Section */}
+          <section className="mb-16">
+            <h1 className="text-4xl font-bold text-white mb-8">Tokens</h1>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              token placeholder shit
+            </p>
           </section>
 
         </article>
