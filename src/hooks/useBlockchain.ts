@@ -80,11 +80,11 @@ export const useBlockchain = () => {
     return () => clearInterval(earningsInterval)
   }, [])
 
-  // Update NFT prices every 12 seconds
+  // Update NFT prices every 6 seconds
   useEffect(() => {
     const priceInterval = setInterval(() => {
       updateNFTPrices()
-    }, 12000) // Update every 12 seconds
+    }, 6000) // Update every 6 seconds
 
     return () => clearInterval(priceInterval)
   }, [])

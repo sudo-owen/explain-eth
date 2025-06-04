@@ -137,7 +137,7 @@ const IntroPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Specifically, on Ethereum, it takes <b>around 12 seconds</b> to complete a transaction.
+              Specifically, on Ethereum, it takes <b>up to 12 seconds</b> to complete a transaction.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -166,7 +166,7 @@ const IntroPage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Of course, instead of packages we're sending ETH. And instead of waiting for the next train, we're waiting about 12 seconds for our transactions to go through.
+              Of course, instead of packages we're sending ETH. And instead of waiting for the next train, we're waiting at most 12 seconds for our transactions to go through.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">

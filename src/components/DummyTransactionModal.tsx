@@ -12,15 +12,15 @@ const DummyTransactionModal: React.FC = () => {
       setPhase('pending')
       setStartTime(new Date())
 
-      // After 12 seconds, show confirmed
+      // After 6 seconds, show confirmed
       setTimeout(() => {
         setPhase('confirmed')
-      }, 12000)
+      }, 6000)
 
       // After 3 more seconds, restart the cycle
       setTimeout(() => {
         cycle()
-      }, 15000)
+      }, 9000)
     }
 
     cycle()
@@ -39,11 +39,12 @@ const DummyTransactionModal: React.FC = () => {
         }`}>
           {isPending ? (
             <CircularCountdown
-              duration={12000}
+              duration={6000}
               startTime={startTime}
               size={32}
               strokeWidth={3}
               theme="ethereum"
+              displayScale={2}
             />
           ) : (
             <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">

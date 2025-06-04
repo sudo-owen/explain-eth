@@ -41,6 +41,7 @@ const TransactionHistoryOverlay: React.FC<TransactionHistoryOverlayProps> = ({
           size={20}
           strokeWidth={2}
           theme="ethereum"
+          displayScale={2}
         />
       )
     }

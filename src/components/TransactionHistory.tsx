@@ -47,6 +47,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({ transactions, t
           size={24}
           strokeWidth={2}
           theme={theme}
+          displayScale={2}
         />
       )
     }

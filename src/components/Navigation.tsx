@@ -23,7 +23,7 @@ const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
 
   // Scroll to top whenever the location changes
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.scrollTo({ top: 0, behavior: 'instant' })
   }, [location.pathname])
 
   const handleBack = () => {
@@ -42,7 +42,30 @@ const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
   const nextPage = canGoForward ? pages[currentPage + 1] : null
 
   return (
-    <div className={`mt-16 pt-8 border-t border-gray-700 ${className}`}>
+    <div className={`mt-16 pt-8 pb-24 border-t border-gray-700 ${className}`}>
+      {/* Mobile: Page Indicator on top row */}
+      <div className="flex justify-center items-center mb-4 md:hidden">
+        <div className="flex items-center space-x-4">
+          <span className="text-gray-400 text-sm">
+            {currentPage + 1} of {pages.length}
+          </span>
+          <div className="flex space-x-2">
+            {pages.map((_, index) => (
+              <div
+                key={index}
+                className={`w-2 h-2 rounded-full ${
+                  index === currentPage ? 'bg-blue-500' : 'bg-gray-600'
+                }`}
+              />
+            ))}
+          </div>
+          <span className="text-gray-300 text-sm font-medium">
+            {pages[currentPage]?.title || 'Unknown'}
+          </span>
+        </div>
+      </div>
+
+      {/* Navigation buttons row */}
       <div className="flex justify-between items-center">
         {/* Back Button */}
         {canGoBack ? (
@@ -56,8 +79,8 @@ const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
           <div className="px-4 py-2"></div> // Empty space to maintain layout
         )}
 
-        {/* Page Indicator */}
-        <div className="flex items-center space-x-4">
+        {/* Desktop: Page Indicator in center */}
+        <div className="hidden md:flex items-center space-x-4">
           <span className="text-gray-400 text-sm">
             {currentPage + 1} of {pages.length}
           </span>

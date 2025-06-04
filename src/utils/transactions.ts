@@ -1,6 +1,6 @@
 import { ChainState, NFT } from '../types/blockchain'
 
-export const TRANSACTION_DURATION = 12000 // 12 seconds in milliseconds
+export const TRANSACTION_DURATION = 6000 // 6 seconds in milliseconds (displays as 12 second countdown)
 export const ROLLUP_TRANSACTION_DURATION = 400 // 400ms for rollup
 export const EARNINGS_RATE = 0.01 // 1% per second
 export const EARNINGS_INTERVAL = 1000 // 1 second in milliseconds

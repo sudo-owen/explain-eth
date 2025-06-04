@@ -171,12 +171,13 @@ const BlockContainer: React.FC<BlockContainerProps> = ({
     if (blockStartTime && transactions.length > 0) {
       return (
         <CircularCountdown
-          duration={12000}
+          duration={6000}
           startTime={blockStartTime}
           size={20}
           strokeWidth={2}
           theme="ethereum"
           className="sm:w-6 sm:h-6"
+          displayScale={2}
         />
       )
     }
@@ -302,21 +303,21 @@ const BlockAnimation: React.FC = () => {
         timeoutsRef.current.push(timeoutId)
       }
 
-      // Phase 2: Wait for confirmation (12 seconds from first transaction)
+      // Phase 2: Wait for confirmation (6 seconds from first transaction)
       const confirmTimeout = setTimeout(() => {
         setPhase('confirming')
         setIsConfirmed(true)
-      }, 12000)
+      }, 6000)
       timeoutsRef.current.push(confirmTimeout)
 
-      // Phase 3: Move block to the right (after 13 seconds)
+      // Phase 3: Move block to the right (after 7 seconds)
       const moveTimeout = setTimeout(() => {
         setPhase('moving')
         setIsMoving(true)
-      }, 13000)
+      }, 7000)
       timeoutsRef.current.push(moveTimeout)
 
-      // Phase 4: Complete the move and update previous block (after 15 seconds)
+      // Phase 4: Complete the move and update previous block (after 9 seconds)
       const completeTimeout = setTimeout(() => {
         // Move current block to previous
         setPreviousBlock([...allTransactions])
@@ -333,7 +334,7 @@ const BlockAnimation: React.FC = () => {
           runBlockCycle()
         }, 1000)
         timeoutsRef.current.push(nextCycleTimeout)
-      }, 15000)
+      }, 9000)
       timeoutsRef.current.push(completeTimeout)
     }
 

@@ -8,6 +8,7 @@ interface CircularCountdownProps {
   className?: string
   theme?: 'ethereum' | 'rollup'
   hideValue?: boolean // Option to hide the countdown number
+  displayScale?: number // Scale factor for displayed countdown (e.g., 2 to show 12 seconds for 6 second duration)
 }
 
 const CircularCountdown: React.FC<CircularCountdownProps> = ({
@@ -17,7 +18,8 @@ const CircularCountdown: React.FC<CircularCountdownProps> = ({
   strokeWidth = 2,
   className = '',
   theme = 'ethereum',
-  hideValue = false
+  hideValue = false,
+  displayScale = 1
 }) => {
   const [progress, setProgress] = useState(0)
   const [timeLeft, setTimeLeft] = useState(duration)
@@ -45,7 +47,7 @@ const CircularCountdown: React.FC<CircularCountdownProps> = ({
   const strokeDasharray = circumference
   const strokeDashoffset = circumference - (progress / 100) * circumference
 
-  const seconds = Math.ceil(timeLeft / 1000)
+  const seconds = Math.ceil((timeLeft / 1000) * displayScale)
 
   const getThemeColors = () => {
     if (theme === 'rollup') {

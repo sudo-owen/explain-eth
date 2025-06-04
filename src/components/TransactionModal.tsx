@@ -55,6 +55,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                   size={32}
                   strokeWidth={3}
                   theme={pendingTransaction.chain === 'rollup' ? 'rollup' : 'ethereum'}
+                  displayScale={pendingTransaction.chain === 'rollup' ? 1 : 2}
                 />
               )
             ) : type === 'success' ? (
