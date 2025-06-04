@@ -9,6 +9,7 @@ import BlockAnimation from '../components/BlockAnimation'
 import StaticBlockchain from '../components/StaticBlockchain'
 import DummyTransactionModal from '../components/DummyTransactionModal'
 import Navigation from '../components/Navigation'
+import { FootnoteProvider, FootnoteRef, FootnoteList } from '../components/Footnote'
 
 const IntroPage: React.FC = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
@@ -28,7 +29,8 @@ const IntroPage: React.FC = () => {
     .reduce((total, tx) => total + tx.amount, 0)
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <FootnoteProvider>
+      <div className="min-h-screen bg-gray-900 text-white">
       <div className="max-w-3xl mx-auto px-6 py-12">
         
         {/* Article Content */}
@@ -174,7 +176,10 @@ const IntroPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              It's because of something called <b>block time</b>. On Ethereum, it takes about 12 seconds for the network to create a <b>block</b>. This "block" is what makes up the word "blockchain."
+              It's because of something called <b>block time</b>. On Ethereum, it takes about 12 seconds for the network to create a <b>block</b>.
+              <FootnoteRef id="speedup">
+                  On average, it's probably closer to 6 seconds, so the animations you see are actually running at 2x speed. But don't worry about this too much.
+              </FootnoteRef>This "block" is what makes up the word "blockchain."
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
@@ -182,7 +187,12 @@ const IntroPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Think of a block like a train in the animation above. The train arrives on schedule, picks up everyone's transactions, then leaves for its destination.       
+              Think of a block like a train in the animation above. The train arrives on schedule, picks up everyone's transactions, then leaves for its destination.
+              <FootnoteRef id="tx-city">
+                <a href="https://txcity.io/v/eth-btc" target="_blank" rel="noopener noreferrer" className="text-blue-400 hover:text-blue-300 underline">
+                  Here
+                </a> is an actual real-time visualization for the Ethereum network if you are curious.
+              </FootnoteRef>
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
@@ -244,6 +254,9 @@ const IntroPage: React.FC = () => {
 
         </article>
 
+        {/* Footnotes */}
+        <FootnoteList />
+
         {/* Navigation */}
         <Navigation />
 
@@ -270,7 +283,8 @@ const IntroPage: React.FC = () => {
         onToggle={() => setIsHistoryOpen(!isHistoryOpen)}
         hideRollupTab={true}
       />
-    </div>
+      </div>
+    </FootnoteProvider>
   )
 }
 

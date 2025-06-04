@@ -7,6 +7,7 @@ import SplitAnimation from '../components/SplitAnimation'
 import AbstractQuadrant from '../components/AbstractQuadrant'
 import Navigation from '../components/Navigation'
 
+
 const AppsPage: React.FC = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
 
