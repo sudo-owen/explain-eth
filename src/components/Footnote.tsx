@@ -12,7 +12,7 @@ interface FootnoteContextType {
   registerFootnote: (footnote: Omit<FootnoteData, 'number' | 'order'>) => void;
   getFootnoteNumber: (id: string) => number;
   scrollToFootnote: (id: string, returnPosition: number) => void;
-  scrollToReturn: (position: number) => void;
+  scrollToFootnoteRef: (id: string) => void;
 }
 
 const FootnoteContext = createContext<FootnoteContextType | null>(null);
@@ -58,14 +58,22 @@ export const FootnoteProvider: React.FC<FootnoteProviderProps> = ({
     }
   };
 
-  const scrollToReturn = (position: number) => {
-    window.scrollTo({ top: position, behavior: "smooth" });
-    sessionStorage.removeItem("footnote-return-position");
+  const scrollToFootnoteRef = (id: string) => {
+    // Find the footnote reference element by looking for the sup element with the footnote ID
+    // We'll use a data attribute to identify footnote references
+    const refElement = document.querySelector(`[data-footnote-id="${id}"]`);
+    if (refElement) {
+      refElement.scrollIntoView({ behavior: "smooth", block: "center" });
+    } else {
+      // Fallback: try to find any element that might contain the footnote reference
+      // This is a best-effort approach if the data attribute isn't found
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   return (
     <FootnoteContext.Provider
-      value={{ footnotes, registerFootnote, getFootnoteNumber, scrollToFootnote, scrollToReturn }}
+      value={{ footnotes, registerFootnote, getFootnoteNumber, scrollToFootnote, scrollToFootnoteRef }}
     >
       {children}
     </FootnoteContext.Provider>
@@ -111,6 +119,7 @@ export const FootnoteRef: React.FC<FootnoteRefProps> = ({
 
   return (
     <sup
+      data-footnote-id={id}
       className="text-blue-400 hover:text-blue-300 cursor-pointer underline ml-1 text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded px-1"
       onClick={handleClick}
       onKeyDown={handleKeyDown}
@@ -132,9 +141,16 @@ const FootnoteTextDisplay: React.FC<{
   const context = useContext(FootnoteContext);
 
   const handleBackClick = () => {
+    if (!context) return;
+
+    // First try to use stored return position (if user clicked footnote reference)
     const returnPosition = sessionStorage.getItem("footnote-return-position");
-    if (returnPosition && context) {
-      context.scrollToReturn(parseInt(returnPosition, 10));
+    if (returnPosition) {
+      window.scrollTo({ top: parseInt(returnPosition, 10), behavior: "smooth" });
+      sessionStorage.removeItem("footnote-return-position");
+    } else {
+      // Two-way binding: scroll to the footnote reference location
+      context.scrollToFootnoteRef(id);
     }
   };
 
