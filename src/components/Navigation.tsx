@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 
 interface NavigationProps {
@@ -20,6 +20,11 @@ const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
 
   const canGoBack = currentPage > 0
   const canGoForward = currentPage < pages.length - 1
+
+  // Scroll to top whenever the location changes
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [location.pathname])
 
   const handleBack = () => {
     if (canGoBack) {
