@@ -1,8 +1,35 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Recipient } from '../types/blockchain'
-import { formatETH, formatETHTruncated } from '../utils/transactions'
-import { getRecipientEmoji, getRecipientBackgroundColor, getRecipientAddress, getRecipientAddressTruncated } from '../utils/recipients'
+import { formatETHTruncated } from '../utils/transactions'
+import { getRecipientEmoji, getRecipientBackgroundColor, getRecipientAddressTruncated } from '../utils/recipients'
 import CircularCountdown from './CircularCountdown'
+
+// Custom hook for intersection observer
+const useIntersectionObserver = (threshold = 0.1) => {
+  const [isVisible, setIsVisible] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting)
+      },
+      { threshold }
+    )
+
+    if (ref.current) {
+      observer.observe(ref.current)
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current)
+      }
+    }
+  }, [threshold])
+
+  return { ref, isVisible }
+}
 
 // Local state interface for the animation
 interface LocalRecipientBalances {
@@ -14,12 +41,36 @@ interface LocalRecipientBalances {
 // Animation phases
 type AnimationPhase = 'pending' | 'splitting' | 'distributing' | 'resetting'
 
-const SplitAnimation: React.FC = () => {
+// Props interface for split percentages
+interface SplitAnimationProps {
+  alicePercent?: number
+  bobPercent?: number
+  carolPercent?: number
+  totalAmount?: number
+}
+
+const SplitAnimation: React.FC<SplitAnimationProps> = ({
+  alicePercent = 33.33,
+  bobPercent = 33.33,
+  carolPercent = 33.33,
+  totalAmount = 0.3
+}) => {
+  // Calculate split amounts
+  const aliceAmount = (totalAmount * alicePercent) / 100
+  const bobAmount = (totalAmount * bobPercent) / 100
+  const carolAmount = (totalAmount * carolPercent) / 100
+
+  // Intersection observer for viewport detection
+  const { ref, isVisible } = useIntersectionObserver(0.1)
+
   // Animation state
   const [phase, setPhase] = useState<AnimationPhase>('pending')
   const [transactionStatus, setTransactionStatus] = useState<'pending' | 'confirmed'>('pending')
   const [transactionStartTime, setTransactionStartTime] = useState(new Date())
   const [cycleCount, setCycleCount] = useState(0)
+
+  // Track timeouts for cleanup
+  const timeoutsRef = useRef<number[]>([])
   
   // Local recipient balances (not synced with global state)
   const [recipientBalances, setRecipientBalances] = useState<LocalRecipientBalances>({
@@ -39,8 +90,23 @@ const SplitAnimation: React.FC = () => {
   const [mainDotPosition, setMainDotPosition] = useState('left') // 'left', 'moving', 'hidden'
 
 
+  // Clear all timeouts
+  const clearAllTimeouts = () => {
+    timeoutsRef.current.forEach(timeoutId => clearTimeout(timeoutId))
+    timeoutsRef.current = []
+  }
+
   useEffect(() => {
+    // Only run animation when component is visible
+    if (!isVisible) {
+      clearAllTimeouts()
+      return
+    }
+
     const runAnimationCycle = () => {
+      // Clear any existing timeouts before starting new cycle
+      clearAllTimeouts()
+
       // Reset everything including balances
       setPhase('pending')
       setTransactionStatus('pending')
@@ -65,24 +131,30 @@ const SplitAnimation: React.FC = () => {
         { delay: 4700, action: () => setRecipientCharging(prev => ({ ...prev, Alice: true })) }, // 200ms after splitter uncharged
         { delay: 4800, action: () => setRecipientCharging(prev => ({ ...prev, Bob: true })) },
         { delay: 4900, action: () => setRecipientCharging(prev => ({ ...prev, Carol: true })) },
-        { delay: 5500, action: () => setRecipientBalances({ Alice: 0.1, Bob: 0.1, Carol: 0.1 }) },
+        { delay: 5500, action: () => setRecipientBalances({ Alice: aliceAmount, Bob: bobAmount, Carol: carolAmount }) },
         { delay: 6000, action: () => setRecipientCharging({ Alice: false, Bob: false, Carol: false }) },
         { delay: 8000, action: () => { setPhase('resetting'); setCycleCount(prev => prev + 1); runAnimationCycle() } }
       ]
 
-      // Execute all steps
+      // Execute all steps and track timeouts
       animationSteps.forEach(step => {
-        setTimeout(step.action, step.delay)
+        const timeoutId = setTimeout(step.action, step.delay)
+        timeoutsRef.current.push(timeoutId)
       })
     }
 
     runAnimationCycle()
-  }, [])
+
+    // Cleanup function
+    return () => {
+      clearAllTimeouts()
+    }
+  }, [isVisible])
 
   const recipients: Recipient[] = ['Alice', 'Bob', 'Carol']
 
   return (
-    <div className="w-full max-w-4xl mx-auto bg-gray-800 rounded-lg p-3 sm:p-6">
+    <div ref={ref} className="w-full max-w-4xl mx-auto bg-gray-800 rounded-lg p-3 sm:p-6">
       {/* Pending Transaction Component */}
       <div className="mb-8">
         <div className={`
@@ -117,7 +189,7 @@ const SplitAnimation: React.FC = () => {
                 Transaction
               </div>
               <div className="text-gray-300 text-sm">
-                Send 0.3 ETH to Payment Splitter
+                Send {formatETHTruncated(totalAmount)} to Payment Splitter
               </div>
             </div>
 
@@ -143,8 +215,8 @@ const SplitAnimation: React.FC = () => {
           {/* Left Column - Payment Splitter */}
           <div className="flex items-center justify-center">
             <div className={`
-              bg-purple-600/40 rounded-lg p-3 sm:p-6 text-center w-full max-w-xs transition-all duration-500
-              ${splitterCharged ? 'border-2 border-white shadow-lg shadow-white/20' : 'border border-purple-500/60'}
+              bg-green-700/40 rounded-lg p-3 sm:p-6 text-center w-full max-w-xs transition-all duration-500
+              ${splitterCharged ? 'border-2 border-white shadow-lg shadow-white/20' : 'border border-green-500/60'}
             `}>
               <div className="text-xl sm:text-2xl mb-1 sm:mb-2">⚡</div>
               <div className="text-sm sm:text-lg font-semibold text-gray-100 mb-1 sm:mb-2">Payment Splitter</div>
@@ -153,7 +225,7 @@ const SplitAnimation: React.FC = () => {
                 0x3f81...3214
               </div>
               <div className="text-xs text-gray-400 break-all hidden sm:block">
-                0x3f81D81e0884abD8Cc4583a704a9397972623214
+                0x3f81...3214
               </div>
             </div>
           </div>
@@ -179,9 +251,9 @@ const SplitAnimation: React.FC = () => {
                       {getRecipientAddressTruncated(recipient)}
                     </div>
                     <div className="text-xs text-gray-400 break-all mb-1 hidden sm:block">
-                      {getRecipientAddress(recipient)}
+                      {getRecipientAddressTruncated(recipient)}
                     </div>
-                    <div className="text-xs font-medium text-gray-200">
+                    <div className="text-s font-bold text-gray-200">
                       {formatETHTruncated(balance)}
                     </div>
                   </div>
@@ -209,9 +281,9 @@ const SplitAnimation: React.FC = () => {
       {/* Status Message */}
       <div className="mt-4 text-center">
         <div className="text-white text-sm bg-black bg-opacity-50 px-3 py-1 rounded inline-block">
-          {phase === 'pending' && 'Sending 0.3 ETH to Payment Splitter'}
+          {phase === 'pending' && `Sending ${formatETHTruncated(totalAmount)} to Payment Splitter`}
           {phase === 'splitting' && 'Payment Splitter executing'}
-          {phase === 'distributing' && 'Automatically sending 0.1 ETH to Alice, Bob, and Carol'}
+          {phase === 'distributing' && `Automatically sending ${formatETHTruncated(aliceAmount)} to Alice, ${formatETHTruncated(bobAmount)} to Bob, and ${formatETHTruncated(carolAmount)} to Carol`}
           {phase === 'resetting' && 'Transaction complete!'}
         </div>
       </div>

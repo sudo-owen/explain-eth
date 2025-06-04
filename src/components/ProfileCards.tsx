@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { useBlockchainContext } from '../contexts/BlockchainContext'
 import { Recipient } from '../types/blockchain'
 import { formatETH } from '../utils/transactions'
-import { getRecipientEmoji, getRecipientDescription, getRecipientBackgroundColor, getRecipientAddress } from '../utils/recipients'
+import { getRecipientEmoji, getRecipientBackgroundColor, getRecipientAddress } from '../utils/recipients'
 import FlashAnimation from './FlashAnimation'
 import CharacterDialogue from './CharacterDialogue'
 

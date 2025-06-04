@@ -39,12 +39,6 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ title, code, className = '' }) =>
               '<span class="text-pink-400 font-bold">$1</span>'
             )
 
-            // Highlight fractions
-            highlightedLine = highlightedLine.replace(
-              /(1\/3)/g,
-              '<span class="text-green-400">$1</span>'
-            )
-
             // Highlight addresses (0x...)
             highlightedLine = highlightedLine.replace(
               /(0x[a-fA-F0-9]+)/g,
@@ -53,8 +47,14 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ title, code, className = '' }) =>
 
             // Highlight names in parentheses
             highlightedLine = highlightedLine.replace(
-              /\((ALICE|BOB|CAROL)\)/g,
-              '(<span class="text-yellow-400">$1</span>)'
+              /(ALICE|BOB|CAROL)/g,
+              '<span class="text-yellow-400 font-bold">$1</span>'
+            )
+
+            // All % highlight with yellow background
+            highlightedLine = highlightedLine.replace(
+              /(\d+%)/g,
+              '<span class="text-white bg-yellow-500/30 p-0.5 rounded font-bold">$1</span>'
             )
 
             return (

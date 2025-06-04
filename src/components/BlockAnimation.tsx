@@ -3,6 +3,33 @@ import { Transaction, Recipient } from '../types/blockchain'
 import { generateTransactionId, generateTransactionFee, formatETHTruncated } from '../utils/transactions'
 import CircularCountdown from './CircularCountdown'
 
+// Custom hook for intersection observer
+const useIntersectionObserver = (threshold = 0.1) => {
+  const [isVisible, setIsVisible] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting)
+      },
+      { threshold }
+    )
+
+    if (ref.current) {
+      observer.observe(ref.current)
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current)
+      }
+    }
+  }, [threshold])
+
+  return { ref, isVisible }
+}
+
 // Test transaction generation
 const generateTestTransaction = (): Transaction => {
   const recipients: Recipient[] = ['Alice', 'Bob', 'Carol']
@@ -207,6 +234,9 @@ const BlockContainer: React.FC<BlockContainerProps> = ({
 }
 
 const BlockAnimation: React.FC = () => {
+  // Intersection observer for viewport detection
+  const { ref, isVisible } = useIntersectionObserver(0.1)
+
   const [currentBlock, setCurrentBlock] = useState<Transaction[]>([])
   const [previousBlock, setPreviousBlock] = useState<Transaction[]>([])
   const [isConfirmed, setIsConfirmed] = useState(false)
@@ -215,16 +245,32 @@ const BlockAnimation: React.FC = () => {
   const [previousBlockNumber, setPreviousBlockNumber] = useState(0)
   const [phase, setPhase] = useState<'filling' | 'confirming' | 'moving'>('filling')
   const [blockStartTime, setBlockStartTime] = useState<Date | undefined>(undefined)
-  
-  // Use useRef to prevent multiple effect runs
+
+  // Use useRef to prevent multiple effect runs and track timeouts
   const isRunning = useRef(false)
+  const timeoutsRef = useRef<number[]>([])
+
+  // Clear all timeouts
+  const clearAllTimeouts = () => {
+    timeoutsRef.current.forEach(timeoutId => clearTimeout(timeoutId))
+    timeoutsRef.current = []
+  }
 
   useEffect(() => {
+    // Only run animation when component is visible
+    if (!isVisible) {
+      clearAllTimeouts()
+      isRunning.current = false
+      return
+    }
+
     // Prevent multiple simultaneous runs
     if (isRunning.current) return
     isRunning.current = true
 
     const runBlockCycle = () => {
+      // Clear any existing timeouts before starting new cycle
+      clearAllTimeouts()
       // Phase 1: Fill the block with transactions
       setPhase('filling')
       setCurrentBlock([])
@@ -240,10 +286,10 @@ const BlockAnimation: React.FC = () => {
       let firstTransactionAdded = false
 
       for (let i = 0; i < numTransactions; i++) {
-        setTimeout(() => {
+        const timeoutId = setTimeout(() => {
           const newTx = generateTestTransaction()
           allTransactions.push(newTx)
-          
+
           // Update state with a copy of the transactions
           setCurrentBlock([...allTransactions])
 
@@ -253,46 +299,52 @@ const BlockAnimation: React.FC = () => {
             firstTransactionAdded = true
           }
         }, i * 500)
+        timeoutsRef.current.push(timeoutId)
       }
 
       // Phase 2: Wait for confirmation (12 seconds from first transaction)
-      setTimeout(() => {
+      const confirmTimeout = setTimeout(() => {
         setPhase('confirming')
         setIsConfirmed(true)
       }, 12000)
+      timeoutsRef.current.push(confirmTimeout)
 
       // Phase 3: Move block to the right (after 13 seconds)
-      setTimeout(() => {
+      const moveTimeout = setTimeout(() => {
         setPhase('moving')
         setIsMoving(true)
       }, 13000)
+      timeoutsRef.current.push(moveTimeout)
 
       // Phase 4: Complete the move and update previous block (after 15 seconds)
-      setTimeout(() => {
+      const completeTimeout = setTimeout(() => {
         // Move current block to previous
         setPreviousBlock([...allTransactions])
         setPreviousBlockNumber(prev => prev + 1)
-        
+
         // Clear current block for next cycle
         setCurrentBlock([])
         setIsMoving(false)
 
         // Start next cycle after a brief pause
-        setTimeout(() => {
+        const nextCycleTimeout = setTimeout(() => {
           // Increment block number for the new cycle
           setBlockNumber(prev => prev + 1)
           runBlockCycle()
         }, 1000)
+        timeoutsRef.current.push(nextCycleTimeout)
       }, 15000)
+      timeoutsRef.current.push(completeTimeout)
     }
 
     runBlockCycle()
 
     // Cleanup function
     return () => {
+      clearAllTimeouts()
       isRunning.current = false
     }
-  }, []) // Keep empty dependency array but add ref guard
+  }, [isVisible]) // Run when visibility changes
 
   const getStatusMessage = () => {
     switch (phase) {
@@ -308,7 +360,7 @@ const BlockAnimation: React.FC = () => {
   }
 
   return (
-    <div className="w-full max-w-6xl mx-auto my-12 pb-4 bg-gray-800 rounded-lg">
+    <div ref={ref} className="w-full max-w-6xl mx-auto my-12 pb-4 bg-gray-800 rounded-lg">
       <div className="p-3 sm:p-6 pb-1">
         {/* Header */}
         <div className="text-center mb-4 sm:mb-6">

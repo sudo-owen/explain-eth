@@ -265,7 +265,7 @@ const HomePage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Here is an example of a sample smart contract we could write to help with that:
+              Let's look at a simplified smart contract:
             </p>
 
 
@@ -275,9 +275,9 @@ const HomePage: React.FC = () => {
                 title="PaymentSplitter.sol"
                 code={`PAYMENT SPLITTER PROGRAM\n
 WHENEVER THIS PROGRAM RECEIVES ETH:
-  SEND 1/3 TO ALICE (0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb)
-  SEND 1/3 TO BOB (0x6b175474e89094c44da98b954eedeac495271d0f)
-  SEND 1/3 TO CAROL (0xcA11bde05977b3631167028862bE2a173976CA11)
+  SEND 33% TO 👩 ALICE (0xb47...),
+  AND SEND 33% TO 👨 BOB (0x6b1...),
+  AND SEND 33% TO 👩‍🦰 CAROL (0xcA1...)
 END`}
                 className="max-w-2xl mx-auto"
               />
@@ -292,15 +292,15 @@ END`}
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Now, instead of having to manually send money to every person individually, we can use this simple program.
+              Now, we can use this simple program to send money to everyone at once, instead of individually sending everyone ETH one at a time.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              But how do we "run" this program?
+              But how do we run this program?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              On Ethereum, all smart contracts have their own address. So to "run" this program, we can send ETH to it, just like how we sent ETH to Alice or Bob. Once the program receives ETH, it will automatically do its thing.
+              On Ethereum, all smart contracts have their own address. To run this program, we just send ETH to its address, just like how we sent ETH to Alice or Bob. Once the program receives ETH, it will automatically split the funds.
             </p>
 
             {/* Split Animation */}
@@ -308,6 +308,45 @@ END`}
               <SplitAnimation />
             </div>
 
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Because the split amounts are coded up, it's also very easy to change them.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Let's say that Alice, Bob, and Carol all baked cookies for a bake sale. Alice has baked half of all the cookies, and Bob and Carol each baked a quarter. Let's say they take sales in ETH so they tell everyone to send them money to a Payment Splitter smart contract.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              How can we change the Payment Splitter program to instead send 50% to Alice, 25% to Bob, and 25% to Carol?
+            </p>
+
+            {/* Payment Splitter Code Block */}
+            <div className="my-12">
+              <CodeBlock
+                title="PaymentSplitter2.sol"
+                code={`PAYMENT SPLITTER 2 PROGRAM\n
+WHENEVER THIS PROGRAM RECEIVES ETH:
+  SEND 50% TO 👩 ALICE (0xb47...),
+  AND SEND 25% TO 👨 BOB (0x6b1...),
+  AND SEND 25% TO 👩‍🦰 CAROL (0xcA1...)
+END`}
+                className="max-w-2xl mx-auto"
+              />
+            </div>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Quite simply, we just change the percentages in the smart contract. So now whenever anyone sends ETH to this new Payment Splitter, it will automatically split the funds according to the new percentages.
+            </p>
+
+            {/* Split Animation with 50/25/25 split */}
+            <div className="my-12">
+              <SplitAnimation
+                alicePercent={50}
+                bobPercent={25}
+                carolPercent={25}
+                totalAmount={0.3}
+              />
+            </div>
           </section>
 
         </article>
