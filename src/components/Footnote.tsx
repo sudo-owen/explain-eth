@@ -11,8 +11,6 @@ interface FootnoteContextType {
   footnotes: FootnoteData[];
   registerFootnote: (footnote: Omit<FootnoteData, 'number' | 'order'>) => void;
   getFootnoteNumber: (id: string) => number;
-  scrollToFootnote: (id: string, returnPosition: number) => void;
-  scrollToFootnoteRef: (id: string) => void;
 }
 
 const FootnoteContext = createContext<FootnoteContextType | null>(null);
@@ -47,33 +45,9 @@ export const FootnoteProvider: React.FC<FootnoteProviderProps> = ({
     return footnote ? footnote.number : 0;
   }, [footnotes]);
 
-  const scrollToFootnote = (id: string, returnPosition: number) => {
-    sessionStorage.setItem(
-      "footnote-return-position",
-      returnPosition.toString()
-    );
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: "smooth", block: "center" });
-    }
-  };
-
-  const scrollToFootnoteRef = (id: string) => {
-    // Find the footnote reference element by looking for the sup element with the footnote ID
-    // We'll use a data attribute to identify footnote references
-    const refElement = document.querySelector(`[data-footnote-id="${id}"]`);
-    if (refElement) {
-      refElement.scrollIntoView({ behavior: "smooth", block: "center" });
-    } else {
-      // Fallback: try to find any element that might contain the footnote reference
-      // This is a best-effort approach if the data attribute isn't found
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-  };
-
   return (
     <FootnoteContext.Provider
-      value={{ footnotes, registerFootnote, getFootnoteNumber, scrollToFootnote, scrollToFootnoteRef }}
+      value={{ footnotes, registerFootnote, getFootnoteNumber }}
     >
       {children}
     </FootnoteContext.Provider>
@@ -103,31 +77,16 @@ export const FootnoteRef: React.FC<FootnoteRefProps> = ({
   // Get the current footnote number
   const actualNumber = context ? context.getFootnoteNumber(id) : (number || 0);
 
-  const handleClick = () => {
-    if (context) {
-      const currentPosition = window.scrollY;
-      context.scrollToFootnote(id, currentPosition);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      handleClick();
-    }
-  };
-
   return (
-    <sup
-      data-footnote-id={id}
-      className="text-blue-400 hover:text-blue-300 cursor-pointer underline ml-1 text-sm transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded px-1"
-      onClick={handleClick}
-      onKeyDown={handleKeyDown}
-      tabIndex={0}
-      role="button"
-      aria-label={`Go to footnote ${actualNumber}`}
-    >
-      [{actualNumber}]
+    <sup className="ml-1 text-sm">
+      <a
+        id={`ref-${id}`}
+        href={`#${id}`}
+        className="text-blue-400 hover:text-blue-300 cursor-pointer underline transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded px-1"
+        aria-label={`Go to footnote ${actualNumber}`}
+      >
+        [{actualNumber}]
+      </a>
     </sup>
   );
 };
@@ -138,41 +97,17 @@ const FootnoteTextDisplay: React.FC<{
   number: number;
   children: React.ReactNode;
 }> = ({ id, number, children }) => {
-  const context = useContext(FootnoteContext);
-
-  const handleBackClick = () => {
-    if (!context) return;
-
-    // First try to use stored return position (if user clicked footnote reference)
-    const returnPosition = sessionStorage.getItem("footnote-return-position");
-    if (returnPosition) {
-      window.scrollTo({ top: parseInt(returnPosition, 10), behavior: "smooth" });
-      sessionStorage.removeItem("footnote-return-position");
-    } else {
-      // Two-way binding: scroll to the footnote reference location
-      context.scrollToFootnoteRef(id);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      handleBackClick();
-    }
-  };
-
   return (
     <div id={id} className="mb-4 text-gray-300 text-sm leading-relaxed">
       <p>
         <span className="text-blue-400 font-medium">{number}.</span> {children}{" "}
-        <button
-          onClick={handleBackClick}
-          onKeyDown={handleKeyDown}
+        <a
+          href={`#ref-${id}`}
           className="text-blue-400 hover:text-blue-300 cursor-pointer underline transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded px-1"
           aria-label="Return to text"
         >
           ↩
-        </button>
+        </a>
       </p>
     </div>
   );
