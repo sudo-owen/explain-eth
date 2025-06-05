@@ -9,6 +9,7 @@ import BlockAnimation from '../components/BlockAnimation'
 import StaticBlockchain from '../components/StaticBlockchain'
 import DummyTransactionModal from '../components/DummyTransactionModal'
 import Navigation from '../components/Navigation'
+import EthShowcase from '../components/EthShowcase'
 import { FootnoteProvider, FootnoteRef, FootnoteList } from '../components/Footnote'
 
 const IntroPage: React.FC = () => {
@@ -70,8 +71,17 @@ const IntroPage: React.FC = () => {
             </p>
             
             <p className="text-gray-300 leading-relaxed mb-8">
-              Like a social media network, you'll need an <strong>account</strong> to get started using Ethereum. An account will let you receive <strong>money</strong>. You can receive many types of digital assets with your account. We'll start with ETH, which is the native currency of the Ethereum network.
+              Like a social media network, you'll need an <strong>account</strong> to get started using Ethereum. An account will let you receive <strong>money</strong>. You can receive many types of digital assets with your account.
             </p>
+
+            <p className="text-gray-300 leading-relaxed mb-8">
+              We'll start with ETH, which is the native currency of the Ethereum network.            
+            </p>
+
+            {/* ETH Showcase */}
+            <div className="my-12">
+              <EthShowcase />
+            </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
               Let's give you a test account to get started:
@@ -83,7 +93,7 @@ const IntroPage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Every account has a unique ID, called an <strong>address</strong>. Your simulated address is <code><span className="break-all">0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2</span></code>. Just like how an email address lets you receive emails on the internet, your Ethereum address lets you receive ETH on the Ethereum network.
+              Every account has a unique ID, called an <strong>address</strong>. Your simulated address is <code className="bg-gray-800 px-2 py-1 rounded text-sm break-all">0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2</code>. Just like how an email address lets you receive emails on the internet, your Ethereum address lets you receive ETH on the Ethereum network.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">

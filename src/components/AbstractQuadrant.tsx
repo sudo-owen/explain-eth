@@ -45,15 +45,33 @@ const useIntersectionObserver = (threshold = 0.1) => {
   return { ref, isVisible }
 }
 
-// Individual quadrant component
-const Quadrant = ({ title, children }: QuadrantProps) => (
-  <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-    <h3 className="text-sm font-medium text-gray-300 mb-3 text-center">{title}</h3>
-    <div className="h-32 relative">
-      {children}
+// Individual quadrant component with subtle background variations
+const Quadrant = ({ title, children }: QuadrantProps) => {
+  // Define subtle background colors for each quadrant type
+  const getQuadrantBackground = (title: string) => {
+    switch (title) {
+      case 'Variable Split':
+        return 'bg-blue-900/20 border-blue-700/30'
+      case 'Dynamic Recipients':
+        return 'bg-green-900/20 border-green-700/30'
+      case 'Fee Flow':
+        return 'bg-yellow-900/20 border-yellow-700/30'
+      case 'Betting':
+        return 'bg-purple-900/20 border-purple-700/30'
+      default:
+        return 'bg-gray-800 border-gray-700'
+    }
+  }
+
+  return (
+    <div className={`${getQuadrantBackground(title)} rounded-lg p-4 border`}>
+      <h3 className="text-sm font-medium text-gray-300 mb-3 text-center">{title}</h3>
+      <div className="h-32 relative">
+        {children}
+      </div>
     </div>
-  </div>
-)
+  )
+}
 
 // Simple recipient component for abstract visualization
 const SimpleRecipient = ({
