@@ -81,7 +81,7 @@ const AppsPage: React.FC = () => {
               <p className="text-gray-300 leading-relaxed mb-8">
                 Let's look at a simplified smart contract{" "}
                 <FootnoteRef id="contract">
-                  This is just a simplified example that doesn't use real code,
+                  This is a simplified example that doesn't use real code,
                   of course. To learn more, check out{" "}
                   <a
                     href="https://docs.soliditylang.org/en/v0.8.30/introduction-to-smart-contracts.html"
@@ -155,7 +155,7 @@ END`}
               </p>
 
               <p className="text-gray-300 leading-relaxed mb-6">
-                Once the program receives ETH, it will automatically do its job and split the
+                Once the program receives ETH, it'll automatically do its job and split the
                 funds three ways between Alice, Bob, and Carol.
               </p>
 
@@ -191,7 +191,11 @@ END`}
 
               <p className="text-gray-300 leading-relaxed mb-6">
                 Let's say that Alice, Bob, and Carol all baked cookies for a
-                bake sale. Alice has baked half of all the cookies, and Bob and
+                bake sale.
+              </p>
+
+              <p className="text-gray-300 leading-relaxed mb-6">
+                Alice has baked half of all the cookies, and Bob and
                 Carol each baked a quarter. Let's say they take sales in ETH so
                 they tell everyone to send them money to a Payment Splitter
                 smart contract.
@@ -204,7 +208,7 @@ END`}
 
               <p className="text-gray-300 leading-relaxed mb-6">
                 All we need to do is change the percentages we had for each
-                person in our smart contract.
+                person in our smart contract!
               </p>
 
               {/* Payment Splitter Code Block with Animation */}
@@ -217,13 +221,13 @@ END`}
               </div>
 
               <p className="text-gray-300 leading-relaxed mb-6">
-                We changed the 33% for Alice to 50%, and the 33% for Bob and Carol
+                We change the 33% for Alice to 50%, and the 33% for Bob and Carol
                 to 25%.
               </p>
 
               <p className="text-gray-300 leading-relaxed mb-6">
-                Now, when we send ETH to this new Payment Splitter, it will
-                automatically split the funds 50/25/25 between Alice, Bob, and
+                Now, when we send ETH to this new Payment Splitter, it
+                automatically splits the funds 50/25/25 between Alice, Bob, and
                 Carol.
               </p>
 
@@ -242,11 +246,11 @@ END`}
             <section className="mb-16">
               <p className="text-gray-300 leading-relaxed mb-6">
                 This is just the tip of the iceberg. There are many other types
-                of smart contracts we could write just to handle payments.
+                of smart contracts we could write to handle even more complex types of payments.
               </p>
 
               <p className="text-gray-300 leading-relaxed mb-6">
-                With smart contracts, we can do:
+                For example, with smart contracts, we could have:
               </p>
 
               {/* Smart Contract Capabilities List */}
@@ -327,7 +331,7 @@ END`}
 
               <p className="text-gray-300 leading-relaxed mb-6">
                 Let's go back to the bake sale example for a second. In an
-                ideal world, we can sell cookies to people for ETH. Many other unrealistic things would also be possible in this world.
+                ideal world, we can sell cookies to people for ETH.
               </p>
 
               <p className="text-gray-300 leading-relaxed mb-6">
