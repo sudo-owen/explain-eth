@@ -254,7 +254,7 @@ END`}
                 <div className="mb-4">
                   <div className="flex items-start">
                     <span className="inline-block w-2 h-2 bg-gray-400 rounded-full mt-3 mr-3 flex-shrink-0"></span>
-                    <div className="flex-1">
+                    <div className="flex-1 text">
                       <span className="text-blue-300">Variable Split:</span> Change
                       the split proportions (we already saw this one)
                     </div>
@@ -269,7 +269,7 @@ END`}
                 <div className="mb-4">
                   <div className="flex items-start">
                     <span className="inline-block w-2 h-2 bg-gray-400 rounded-full mt-3 mr-3 flex-shrink-0"></span>
-                    <div className="flex-1">
+                    <div className="flex-1 text">
                       <span className="text-green-300">Dynamic Recipients:</span>{" "}
                       Add or remove recipients (e.g. remove 👩‍🦰 Carol, or we could
                       add 🕵️‍♀️ Eve)
@@ -285,7 +285,7 @@ END`}
                 <div className="mb-4">
                   <div className="flex items-start">
                     <span className="inline-block w-2 h-2 bg-gray-400 rounded-full mt-3 mr-3 flex-shrink-0"></span>
-                    <div className="flex-1">
+                    <div className="flex-1 text">
                       <span className="text-yellow-300">Fee Flow:</span> Charge a
                       processing fee (e.g. send 1% to ourselves, then pass the rest
                       along)
@@ -301,7 +301,7 @@ END`}
                 <div className="mb-4">
                   <div className="flex items-start">
                     <span className="inline-block w-2 h-2 bg-gray-400 rounded-full mt-3 mr-3 flex-shrink-0"></span>
-                    <div className="flex-1">
+                    <div className="flex-1 text">
                       <span className="text-purple-300">Betting:</span> Take in
                       money from 2 people, and pay it out to 1 person (e.g. to
                       settle a bet)

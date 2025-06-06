@@ -27,7 +27,7 @@ body {
 }
 
 /* Larger paragraph text */
-p, li {
+p, li, .text {
   font-size: 1.2rem;
   line-height: 1.75;
   font-weight: 400;

@@ -10,6 +10,7 @@ import StaticBlockchain from '../components/StaticBlockchain'
 import DummyTransactionModal from '../components/DummyTransactionModal'
 import Navigation from '../components/Navigation'
 import EthShowcase from '../components/EthShowcase'
+import NetworkAnimation from '../components/NetworkAnimation'
 import { FootnoteProvider, FootnoteRef, FootnoteList } from '../components/Footnote'
 
 const IntroPage: React.FC = () => {
@@ -72,7 +73,10 @@ const IntroPage: React.FC = () => {
               Well, a <strong>network</strong> is a group of connected things, like a social network. As long as something is in the network, you can reach it. Just like how on the Facebook network, you can send a message to anyone as long as they have an account.
             </p>
             
-            {/* NETWORK ANIMATION */}
+            {/* Network Animation */}
+            <div className="my-12">
+              <NetworkAnimation />
+            </div>
 
             <p className="text-gray-300 leading-relaxed mb-6">
               (I know we didn't define <strong>blockchain</strong> yet, don't worry, we'll get to it.)
