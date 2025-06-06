@@ -6,6 +6,7 @@ import CodeBlock from "../components/CodeBlock";
 import SplitAnimation from "../components/SplitAnimation";
 import AbstractQuadrant from "../components/AbstractQuadrant";
 import Navigation from "../components/Navigation";
+import BalanceComponent from "../components/BalanceComponent";
 import {
   FootnoteList,
   FootnoteProvider,
@@ -166,7 +167,21 @@ END`}
                 Here, give it a try yourself.
               </p>
 
-              {/* BALANCE WITH SPLITTER */}
+              {/* Balance Component with Splitter */}
+              <div className="my-12">
+                <BalanceComponent
+                  showSendAction={true}
+                  allowedRecipients={['Alice', 'Bob', 'Carol']}
+                  className="max-w-md mx-auto"
+                  disableButtonsOnPending={true}
+                  showSentCheckmarks={true}
+                  componentId="apps-splitter-balance"
+                  useSplitter={true}
+                  splitterAmount={0.03}
+                  autoInitializeETH={true}
+                  showRecipientSelection={false}
+                />
+              </div>
 
               <p className="text-gray-300 leading-relaxed mb-6">
                 Because the split amounts are coded up, it's also very easy to

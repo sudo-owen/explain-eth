@@ -31,6 +31,12 @@ const recipientData: Record<string, RecipientData> = {
     description: 'A mysterious stranger',
     backgroundColor: 'bg-yellow-800 border-yellow-700',
     address: '0x0000000000000000000000000000000000000000'
+  },
+  'Splitter': {
+    emoji: '⚡',
+    description: 'Payment Splitter Contract',
+    backgroundColor: 'bg-green-700/40 border-green-500/60',
+    address: '0x3f8135843586dcfb17f8f16422f2e6a01cd54214'
   }
 }
 
@@ -55,4 +61,4 @@ export const getRecipientAddressTruncated = (name: string): string => {
   return `${address.slice(0, 6)}...${address.slice(-4)}`
 }
 
-export const recipients: Recipient[] = ['Alice', 'Bob', 'Carol', 'Eve']
+export const recipients: Recipient[] = ['Alice', 'Bob', 'Carol', 'Eve', 'Splitter']

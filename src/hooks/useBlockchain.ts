@@ -237,6 +237,45 @@ export const useBlockchain = () => {
     processTransaction(transaction, stateUpdater, chain === 'rollup' ? ROLLUP_TRANSACTION_DURATION : TRANSACTION_DURATION)
   }, [ethereumState, rollupState, showModal, processTransaction])
 
+  const sendToSplitter = useCallback((chain: ChainType, amount: number) => {
+    const chainState = chain === 'ethereum' ? ethereumState : rollupState
+    const fee = generateTransactionFee(chain === 'rollup')
+    const validation = validateSendMoney(chainState, amount, fee)
+
+    if (!validation.isValid) {
+      showModal('error', validation.error!)
+      return
+    }
+
+    const transaction: Transaction = {
+      id: generateTransactionId(),
+      chain,
+      type: 'send',
+      amount,
+      fee,
+      recipient: 'Splitter' as Recipient,
+      status: 'pending',
+      timestamp: new Date(),
+      nonce: 0 // Will be assigned in processTransaction
+    }
+
+    // Define the state update to apply when transaction is confirmed
+    // The splitter automatically distributes the amount equally to Alice, Bob, and Carol
+    const splitAmount = amount / 3
+    const stateUpdater = (prev: ChainState) => ({
+      ...prev,
+      balance: prev.balance - amount - fee, // Deduct both amount and fee
+      recipientBalances: {
+        ...prev.recipientBalances,
+        Alice: prev.recipientBalances.Alice + splitAmount,
+        Bob: prev.recipientBalances.Bob + splitAmount,
+        Carol: prev.recipientBalances.Carol + splitAmount
+      }
+    })
+
+    processTransaction(transaction, stateUpdater, chain === 'rollup' ? ROLLUP_TRANSACTION_DURATION : TRANSACTION_DURATION)
+  }, [ethereumState, rollupState, showModal, processTransaction])
+
   const purchaseNFT = useCallback((chain: ChainType, nftId: string, price: number, emoji: string) => {
     const chainState = chain === 'ethereum' ? ethereumState : rollupState
     const fee = generateTransactionFee(chain === 'rollup')
@@ -489,6 +528,7 @@ export const useBlockchain = () => {
     modalState,
     currentPendingTransaction,
     sendMoney,
+    sendToSplitter,
     purchaseNFT,
     sellNFT,
     depositEarnings,

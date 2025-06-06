@@ -54,7 +54,7 @@ const IntroPage: React.FC = () => {
 
           {/* Ethereum Section */}
           <section className="mb-16">
-            <h1 className="text-4xl font-bold text-white mb-8">What's Ethereum</h1>
+            <h1 className="text-4xl font-bold text-white mb-8">Ethereum</h1>
             
             <p className="text-gray-300 leading-relaxed mb-6">
               Let's get started.

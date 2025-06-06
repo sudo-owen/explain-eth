@@ -1,6 +1,6 @@
 export type ChainType = 'ethereum' | 'rollup'
 
-export type Recipient = 'Alice' | 'Bob' | 'Carol' | 'Eve'
+export type Recipient = 'Alice' | 'Bob' | 'Carol' | 'Eve' | 'Splitter'
 
 export interface NFT {
   id: string

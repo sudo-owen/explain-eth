@@ -6,6 +6,7 @@ interface BlockchainContextType {
   ethereumState: ChainState
   rollupState: ChainState
   sendMoney: (chain: 'ethereum' | 'rollup', recipient: Recipient, amount: number) => void
+  sendToSplitter: (chain: 'ethereum' | 'rollup', amount: number) => void
   purchaseNFT: (chain: 'ethereum' | 'rollup', nftId: string, price: number, emoji: string) => void
   sellNFT: (chain: 'ethereum' | 'rollup', nftId: string) => void
   depositEarnings: (chain: 'ethereum' | 'rollup', amount: number) => void

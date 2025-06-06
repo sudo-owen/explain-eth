@@ -14,6 +14,10 @@ interface BalanceComponentProps {
   autoCycleRecipients?: boolean
   showSentCheckmarks?: boolean
   componentId?: string
+  useSplitter?: boolean
+  splitterAmount?: number
+  autoInitializeETH?: boolean
+  showRecipientSelection?: boolean
 }
 
 const BalanceComponent: React.FC<BalanceComponentProps> = ({
@@ -24,13 +28,26 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
   disableButtonsOnPending = true,
   autoCycleRecipients = false,
   showSentCheckmarks = false,
-  componentId
+  componentId,
+  useSplitter = false,
+  splitterAmount = 0.03,
+  autoInitializeETH = false,
+  showRecipientSelection = true
 }) => {
-  const { ethereumState, sendMoney, receiveETH, transactionHistory } = useBlockchainContext()
+  const { ethereumState, sendMoney, sendToSplitter, receiveETH, transactionHistory } = useBlockchainContext()
   const [selectedRecipient, setSelectedRecipient] = useState<Recipient>(allowedRecipients[0] || 'Bob')
   const [lastTransactionCount, setLastTransactionCount] = useState(0)
   const [componentTransactionIds, setComponentTransactionIds] = useState<Set<string>>(new Set())
   const [pendingSendFromComponent, setPendingSendFromComponent] = useState<{recipient: Recipient, amount: number, timestamp: number} | null>(null)
+  const [hasInitialized, setHasInitialized] = useState(false)
+
+  // Auto-initialize with 1 ETH if balance is zero and autoInitializeETH is true
+  useEffect(() => {
+    if (autoInitializeETH && ethereumState.balance === 0 && !hasInitialized) {
+      setHasInitialized(true)
+      receiveETH()
+    }
+  }, [autoInitializeETH, ethereumState.balance, hasInitialized, receiveETH])
 
   // Track transactions sent from this component
   useEffect(() => {
@@ -71,10 +88,18 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
   }, [transactionHistory, autoCycleRecipients, allowedRecipients, selectedRecipient, lastTransactionCount])
 
   // Quick send amounts
-  const quickSendAmounts = [0.01]
+  const quickSendAmounts = useSplitter ? [splitterAmount] : [0.01]
 
-  // Check if there's a pending send transaction to a specific recipient
+  // Check if there's a pending send transaction to a specific recipient or splitter
   const isPendingSendToRecipient = (recipient: Recipient) => {
+    if (useSplitter) {
+      return transactionHistory.some(tx =>
+        tx.type === 'send' &&
+        tx.recipient === 'Splitter' &&
+        tx.status === 'pending' &&
+        tx.chain === 'ethereum'
+      )
+    }
     return transactionHistory.some(tx =>
       tx.type === 'send' &&
       tx.recipient === recipient &&
@@ -98,16 +123,27 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
 
   const handleQuickSend = (amount: number) => {
     if (amount > 0 && amount <= ethereumState.balance) {
-      // Record that we're about to send from this component
-      if (componentId) {
-        setPendingSendFromComponent({
-          recipient: selectedRecipient,
-          amount: amount,
-          timestamp: Date.now()
-        })
+      if (useSplitter) {
+        // Send to splitter contract
+        if (componentId) {
+          setPendingSendFromComponent({
+            recipient: 'Splitter',
+            amount: amount,
+            timestamp: Date.now()
+          })
+        }
+        sendToSplitter('ethereum', amount)
+      } else {
+        // Regular send to selected recipient
+        if (componentId) {
+          setPendingSendFromComponent({
+            recipient: selectedRecipient,
+            amount: amount,
+            timestamp: Date.now()
+          })
+        }
+        sendMoney('ethereum', selectedRecipient, amount)
       }
-
-      sendMoney('ethereum', selectedRecipient, amount)
       // The useEffect above will automatically track this transaction if componentId is set
     }
   }
@@ -138,47 +174,81 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
         <div className="space-y-4">
           <h4 className="text-md font-medium text-gray-200">Send ETH</h4>
           
-          {/* Recipient Selection */}
-          <div>
-            <label className="block text-sm text-gray-400 mb-2 break-all">
-              To: {getRecipientAddress(selectedRecipient)}
-            </label>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-              {allowedRecipients.map((recipient) => {
-                const recipientBalance = ethereumState.recipientBalances[recipient] || 0
-                const hasSentMoney = hasSentMoneyToRecipient(recipient)
-                return (
-                  <FlashAnimation
-                    key={recipient}
-                    trigger={recipientBalance}
-                    flashColor="bg-blue-400/40"
-                    flashType="border"
-                    duration={1200}
-                  >
-                    <button
-                      onClick={() => setSelectedRecipient(recipient)}
-                      className={`
-                        w-full flex flex-col items-center space-y-1 px-3 py-2 rounded-lg border transition-colors cursor-pointer
-                        ${selectedRecipient === recipient
-                          ? 'bg-blue-600 border-blue-500 text-white'
-                          : 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600'
-                        }
-                      `}
+          {/* Recipient Selection or Display */}
+          {showRecipientSelection ? (
+            <div>
+              <label className="block text-sm text-gray-400 mb-2 break-all">
+                To: {useSplitter ? 'Payment Splitter Contract' : getRecipientAddress(selectedRecipient)}
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {allowedRecipients.map((recipient) => {
+                  const recipientBalance = ethereumState.recipientBalances[recipient] || 0
+                  const hasSentMoney = hasSentMoneyToRecipient(recipient)
+                  return (
+                    <FlashAnimation
+                      key={recipient}
+                      trigger={recipientBalance}
+                      flashColor="bg-blue-400/40"
+                      flashType="border"
+                      duration={1200}
                     >
-                      <div className="flex items-center space-x-2">
-                        <span className="text-lg">{getRecipientEmoji(recipient)}</span>
-                        <span className="text-sm font-medium">{recipient}</span>
-                        {showSentCheckmarks && hasSentMoney && <span className="text-green-400">✅</span>}
-                      </div>
-                      <span className="text-xs text-gray-400">
-                        {formatETHTruncated(recipientBalance)}
-                      </span>
-                    </button>
-                  </FlashAnimation>
-                )
-              })}
+                      <button
+                        onClick={() => setSelectedRecipient(recipient)}
+                        className={`
+                          w-full flex flex-col items-center space-y-1 px-3 py-2 rounded-lg border transition-colors cursor-pointer
+                          ${selectedRecipient === recipient
+                            ? 'bg-blue-600 border-blue-500 text-white'
+                            : 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600'
+                          }
+                        `}
+                      >
+                        <div className="flex items-center space-x-2">
+                          <span className="text-lg">{getRecipientEmoji(recipient)}</span>
+                          <span className="text-sm font-medium">{recipient}</span>
+                          {showSentCheckmarks && hasSentMoney && <span className="text-green-400">✅</span>}
+                        </div>
+                        <span className="text-xs text-gray-400">
+                          {formatETHTruncated(recipientBalance)}
+                        </span>
+                      </button>
+                    </FlashAnimation>
+                  )
+                })}
+              </div>
             </div>
-          </div>
+          ) : (
+            <div>
+              <label className="block text-sm text-gray-400 mb-2 break-all">
+                Recipients: Alice, Bob, and Carol will each receive {formatETHTruncated(splitterAmount / 3)}
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                {allowedRecipients.map((recipient) => {
+                  const recipientBalance = ethereumState.recipientBalances[recipient] || 0
+                  const hasSentMoney = hasSentMoneyToRecipient(recipient)
+                  return (
+                    <FlashAnimation
+                      key={recipient}
+                      trigger={recipientBalance}
+                      flashColor="bg-blue-400/40"
+                      flashType="border"
+                      duration={1200}
+                    >
+                      <div className="w-full flex flex-col items-center space-y-1 px-3 py-2 rounded-lg border bg-gray-700 border-gray-600 text-gray-300">
+                        <div className="flex items-center space-x-2">
+                          <span className="text-lg">{getRecipientEmoji(recipient)}</span>
+                          <span className="text-sm font-medium">{recipient}</span>
+                          {showSentCheckmarks && hasSentMoney && <span className="text-green-400">✅</span>}
+                        </div>
+                        <span className="text-xs text-gray-400">
+                          {formatETHTruncated(recipientBalance)}
+                        </span>
+                      </div>
+                    </FlashAnimation>
+                  )
+                })}
+              </div>
+            </div>
+          )}
 
           {/* Quick Send Buttons */}
           <div>
@@ -201,7 +271,10 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
                       }
                     `}
                   >
-                    Send {formatETHTruncated(amount)} to {selectedRecipient}
+                    {useSplitter
+                      ? `Send ${formatETHTruncated(amount)} to Splitter`
+                      : `Send ${formatETHTruncated(amount)} to ${selectedRecipient}`
+                    }
                   </button>
                 )
               })}
