@@ -47,7 +47,7 @@ const TokenSpreadsheet: React.FC = () => {
 
   const formatETHBalance = (balance: number) => {
     return {
-      value: formatETHTruncated(balance),
+      value: formatETHTruncated(balance).slice(0, -4),
       ticker: 'ETH'
     }
   }

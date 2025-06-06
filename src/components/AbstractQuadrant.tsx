@@ -622,27 +622,62 @@ const BettingContract = ({ isVisible }: AnimationComponentProps) => {
   )
 }
 
-const AbstractQuadrant = () => {
+interface AbstractQuadrantProps {
+  quadrantType?: 'Variable Split' | 'Dynamic Recipients' | 'Fee Flow' | 'Betting'
+}
+
+const AbstractQuadrant: React.FC<AbstractQuadrantProps> = ({ quadrantType }) => {
   const { ref, isVisible } = useIntersectionObserver(0.1)
-  
+
+  // Helper function to render individual quadrant
+  const renderQuadrant = (title: string) => {
+    switch (title) {
+      case 'Variable Split':
+        return (
+          <Quadrant title="Variable Split">
+            <VariableProportions isVisible={isVisible} />
+          </Quadrant>
+        )
+      case 'Dynamic Recipients':
+        return (
+          <Quadrant title="Dynamic Recipients">
+            <DynamicRecipients isVisible={isVisible} />
+          </Quadrant>
+        )
+      case 'Fee Flow':
+        return (
+          <Quadrant title="Fee Flow">
+            <CashbackFlow isVisible={isVisible} />
+          </Quadrant>
+        )
+      case 'Betting':
+        return (
+          <Quadrant title="Betting">
+            <BettingContract isVisible={isVisible} />
+          </Quadrant>
+        )
+      default:
+        return null
+    }
+  }
+
+  // If quadrantType is specified, render only that quadrant
+  if (quadrantType) {
+    return (
+      <div ref={ref} className="w-full max-w-md mx-auto bg-gray-900 rounded-lg p-4">
+        {renderQuadrant(quadrantType)}
+      </div>
+    )
+  }
+
+  // Default behavior: render all quadrants in grid
   return (
     <div ref={ref} className="w-full max-w-4xl mx-auto bg-gray-900 rounded-lg p-6">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Quadrant title="Variable Split">
-          <VariableProportions isVisible={isVisible} />
-        </Quadrant>
-        
-        <Quadrant title="Dynamic Recipients">
-          <DynamicRecipients isVisible={isVisible} />
-        </Quadrant>
-        
-        <Quadrant title="Fee Flow">
-          <CashbackFlow isVisible={isVisible} />
-        </Quadrant>
-        
-        <Quadrant title="Betting">
-          <BettingContract isVisible={isVisible} />
-        </Quadrant>
+        {renderQuadrant('Variable Split')}
+        {renderQuadrant('Dynamic Recipients')}
+        {renderQuadrant('Fee Flow')}
+        {renderQuadrant('Betting')}
       </div>
     </div>
   )

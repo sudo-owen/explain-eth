@@ -42,12 +42,14 @@ const IntroPage: React.FC = () => {
             <h1 className="text-4xl font-bold text-white mb-8">Intro</h1>
             
             <p className="text-gray-300 leading-relaxed mb-6">
-              Hi, if you have no idea what <strong>Ethereum</strong>, <strong>blockchains</strong>, and <strong>smart contracts</strong> are, this essay is for you!
+              Hi, if you have no idea what <strong>Ethereum</strong>, <strong>blockchains</strong>, and <strong>smart contracts</strong> are, this is for you!
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              This is a series of articles that tries to explain the basics blockchain in a simplified way. I do my best to avoid heavy math or programming jargon, but there <i>will</i> be some new words and ideas. I will try to use real-world examples when possible to help bridge the gap.
             </p>
             
-            <p className="text-gray-300 leading-relaxed">
-              Many ideas presented here will be simplified, so please keep in mind that the actual concepts <em>will</em> be more detailed. (For all the experts in the room, just enjoy the animations.)
-            </p>
+            <p className="text-gray-300 leading-relaxed">(For all the experts in the room, just enjoy the animations.)</p>
           </section>
 
           {/* Ethereum Section */}
@@ -55,7 +57,11 @@ const IntroPage: React.FC = () => {
             <h1 className="text-4xl font-bold text-white mb-8">What's Ethereum</h1>
             
             <p className="text-gray-300 leading-relaxed mb-6">
-              Let's get started. What is Ethereum? Ethereum is a <strong>blockchain network</strong> for <b>sending money</b> and <strong>running apps</strong>.
+              Let's get started.
+            </p>
+              
+            <p className="text-gray-300 leading-relaxed mb-6">
+              What is Ethereum? Ethereum is a <strong>blockchain network</strong> for <b>sending money</b> and <strong>running apps</strong>.
             </p>
             
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -66,6 +72,8 @@ const IntroPage: React.FC = () => {
               Well, a <strong>network</strong> is a group of connected things, like a social network. As long as something is in the network, you can reach it. Just like how on the Facebook network, you can send a message to anyone as long as they have an account.
             </p>
             
+            {/* NETWORK ANIMATION */}
+
             <p className="text-gray-300 leading-relaxed mb-6">
               (I know we didn't define <strong>blockchain</strong> yet, don't worry, we'll get to it.)
             </p>
@@ -75,15 +83,6 @@ const IntroPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              We'll start with ETH, which is the native currency of the Ethereum network.            
-            </p>
-
-            {/* ETH Showcase */}
-            <div className="my-12">
-              <EthShowcase />
-            </div>
-
-            <p className="text-gray-300 leading-relaxed mb-8">
               Let's give you a test account to get started:
             </p>
 
@@ -91,10 +90,19 @@ const IntroPage: React.FC = () => {
             <div className="my-12">
               <BalanceComponent className="max-w-md mx-auto" />
             </div>
-
+            
             <p className="text-gray-300 leading-relaxed mb-8">
               Every account has a unique ID, called an <strong>address</strong>. Your simulated address is <code className="bg-gray-800 px-2 py-1 rounded text-sm break-all">0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2</code>. Just like how an email address lets you receive emails on the internet, your Ethereum address lets you receive ETH on the Ethereum network.
             </p>
+
+            <p className="text-gray-300 leading-relaxed mb-8">
+              What is ETH? ETH is the native currency of the Ethereum network. Like Bitcoin, it's another digital currency that you can trade or transfer.
+            </p>
+
+            {/* ETH Showcase */}
+            <div className="my-12">
+              <EthShowcase />
+            </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
                Here, let's give you 1 (simulated) ETH to get started below.
@@ -106,11 +114,15 @@ const IntroPage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Now that you have some ETH, you'll be able to send it around to other people.
+              Now that you have some ETH, you'll can send it around to other people.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              You also need some friends to send money to. Meet Alice, Bob, and Carol.
+              Let's give you some simulated friends to send money to.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-8">
+              Meet Alice, Bob, and Carol.
             </p>
 
             {/* Profile Cards */}
@@ -157,7 +169,7 @@ const IntroPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              What if we have to send money to multiple people? Do we need to send first to Alice, wait a full 12 seconds, then send to Bob, wait, and so on?
+              What if we have to send money to multiple people? Do we need to send first to Alice, wait 12 seconds, then send to Bob, wait, and so on?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -166,6 +178,10 @@ const IntroPage: React.FC = () => {
 
             <p className="text-gray-300 leading-relaxed mb-6">
               On Ethereum, we can send out multiple transactions to different accounts. Then, in around 12 seconds, they'll all happen one after another in quick succession.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              How does that work? Here's an example.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
@@ -227,7 +243,7 @@ const IntroPage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              When we send out all these different transactions, they get collected into a <b>block</b>. So a block is a list of all the transactions that have happened, and a new one gets published every 12 seconds.
+              When we send out all these different transactions, they get collected into a <b>block</b>. So a block is a list of all the transactions that have happened. And a new block gets published around every 12 seconds.
             </p>
 
             {/* Block Animation */}
@@ -236,7 +252,7 @@ const IntroPage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              And once we have more than one block, we have a <b>blockchain</b>. As the name suggests, it's a chain of blocks, or an ordered list of transactions.
+              Once we have more than one block, we have a <b>blockchain</b>. As the name suggests, it's a chain of blocks, or an ordered list of transactions.
             </p>
 
             {/* Static Blockchain Component */}
@@ -245,11 +261,11 @@ const IntroPage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              But what other types of transactions are there?
+              But what other types of transactions are there? So far we've only seen sending and receiving ETH.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              In addition to sending ETH around, we can also interact with <b>apps</b> on the Ethereum network. 
+              In addition to sending ETH around, we can also interact with <b>apps</b> on the Ethereum network. These interactions are also transactions!
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">

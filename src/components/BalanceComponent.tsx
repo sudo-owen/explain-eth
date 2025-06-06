@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useBlockchainContext } from '../contexts/BlockchainContext'
 import { Recipient } from '../types/blockchain'
-import { formatETH } from '../utils/transactions'
+import { formatETH, formatETHTruncated } from '../utils/transactions'
 import { getRecipientAddress, getRecipientEmoji } from '../utils/recipients'
 import FlashAnimation from './FlashAnimation'
 
@@ -171,7 +171,7 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
                         {showSentCheckmarks && hasSentMoney && <span className="text-green-400">✅</span>}
                       </div>
                       <span className="text-xs text-gray-400">
-                        {formatETH(recipientBalance)}
+                        {formatETHTruncated(recipientBalance)}
                       </span>
                     </button>
                   </FlashAnimation>
@@ -201,7 +201,7 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
                       }
                     `}
                   >
-                    Send {formatETH(amount)} to {selectedRecipient}
+                    Send {formatETHTruncated(amount)} to {selectedRecipient}
                   </button>
                 )
               })}
