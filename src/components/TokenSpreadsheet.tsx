@@ -105,8 +105,9 @@ const TokenSpreadsheet: React.FC<TokenSpreadsheetProps> = ({
 
       // Step 6: Bob's balance increases, fade out badge - 0.5s
       setTimeout(() => {
-        setAnimatedBalances(prev => ({ ...prev, 'Bob': 285.50 })) // 275.50 + 10
-
+        const bobUser = userData.find(u => u.name === 'Bob')
+        const newBobBalance = bobUser!.usdcBalance + 10
+        setAnimatedBalances(prev => ({ ...prev, 'Bob': newBobBalance }))
         // Start fade out
         setFloatingBadges(prev => prev.map(badge => ({ ...badge, isVisible: false })))
 
@@ -238,7 +239,9 @@ const TokenSpreadsheet: React.FC<TokenSpreadsheetProps> = ({
           </div>
 
         {/* Mobile Table */}
-        <div className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden relative">
+        <div className={`bg-gray-800 border border-gray-700 rounded-lg relative ${
+          floatingBadges.length > 0 ? 'overflow-visible' : 'overflow-hidden'
+        }`}>
           <div className="bg-gray-700 px-4 py-3 border-b border-gray-600">
             <div className="flex items-center justify-center space-x-2">
               <img
@@ -250,7 +253,7 @@ const TokenSpreadsheet: React.FC<TokenSpreadsheetProps> = ({
             </div>
           </div>
           <div className="overflow-x-auto"
-            style={floatingBadges.length > 0 ? { overflowX: 'hidden' } : {}}
+            style={floatingBadges.length > 0 ? { overflowX: 'visible' } : {}}
           >
             <table className="w-full">
               <thead>
@@ -295,12 +298,12 @@ const TokenSpreadsheet: React.FC<TokenSpreadsheetProps> = ({
                         {floatingBadge && (
                           <div
                             className={`
-                              absolute top-0 right-0 px-2 py-1 rounded-full text-xs font-bold z-10 pointer-events-none
+                              absolute top-0 right-2 px-2 py-1 rounded-full text-xs font-bold z-10 pointer-events-none
                               ${floatingBadge.amount > 0 ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}
                               transition-all duration-300 ease-out
                               ${floatingBadge.isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}
                             `}
-                            style={{ transform: 'translate(25%, -25%)' }}
+                            style={{ transform: 'translate(-10%, -25%)' }}
                           >
                             {floatingBadge.amount > 0 ? '+' : ''}{floatingBadge.amount}
                           </div>
@@ -319,7 +322,9 @@ const TokenSpreadsheet: React.FC<TokenSpreadsheetProps> = ({
       {/* Mobile Single Token Table (when not showing both) */}
       {showTokens !== 'both' && (
         <div className="md:hidden">
-            <div className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden relative">
+            <div className={`bg-gray-800 border border-gray-700 rounded-lg relative ${
+              floatingBadges.length > 0 ? 'overflow-visible' : 'overflow-hidden'
+            }`}>
               <div className="bg-gray-700 px-4 py-3 border-b border-gray-600">
                 <div className="flex items-center justify-center space-x-2">
                   <img
@@ -331,6 +336,7 @@ const TokenSpreadsheet: React.FC<TokenSpreadsheetProps> = ({
                 </div>
               </div>
               <div className="overflow-x-auto"
+                style={floatingBadges.length > 0 ? { overflowX: 'visible' } : {}}
               >
                 <table className="w-full">
                   <thead>
@@ -398,13 +404,17 @@ const TokenSpreadsheet: React.FC<TokenSpreadsheetProps> = ({
 
       {/* Desktop Unified Table */}
       <div className="hidden md:block">
-        <div className="bg-gray-800 border border-gray-700 rounded-lg overflow-hidden relative">
+        <div className={`bg-gray-800 border border-gray-700 rounded-lg relative ${
+          floatingBadges.length > 0 ? 'overflow-visible' : 'overflow-hidden'
+        }`}>
           <div className="bg-gray-700 px-4 py-3 border-b border-gray-600">
             <h3 className="text-lg font-semibold text-gray-100 text-center">
               {showTokens === 'both' ? 'Token Balances' : `${showTokens} Balances`}
             </h3>
           </div>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto"
+            style={floatingBadges.length > 0 ? { overflowX: 'visible' } : {}}
+          >
             <table className="w-full">
               <thead>
                 <tr className="bg-gray-750">
@@ -489,7 +499,7 @@ const TokenSpreadsheet: React.FC<TokenSpreadsheetProps> = ({
       </div>
 
       {/* Caption */}
-      <div className="flex justify-center mt-6">
+      <div className="flex justify-center mt-6 mb-6">
         <div className="text-white text-sm bg-black bg-opacity-50 px-4 py-2 rounded max-w-2xl">
           {caption || "Each token maintains its own table of who owns what. Your address can hold multiple types of tokens simultaneously because it has a row in every token's table."}
         </div>

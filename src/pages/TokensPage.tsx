@@ -144,6 +144,15 @@ const TokensPage: React.FC = () => {
               caption="When Alice sends 10 USDC to Bob, their balances in the spreadsheet are updated."
             />
 
+            <p className="text-gray-300 leading-relaxed mb-6">
+              One cool thing is that the Ethereum network is always live. You can send tokens around wherever you want, whenever you want. No early closing hours or weekends off. This is one reason why people are interested in using blockchain for financial apps like cross-border payments. 
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Now that we've introduced tokens, let's take a look at how we can use them in our <Vocab>smart contracts</Vocab>...
+            </p>
+              
+
           </section>
 
         </article>
