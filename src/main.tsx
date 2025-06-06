@@ -5,6 +5,7 @@ import HomePage from './pages/HomePage.tsx'
 import IntroPage from './pages/IntroPage.tsx'
 import AppsPage from './pages/AppsPage.tsx'
 import TokensPage from './pages/TokensPage.tsx'
+import Apps2Page from './pages/Apps2Page.tsx'
 import PlaygroundPage from './pages/PlaygroundPage.tsx'
 import { BlockchainProvider } from './contexts/BlockchainContext.tsx'
 import './index.css'
@@ -18,6 +19,7 @@ createRoot(document.getElementById('root')!).render(
           <Route path="/intro" element={<IntroPage />} />
           <Route path="/apps" element={<AppsPage />} />
           <Route path="/tokens" element={<TokensPage />} />
+          <Route path="/apps2" element={<Apps2Page />} />
           <Route path="/playground" element={<PlaygroundPage />} />
         </Routes>
       </BlockchainProvider>

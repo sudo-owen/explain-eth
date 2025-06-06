@@ -33,15 +33,15 @@ const TokensPage: React.FC = () => {
             <h1 className="text-4xl font-bold text-white mb-8">Tokens</h1>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Let's talk <Vocab>tokens</Vocab>. 
-            </p>
-
-            <p className="text-gray-300 leading-relaxed mb-6">
               What is a <Vocab>token</Vocab>?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              A token is a currency that can be sent on a blockchain network. You can receive all types of tokens with the same <code className="bg-gray-800 px-2 py-1 rounded text-sm break-all">0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2</code> address.
+              A <Vocab>token</Vocab> is a currency that can be sent on a blockchain network.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              You can receive all types of tokens with the same <code className="bg-gray-800 px-2 py-1 rounded text-sm break-all">0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2</code> address. There's no need to use a new account for each token type.
             </p>
 
             <div className="my-8">
@@ -114,7 +114,7 @@ const TokensPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Imagine the Ethereum network contains a super big spreadsheet.
+              Imagine the Ethereum network contains a <i>super</i> big spreadsheet.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -130,7 +130,7 @@ const TokensPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              A transfer is just updating the balance in the spreadsheet. The sender's balance goes down, and the receiver's balance goes up.            
+              A "send" means updating the balance in the spreadsheet. The sender's balance goes down, and the receiver's balance goes up.            
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">

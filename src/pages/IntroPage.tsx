@@ -48,10 +48,24 @@ const IntroPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              This is a series of articles that tries to explain the basics blockchain in a simplified way. I do my best to avoid heavy math or programming jargon, but there <i>will</i> be some new words and ideas. I will try to use real-world examples when possible to help bridge the gap.
+              This is a series of articles that tries to explain the basics of blockchain in a simplified way. I do my best to avoid heavy math or programming jargon, but there <i>will</i> be some new words and ideas. I try to use real-world examples when possible to help bridge the gap.
             </p>
             
-            <p className="text-gray-300 leading-relaxed">(For all the experts in the room, just enjoy the animations.)</p>
+            <p className="text-gray-300 leading-relaxed mb-6">(For all the experts in the room, just enjoy the animations.)</p>
+            
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Along the way, we'll cover how blockchains:
+              <ul className="list-disc list-inside">
+                <li>Let us send and receive money 24/7</li>
+                <li>Automatically split bills</li>
+                <li>Earn interest on our dollars</li>
+                <li>Unlock new types of apps</li>
+              </ul>
+              And a little bit more!
+            </p>
+
+            {/* Quadrant animation */}
+
           </section>
 
           {/* Ethereum Section */}
