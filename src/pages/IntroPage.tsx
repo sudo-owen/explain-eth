@@ -11,6 +11,7 @@ import DummyTransactionModal from '../components/DummyTransactionModal'
 import Navigation from '../components/Navigation'
 import EthShowcase from '../components/EthShowcase'
 import NetworkAnimation from '../components/NetworkAnimation'
+import IntroAbstractQuadrant from '../components/IntroAbstractQuadrant'
 import { FootnoteProvider, FootnoteRef, FootnoteList } from '../components/Footnote'
 import Vocab from '../components/Vocab'
 
@@ -53,18 +54,77 @@ const IntroPage: React.FC = () => {
             
             <p className="text-gray-300 leading-relaxed mb-6">(For all the experts in the room, just enjoy the animations.)</p>
             
-            <p className="text-gray-300 leading-relaxed mb-6">
+            <p className="text-gray-300 leading-relaxed mb-4">
               Along the way, we'll cover how blockchains:
-              <ul className="list-disc list-inside">
-                <li>Let us send and receive money 24/7</li>
-                <li>Automatically split bills</li>
-                <li>Earn interest on our dollars</li>
-                <li>Unlock new types of apps</li>
-              </ul>
-              And a little bit more!
             </p>
 
-            {/* Quadrant animation */}
+            {/* Blockchain Capabilities List */}
+            <div className="text-gray-300 leading-relaxed mb-6">
+              {/* Send/Receive Money */}
+              <div className="mb-4">
+                <div className="flex items-start">
+                  <span className="inline-block w-2 h-2 bg-gray-400 rounded-full mt-3 mr-3 flex-shrink-0"></span>
+                  <div className="flex-1 text">
+                    <span className="text-blue-300">Let us send and receive money 24/7</span>
+                  </div>
+                </div>
+                {/* Mobile-only quadrant */}
+                <div className="mt-4 md:hidden">
+                  <IntroAbstractQuadrant quadrantType="Send/Receive Money" />
+                </div>
+              </div>
+
+              {/* Split Bills */}
+              <div className="mb-4">
+                <div className="flex items-start">
+                  <span className="inline-block w-2 h-2 bg-gray-400 rounded-full mt-3 mr-3 flex-shrink-0"></span>
+                  <div className="flex-1 text">
+                    <span className="text-green-300">Automatically split bills</span>
+                  </div>
+                </div>
+                {/* Mobile-only quadrant */}
+                <div className="mt-4 md:hidden">
+                  <IntroAbstractQuadrant quadrantType="Split Bills" />
+                </div>
+              </div>
+
+              {/* Earn Interest */}
+              <div className="mb-4">
+                <div className="flex items-start">
+                  <span className="inline-block w-2 h-2 bg-gray-400 rounded-full mt-3 mr-3 flex-shrink-0"></span>
+                  <div className="flex-1 text">
+                    <span className="text-yellow-300">Earn interest on our dollars</span>
+                  </div>
+                </div>
+                {/* Mobile-only quadrant */}
+                <div className="mt-4 md:hidden">
+                  <IntroAbstractQuadrant quadrantType="Earn Interest" />
+                </div>
+              </div>
+
+              {/* New Apps */}
+              <div className="mb-4">
+                <div className="flex items-start">
+                  <span className="inline-block w-2 h-2 bg-gray-400 rounded-full mt-3 mr-3 flex-shrink-0"></span>
+                  <div className="flex-1 text">
+                    <span className="text-purple-300">Unlock new types of apps</span>
+                  </div>
+                </div>
+                {/* Mobile-only quadrant */}
+                <div className="mt-4 md:hidden">
+                  <IntroAbstractQuadrant quadrantType="New Apps" />
+                </div>
+              </div>
+            </div>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              And more!
+            </p>
+
+            {/* Desktop-only Abstract Quadrant Animation */}
+            <div className="mb-12 hidden md:block">
+              <IntroAbstractQuadrant />
+            </div>
 
           </section>
 

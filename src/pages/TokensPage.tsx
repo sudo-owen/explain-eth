@@ -149,7 +149,15 @@ const TokensPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Now that we've introduced tokens, let's take a look at how we can use them in our <Vocab>smart contracts</Vocab>...
+              Okay so now we know the basics of smart contracts. And we know about stablecoins. We can combine them to build new types of apps!
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              What do they look like?
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Let's do a deeper dive into <Vocab>smart contracts</Vocab>...
             </p>
               
 

@@ -622,11 +622,11 @@ const BettingContract = ({ isVisible }: AnimationComponentProps) => {
   )
 }
 
-interface AbstractQuadrantProps {
+interface AppsAbstractQuadrantProps {
   quadrantType?: 'Variable Split' | 'Dynamic Recipients' | 'Fee Flow' | 'Betting'
 }
 
-const AbstractQuadrant: React.FC<AbstractQuadrantProps> = ({ quadrantType }) => {
+const AppsAbstractQuadrant: React.FC<AppsAbstractQuadrantProps> = ({ quadrantType }) => {
   const { ref, isVisible } = useIntersectionObserver(0.1)
 
   // Helper function to render individual quadrant
@@ -683,4 +683,4 @@ const AbstractQuadrant: React.FC<AbstractQuadrantProps> = ({ quadrantType }) => 
   )
 }
 
-export default AbstractQuadrant
+export default AppsAbstractQuadrant

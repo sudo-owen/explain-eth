@@ -41,6 +41,9 @@ interface LocalRecipientBalances {
 // Animation phases
 type AnimationPhase = 'pending' | 'splitting' | 'distributing' | 'resetting'
 
+// Dot animation phases for the splitting effect
+type DotAnimationPhase = 'reset' | 'moving' | 'splitting' | 'arrived'
+
 // Props interface for split percentages
 interface SplitAnimationProps {
   alicePercent?: number
@@ -86,8 +89,7 @@ const SplitAnimation: React.FC<SplitAnimationProps> = ({
     Bob: false,
     Carol: false
   })
-  const [showMainDot, setShowMainDot] = useState(false)
-  const [mainDotPosition, setMainDotPosition] = useState('left') // 'left', 'moving', 'hidden'
+  const [dotAnimationPhase, setDotAnimationPhase] = useState<DotAnimationPhase>('reset')
   const [recipientDots, setRecipientDots] = useState<Record<string, boolean>>({
     Alice: false,
     Bob: false,
@@ -119,20 +121,18 @@ const SplitAnimation: React.FC<SplitAnimationProps> = ({
       setSplitterCharged(false)
       setRecipientCharging({ Alice: false, Bob: false, Carol: false })
       setRecipientBalances({ Alice: 0, Bob: 0, Carol: 0 })
-      setShowMainDot(false)
-      setMainDotPosition('left')
+      setDotAnimationPhase('reset')
       setRecipientDots({ Alice: false, Bob: false, Carol: false })
 
       // Single animation sequence with all timing
       const animationSteps = [
-        { delay: 100, action: () => setShowMainDot(true) },
-        { delay: 200, action: () => { setMainDotPosition('moving'); setSplitterCharged(true) } },
-        { delay: 4000, action: () => { setPhase('splitting'); setTransactionStatus('confirmed') } },
+        { delay: 100, action: () => setDotAnimationPhase('moving') },
+        { delay: 200, action: () => setSplitterCharged(true) },
+        { delay: 4000, action: () => { setPhase('splitting'); setTransactionStatus('confirmed'); setDotAnimationPhase('splitting') } },
         { delay: 4500, action: () => {
-          setMainDotPosition('hidden')
-          setShowMainDot(false)
           setPhase('distributing')
           setSplitterCharged(false)
+          setDotAnimationPhase('arrived')
         }},
         { delay: 4700, action: () => {
           setRecipientCharging(prev => ({ ...prev, Alice: true }))
@@ -176,6 +176,59 @@ const SplitAnimation: React.FC<SplitAnimationProps> = ({
     const maxSize = 16 // maximum size in pixels
     const ratio = amount / totalAmount
     return Math.max(baseSize, Math.min(maxSize, baseSize + (ratio * (maxSize - baseSize))))
+  }
+
+  // Get animated dot style for splitting animation (similar to AbstractQuadrant)
+  const getAnimatedDotStyle = (index: number) => {
+    const recipients = ['Alice', 'Bob', 'Carol']
+    const recipient = recipients[index]
+    const amount = index === 0 ? aliceAmount : index === 1 ? bobAmount : carolAmount
+    const dotSize = getDotSize(amount)
+
+    // Calculate target positions for each recipient (approximate positions in the right column)
+    const targetTops = [25, 50, 75] // Approximate percentages for Alice, Bob, Carol positions
+    const targetTop = targetTops[index]
+
+    let left: string, top: string, width: string, height: string, opacity: number
+
+    switch (dotAnimationPhase) {
+      case 'reset':
+        left = '20px'
+        top = '50%'
+        width = height = '12px'
+        opacity = index === 0 ? 1 : 0 // Only show main dot initially
+        break
+      case 'moving':
+        left = '40%' // Move toward splitter
+        top = '50%'
+        width = height = '12px'
+        opacity = index === 0 ? 1 : 0 // Still only main dot
+        break
+      case 'splitting':
+        left = '75%' // Continue to recipients area
+        top = `${targetTop}%` // Split to different Y positions
+        width = height = `${dotSize}px` // Change to target sizes
+        opacity = 1 // All dots become visible
+        break
+      case 'arrived':
+        left = '75%'
+        top = `${targetTop}%`
+        width = height = `${dotSize}px`
+        opacity = 0 // Hide animated dots, show recipient dots instead
+        break
+      default:
+        opacity = 0
+    }
+
+    return {
+      left,
+      top,
+      width,
+      height,
+      opacity,
+      transform: 'translateY(-50%)',
+      transition: dotAnimationPhase === 'reset' ? 'none' : 'all 1000ms cubic-bezier(0.4, 0, 0.2, 1)'
+    }
   }
 
   return (
@@ -301,18 +354,14 @@ const SplitAnimation: React.FC<SplitAnimationProps> = ({
           </div>
         </div>
 
-        {/* Main White Dot Animation - visible only when not overlapping components */}
-        {showMainDot && mainDotPosition !== 'hidden' && (
+        {/* Animated splitting dots */}
+        {[0, 1, 2].map((index) => (
           <div
-            className="absolute w-4 h-4 bg-white rounded-full transition-all duration-1000 ease-in-out z-10"
-            style={{
-              top: '50%',
-              transform: 'translateY(-50%)',
-              left: mainDotPosition === 'left' ? '-20px' : 'calc(40% - 8px)', // Stop before splitter component
-              opacity: 1
-            }}
+            key={`split-dot-${index}-${cycleCount}`}
+            className="absolute bg-white rounded-full z-10"
+            style={getAnimatedDotStyle(index)}
           />
-        )}
+        ))}
 
       </div>
 

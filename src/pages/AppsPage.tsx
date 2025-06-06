@@ -4,7 +4,7 @@ import TransactionModal from "../components/TransactionModal";
 import TransactionHistoryOverlay from "../components/TransactionHistoryOverlay";
 import CodeBlock from "../components/CodeBlock";
 import SplitAnimation from "../components/SplitAnimation";
-import AbstractQuadrant from "../components/AbstractQuadrant";
+import AppsAbstractQuadrant from "../components/AppsAbstractQuadrant";
 import Navigation from "../components/Navigation";
 import BalanceComponent from "../components/BalanceComponent";
 import {
@@ -269,7 +269,7 @@ END`}
                   </div>
                   {/* Mobile-only quadrant */}
                   <div className="mt-4 md:hidden">
-                    <AbstractQuadrant quadrantType="Variable Split" />
+                    <AppsAbstractQuadrant quadrantType="Variable Split" />
                   </div>
                 </div>
 
@@ -285,7 +285,7 @@ END`}
                   </div>
                   {/* Mobile-only quadrant */}
                   <div className="mt-4 md:hidden">
-                    <AbstractQuadrant quadrantType="Dynamic Recipients" />
+                    <AppsAbstractQuadrant quadrantType="Dynamic Recipients" />
                   </div>
                 </div>
 
@@ -301,7 +301,7 @@ END`}
                   </div>
                   {/* Mobile-only quadrant */}
                   <div className="mt-4 md:hidden">
-                    <AbstractQuadrant quadrantType="Fee Flow" />
+                    <AppsAbstractQuadrant quadrantType="Fee Flow" />
                   </div>
                 </div>
 
@@ -317,14 +317,14 @@ END`}
                   </div>
                   {/* Mobile-only quadrant */}
                   <div className="mt-4 md:hidden">
-                    <AbstractQuadrant quadrantType="Betting" />
+                    <AppsAbstractQuadrant quadrantType="Betting" />
                   </div>
                 </div>
               </div>
 
               {/* Desktop-only Abstract Quadrant Animation */}
               <div className="my-12 hidden md:block">
-                <AbstractQuadrant />
+                <AppsAbstractQuadrant />
               </div>
 
               <p className="text-gray-300 leading-relaxed mb-6">

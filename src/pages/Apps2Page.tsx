@@ -25,10 +25,10 @@ const Apps2Page: React.FC = () => {
           
           {/* Apps2 Section */}
           <section className="mb-16">
-            <h1 className="text-4xl font-bold text-white mb-8">Apps2</h1>
+            <h1 className="text-4xl font-bold text-white mb-8">Apps (But Now With Tokens)</h1>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              This is a placeholder page for Apps2.
+              This is a placeholder.
             </p>
 
           </section>
