@@ -5,6 +5,7 @@ import TransactionHistoryOverlay from '../components/TransactionHistoryOverlay'
 import Navigation from '../components/Navigation'
 import TokenFlowAnimation from '../components/TokenFlowAnimation'
 import StablecoinShowcase from '../components/StablecoinShowcase'
+import VolatilityComparison from '../components/VolatilityComparison'
 
 const TokensPage: React.FC = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
@@ -64,6 +65,11 @@ const TokensPage: React.FC = () => {
             <p className="text-gray-300 leading-relaxed mb-6">
               Unlike ETH, which has a fluctuating price depending on market conditions, these USD stablecoins are always tracking the US Dollar. So 1 USDC or 1 USDT will always be redeemable for $1. This makes it great for payments, splitting bills, or merchants.
             </p>
+
+            {/* VOLATILITY COMPARISON */}
+            <div className="my-8">
+              <VolatilityComparison />
+            </div>
 
             <p className="text-gray-300 leading-relaxed mb-6">
               How does it work?
