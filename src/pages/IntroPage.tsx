@@ -119,7 +119,7 @@ const IntroPage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Now that you have some ETH, you'll can send it around to other people.
+              Now that you have some ETH, you can send it around to other people.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
