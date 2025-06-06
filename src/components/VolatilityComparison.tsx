@@ -98,7 +98,7 @@ const VolatilityComparison: React.FC = () => {
   return (
     <div className="w-full max-w-4xl mx-auto bg-gray-800 rounded-lg p-6">
       <h3 className="text-2xl font-bold text-white mb-6 text-center">
-        Price Volatility Comparison
+        Price Comparison
       </h3>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -145,9 +145,9 @@ const VolatilityComparison: React.FC = () => {
             </svg>
             
             {/* Price labels */}
-            <div className="absolute top-1 left-2 text-xs text-gray-400">$4000</div>
-            <div className="absolute bottom-1 left-2 text-xs text-gray-400">$1000</div>
-            <div className="absolute top-1/2 left-2 text-xs text-gray-400 transform -translate-y-1/2">$2500</div>
+            <div className="absolute top-1 left-1 text-xs text-gray-400">$4000</div>
+            <div className="absolute bottom-1 left-1 text-xs text-gray-400">$1000</div>
+            <div className="absolute top-1/2 left-1 text-xs text-gray-400 transform -translate-y-1/2">$2500</div>
           </div>
           
           <div className="text-center mt-2">
@@ -216,9 +216,9 @@ const VolatilityComparison: React.FC = () => {
             </svg>
             
             {/* Price labels */}
-            <div className="absolute top-1 left-2 text-xs text-gray-400">$1.01</div>
-            <div className="absolute bottom-1 left-2 text-xs text-gray-400">$0.99</div>
-            <div className="absolute top-1/2 left-2 text-xs text-gray-400 transform -translate-y-1/2">$1.00</div>
+            <div className="absolute top-1 left-1 text-xs text-gray-400">$1.01</div>
+            <div className="absolute bottom-1 left-1 text-xs text-gray-400">$0.99</div>
+            <div className="absolute top-1/2 left-1 text-xs text-gray-400 transform -translate-y-1/2">$1.00</div>
           </div>
           
           <div className="text-center mt-2">

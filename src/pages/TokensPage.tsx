@@ -6,6 +6,7 @@ import Navigation from '../components/Navigation'
 import TokenFlowAnimation from '../components/TokenFlowAnimation'
 import StablecoinShowcase from '../components/StablecoinShowcase'
 import VolatilityComparison from '../components/VolatilityComparison'
+import TokenSpreadsheet from '../components/TokenSpreadsheet'
 
 const TokensPage: React.FC = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
@@ -72,7 +73,7 @@ const TokensPage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              How does it work?
+              How do stablecoins work?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -96,7 +97,7 @@ const TokensPage: React.FC = () => {
             </p>
 
             <div className="my-8">
-              {/* SPREADSHEET EXAMPLE */}
+              <TokenSpreadsheet />
             </div>
 
           </section>
