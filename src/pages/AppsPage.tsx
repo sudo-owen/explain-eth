@@ -75,7 +75,7 @@ const AppsPage: React.FC = () => {
               </p>
 
               <p className="text-gray-300 leading-relaxed mb-6">
-                What if we could automate that somehow?
+                What if we could automate that to be just one click?
               </p>
 
               <p className="text-gray-300 leading-relaxed mb-8">
@@ -122,7 +122,7 @@ END`}
               </p>
 
               <p className="text-gray-300 leading-relaxed mb-6">
-                As you might have already understood, it's a payment splitter!
+                It's a payment splitter!
               </p>
 
               <p className="text-gray-300 leading-relaxed mb-6">
@@ -151,12 +151,13 @@ END`}
 
               <p className="text-gray-300 leading-relaxed mb-6">
                 On Ethereum, all smart contracts have their own address. To run
-                this program, we just send ETH to its address.
+                this program, we just send ETH to its address. So it's a transaction, just like how sending ETH to Alice, Bob, or Carol is also a transaction.
               </p>
 
               <p className="text-gray-300 leading-relaxed mb-6">
                 Once the program receives ETH, it'll automatically do its job and split the
-                funds three ways between Alice, Bob, and Carol.
+                funds three ways between Alice, Bob, and Carol as part of the same
+                transaction.
               </p>
 
               {/* Split Animation */}
@@ -200,6 +201,8 @@ END`}
                 they tell everyone to send them money to a Payment Splitter
                 smart contract.
               </p>
+
+              {/* COOKIE DIAGRAM */}
 
               <p className="text-gray-300 leading-relaxed mb-6">
                 How can we change the Payment Splitter program to instead send
@@ -250,7 +253,7 @@ END`}
               </p>
 
               <p className="text-gray-300 leading-relaxed mb-6">
-                For example, with smart contracts, we could have:
+                For example, we could have:
               </p>
 
               {/* Smart Contract Capabilities List */}

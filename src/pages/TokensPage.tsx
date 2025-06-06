@@ -8,7 +8,6 @@ import StablecoinShowcase from '../components/StablecoinShowcase'
 import VolatilityComparison from '../components/VolatilityComparison'
 import TokenSpreadsheet from '../components/TokenSpreadsheet'
 import Vocab from '../components/Vocab'
-import Footnote from '../components/Footnote'
 
 const TokensPage: React.FC = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
@@ -34,7 +33,7 @@ const TokensPage: React.FC = () => {
             <h1 className="text-4xl font-bold text-white mb-8">Tokens</h1>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Your account can hold many types of <Vocab>tokens</Vocab>. 
+              Let's talk <Vocab>tokens</Vocab>. 
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -50,11 +49,11 @@ const TokensPage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              What other tokens are there?
+              All of our examples so far have used ETH. But on the Ethereum network, there are many, many different types of tokens. 
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              All of our examples so far have used ETH. But on the Ethereum network, there are many, many different types of tokens. 
+              What other tokens are there?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -111,16 +110,39 @@ const TokensPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              It's time for another example.
+              It's time for another example!
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Imagine the Ethereum network contains a super big spreadsheet. This spreadsheet has tables for every token <i>and</i> every account ever created. For each token, there is a column for address and balance. This way, we can keep track of everyone's balances for every token.
+              Imagine the Ethereum network contains a super big spreadsheet.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              This spreadsheet has tables for every token <i>and</i> every account ever created. For each token, there is a column for address and balance. This way, we can keep track of everyone's balances for every token.
             </p>
 
             <div className="my-8">
               <TokenSpreadsheet />
             </div>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              This spreadsheet model also helps us think about what it really means when we "send" a token to another address (whether it's a person or a smart contract). 
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              A transfer is just updating the balance in the spreadsheet. The sender's balance goes down, and the receiver's balance goes up.            
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              So if Alice sends Bob 10 USDC, we can think of the Ethereum network updating the spreadsheet cells for Alice and Bob's accounts.
+            </p>
+
+            {/* TRANSFER ANIMATION */}
+            <TokenSpreadsheet
+              mode="transfer-animation"
+              showTokens="USDC"
+              caption="When Alice sends 10 USDC to Bob, their balances in the spreadsheet are updated."
+            />
 
           </section>
 
