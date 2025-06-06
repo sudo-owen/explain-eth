@@ -151,7 +151,7 @@ const VolatilityComparison: React.FC = () => {
           </div>
           
           <div className="text-center mt-2">
-            <div className="text-sm text-blue-400 font-medium">High Volatility</div>
+            <div className="text-sm text-blue-300 font-medium">High Volatility</div>
             <div className="text-xs text-gray-500">Price swings</div>
           </div>
         </div>

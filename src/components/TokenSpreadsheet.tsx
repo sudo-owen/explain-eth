@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { getRecipientEmoji, getRecipientAddress } from '../utils/recipients'
+import { formatETHTruncated } from '../utils/transactions'
 
 interface TokenData {
   name: string
@@ -18,38 +19,44 @@ const TokenSpreadsheet: React.FC = () => {
       name: 'You',
       emoji: '👤',
       address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
-      ethBalance: Math.random() * 4.9 + 0.1,
-      usdcBalance: Math.random() * 4900 + 100
+      ethBalance: 2,
+      usdcBalance: 100
     },
     {
       name: 'Alice',
       emoji: getRecipientEmoji('Alice'),
       address: getRecipientAddress('Alice'),
-      ethBalance: Math.random() * 4.9 + 0.1,
-      usdcBalance: Math.random() * 4900 + 100
+      ethBalance: 0.3,
+      usdcBalance: 50
     },
     {
       name: 'Bob',
       emoji: getRecipientEmoji('Bob'),
       address: getRecipientAddress('Bob'),
-      ethBalance: Math.random() * 4.9 + 0.1,
-      usdcBalance: Math.random() * 4900 + 100
+      ethBalance: 1.2,
+      usdcBalance: 275.50
     },
     {
       name: 'Carol',
       emoji: getRecipientEmoji('Carol'),
       address: getRecipientAddress('Carol'),
-      ethBalance: Math.random() * 4.9 + 0.1,
-      usdcBalance: Math.random() * 4900 + 100
+      ethBalance: 0.8,
+      usdcBalance: 69.42
     }
   ]
 
   const formatETHBalance = (balance: number) => {
-    return `${balance.toFixed(4)} ETH`
+    return {
+      value: formatETHTruncated(balance),
+      ticker: 'ETH'
+    }
   }
 
   const formatUSDCBalance = (balance: number) => {
-    return `${balance.toFixed(2)} USDC`
+    return {
+      value: balance.toFixed(2),
+      ticker: 'USDC'
+    }
   }
 
   const truncateAddress = (address: string) => {
@@ -63,6 +70,16 @@ const TokenSpreadsheet: React.FC = () => {
   const formatCurrentBalance = (user: TokenData) => {
     const balance = getCurrentBalance(user)
     return activeTab === 'ETH' ? formatETHBalance(balance) : formatUSDCBalance(balance)
+  }
+
+  const renderBalance = (balanceData: { value: string; ticker: string }, isETH: boolean) => {
+    const tickerColor = isETH ? 'text-blue-300' : 'text-green-400'
+    return (
+      <span className="text-sm">
+        <span className="font-bold text-gray-300">{balanceData.value}</span>
+        <span className={`ml-1 font-medium ${tickerColor}`}>{balanceData.ticker}</span>
+      </span>
+    )
   }
 
   return (
@@ -137,9 +154,7 @@ const TokenSpreadsheet: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-4 py-3 text-right border-b border-gray-700">
-                      <span className="text-sm font-medium text-green-400">
-                        {formatCurrentBalance(user)}
-                      </span>
+                      {renderBalance(formatCurrentBalance(user), activeTab === 'ETH')}
                     </td>
                   </tr>
                 ))}
@@ -194,14 +209,10 @@ const TokenSpreadsheet: React.FC = () => {
                       </div>
                     </td>
                     <td className="px-4 py-3 text-right border-b border-gray-700">
-                      <span className="text-sm font-medium text-green-400">
-                        {formatETHBalance(user.ethBalance)}
-                      </span>
+                      {renderBalance(formatETHBalance(user.ethBalance), true)}
                     </td>
                     <td className="px-4 py-3 text-right border-b border-gray-700">
-                      <span className="text-sm font-medium text-green-400">
-                        {formatUSDCBalance(user.usdcBalance)}
-                      </span>
+                      {renderBalance(formatUSDCBalance(user.usdcBalance), false)}
                     </td>
                   </tr>
                 ))}
