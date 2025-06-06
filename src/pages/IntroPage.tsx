@@ -12,6 +12,7 @@ import Navigation from '../components/Navigation'
 import EthShowcase from '../components/EthShowcase'
 import NetworkAnimation from '../components/NetworkAnimation'
 import { FootnoteProvider, FootnoteRef, FootnoteList } from '../components/Footnote'
+import Vocab from '../components/Vocab'
 
 const IntroPage: React.FC = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
@@ -43,7 +44,7 @@ const IntroPage: React.FC = () => {
             <h1 className="text-4xl font-bold text-white mb-8">Intro</h1>
             
             <p className="text-gray-300 leading-relaxed mb-6">
-              Hi, if you have no idea what <strong>Ethereum</strong>, <strong>blockchains</strong>, and <strong>smart contracts</strong> are, this is for you!
+              Hi, if you have no idea what <Vocab>Ethereum</Vocab>, <Vocab>blockchains</Vocab>, and <Vocab>smart contracts</Vocab> are, this is for you!
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -62,15 +63,15 @@ const IntroPage: React.FC = () => {
             </p>
               
             <p className="text-gray-300 leading-relaxed mb-6">
-              What is Ethereum? Ethereum is a <strong>blockchain network</strong> for <b>sending money</b> and <strong>running apps</strong>.
+              What is Ethereum? Ethereum is a <Vocab>blockchain network</Vocab> for <Vocab>sending money</Vocab> and <Vocab>running apps</Vocab>.
             </p>
-            
+
             <p className="text-gray-300 leading-relaxed mb-6">
               What does that mean?
             </p>
-            
+
             <p className="text-gray-300 leading-relaxed mb-6">
-              Well, a <strong>network</strong> is a group of connected things, like a social network. As long as something is in the network, you can reach it. Just like how on the Facebook network, you can send a message to anyone as long as they have an account.
+              Well, a <Vocab>network</Vocab> is a group of connected things, like a social network. As long as something is in the network, you can reach it. Just like how on the Facebook network, you can send a message to anyone as long as they have an account.
             </p>
             
             {/* Network Animation */}
@@ -79,11 +80,11 @@ const IntroPage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              (I know we didn't define <strong>blockchain</strong> yet, don't worry, we'll get to it.)
+              (I know we didn't define <Vocab>blockchain</Vocab> yet, don't worry, we'll get to it.)
             </p>
-            
+
             <p className="text-gray-300 leading-relaxed mb-8">
-              Like a social media network, you'll need an <strong>account</strong> to get started using Ethereum. An account will let you receive <strong>money</strong>. You can receive many types of digital assets with your account.
+              Like a social media network, you'll need an <Vocab>account</Vocab> to get started using Ethereum. An account will let you receive <Vocab>money</Vocab>. You can receive many types of digital assets with your account.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
@@ -96,7 +97,7 @@ const IntroPage: React.FC = () => {
             </div>
             
             <p className="text-gray-300 leading-relaxed mb-8">
-              Every account has a unique ID, called an <strong>address</strong>. Your simulated address is <code className="bg-gray-800 px-2 py-1 rounded text-sm break-all">0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2</code>. Just like how an email address lets you receive emails on the internet, your Ethereum address lets you receive ETH on the Ethereum network.
+              Every account has a unique ID, called an <Vocab>address</Vocab>. Your simulated address is <code className="bg-gray-800 px-2 py-1 rounded text-sm break-all">0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2</code>. Just like how an email address lets you receive emails on the internet, your Ethereum address lets you receive ETH on the Ethereum network.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-8">
@@ -157,7 +158,7 @@ const IntroPage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Once it turns green, your send transaction has been <b>confirmed</b>. This lets you know that it was successful, i.e. that it went through.
+              Once it turns green, your send transaction has been <Vocab>confirmed</Vocab>. This lets you know that it was successful, i.e. that it went through.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -165,7 +166,7 @@ const IntroPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Specifically, on Ethereum, it takes <b>up to 12 seconds</b> to complete a transaction.
+              Specifically, on Ethereum, it takes <Vocab>up to 12 seconds</Vocab> to complete a transaction.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -206,7 +207,7 @@ const IntroPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              It's because of something called <b>block time</b>. On Ethereum, it takes about 12 seconds for the network to create a <b>block</b>.
+              It's because of something called <Vocab>block time</Vocab>. On Ethereum, it takes about 12 seconds for the network to create a <Vocab>block</Vocab>.
               <FootnoteRef id="speedup">
                   On average, it's probably closer to 6 seconds, so the animations you see are actually running at 2x speed. But don't worry about this too much.
               </FootnoteRef>This "block" is what makes up the word "blockchain."
@@ -247,7 +248,7 @@ const IntroPage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              When we send out all these different transactions, they get collected into a <b>block</b>. So a block is a list of all the transactions that have happened. And a new block gets published around every 12 seconds.
+              When we send out all these different transactions, they get collected into a <Vocab>block</Vocab>. So a block is a list of all the transactions that have happened. And a new block gets published around every 12 seconds.
             </p>
 
             {/* Block Animation */}
@@ -256,7 +257,7 @@ const IntroPage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Once we have more than one block, we have a <b>blockchain</b>. As the name suggests, it's a chain of blocks, or an ordered list of transactions.
+              Once we have more than one block, we have a <Vocab>blockchain</Vocab>. As the name suggests, it's a chain of blocks, or an ordered list of transactions.
             </p>
 
             {/* Static Blockchain Component */}
@@ -269,15 +270,15 @@ const IntroPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              In addition to sending ETH around, we can also interact with <b>apps</b> on the Ethereum network. These interactions are also transactions!
+              In addition to sending ETH around, we can also interact with <Vocab>apps</Vocab> on the Ethereum network. These interactions are also transactions!
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              What does that mean? What does an app look like? 
+              What does that mean? What does an app look like?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Let's explore the basics of <b>apps</b>...
+              Let's explore the basics of <Vocab>apps</Vocab>...
             </p>
 
           </section>

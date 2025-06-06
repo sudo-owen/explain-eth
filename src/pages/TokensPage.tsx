@@ -7,6 +7,8 @@ import TokenFlowAnimation from '../components/TokenFlowAnimation'
 import StablecoinShowcase from '../components/StablecoinShowcase'
 import VolatilityComparison from '../components/VolatilityComparison'
 import TokenSpreadsheet from '../components/TokenSpreadsheet'
+import Vocab from '../components/Vocab'
+import Footnote from '../components/Footnote'
 
 const TokensPage: React.FC = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false)
@@ -32,7 +34,11 @@ const TokensPage: React.FC = () => {
             <h1 className="text-4xl font-bold text-white mb-8">Tokens</h1>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Your account can hold many types of <strong>tokens</strong>. What is a token?
+              Your account can hold many types of <Vocab>tokens</Vocab>. 
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              What is a <Vocab>token</Vocab>?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -48,15 +54,19 @@ const TokensPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              All of our examples so far have used ETH. But on the Ethereum network, there are many, many different types of tokens. One important category of tokens are called <strong>stablecoins</strong>.
+              All of our examples so far have used ETH. But on the Ethereum network, there are many, many different types of tokens. 
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              <strong>Stablecoins</strong> are tokens whose value is tied to a currency. Like I mentioned earlier, these include tokens which track the US Dollar (and we'll focus on them). But there are also ones that track other real world currencies like the Euro and even other assets like gold or silver!
+              One important category of tokens are called <Vocab>stablecoins</Vocab>. 
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Two popular USD stablecoins are <strong>USDC (US Dollar Coin)</strong> and <strong>USDT (US Dollar Tether)</strong>.
+              <Vocab>Stablecoins</Vocab> are tokens whose value is tied to a currency. Like I mentioned earlier, these include tokens which track the US Dollar (and we'll focus on them). But there are also ones that track other real world currencies like the Euro and even other assets like gold or silver!
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Two popular USD stablecoins are <Vocab>USDC (US Dollar Coin)</Vocab> and <Vocab>USDT (US Dollar Tether)</Vocab>.
             </p>
 
             <div className="my-8">
@@ -64,7 +74,7 @@ const TokensPage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Unlike ETH, which has a fluctuating price depending on market conditions, these USD stablecoins are always tracking the US Dollar. So 1 USDC or 1 USDT will always be redeemable for $1. This makes it great for payments, splitting bills, or merchants.
+              Unlike ETH, which has a fluctuating price depending on market conditions, these USD stablecoins are always tracking the US Dollar. So 1 USDC or 1 USDT will always be redeemable for $1. This makes it great for payments, merchants, and finance.
             </p>
 
             {/* VOLATILITY COMPARISON */}
@@ -77,11 +87,11 @@ const TokensPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Under the hood, a company manages a stablecoin. These companies will put money into bank accounts, bonds, or short-dated USD treasuries. Then, for each $1 that they put in, they will <strong>mint</strong> 1 USD token on Ethereum.
+              Under the hood, a company manages a stablecoin. These companies will put money into bank accounts, bonds, or short-dated USD treasuries. Then, for each $1 that they put in, they will <Vocab>mint</Vocab> 1 USD token on Ethereum.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              What does <strong>minting</strong> mean?
+              What does <Vocab>minting</Vocab> mean?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -89,11 +99,23 @@ const TokensPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              What does that look like? And how does your address hold all of these tokens?
+              What does that look like?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              One way to think about what's happening is that the Ethereum network contains a super big spreadsheet. And this spreadsheet has tables for every token, with a column for address and balance.
+              Where do the tokens "live"?
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              And how do our accounts keep track of everything?
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              It's time for another example.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Imagine the Ethereum network contains a super big spreadsheet. This spreadsheet has tables for every token <i>and</i> every account ever created. For each token, there is a column for address and balance. This way, we can keep track of everyone's balances for every token.
             </p>
 
             <div className="my-8">

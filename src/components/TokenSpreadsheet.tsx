@@ -225,7 +225,7 @@ const TokenSpreadsheet: React.FC = () => {
       {/* Caption */}
       <div className="flex justify-center mt-6">
         <div className="text-white text-sm bg-black bg-opacity-50 px-4 py-2 rounded max-w-2xl">
-          Each token maintains its own ledger of who owns what. Your address can hold multiple types of tokens simultaneously.
+          Each token maintains its own table of who owns what. Your address can hold multiple types of tokens simultaneously because it has a row in every token's table.
         </div>
       </div>
     </div>

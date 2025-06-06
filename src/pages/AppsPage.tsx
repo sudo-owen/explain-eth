@@ -12,6 +12,7 @@ import {
   FootnoteProvider,
   FootnoteRef,
 } from "../components/Footnote";
+import Vocab from "../components/Vocab";
 
 const AppsPage: React.FC = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
@@ -37,12 +38,12 @@ const AppsPage: React.FC = () => {
 
               <p className="text-gray-300 leading-relaxed mb-6">
                 An app on Ethereum is a program that can also send or receive
-                ETH <b>according to its own rules</b>.
+                ETH <Vocab>according to its own rules</Vocab>.
               </p>
 
               <p className="text-gray-300 leading-relaxed mb-6">
                 In blockchain jargon, this type of program is called a{" "}
-                <strong>smart contract</strong>.
+                <Vocab>smart contract</Vocab>.
               </p>
 
               <p className="text-gray-300 leading-relaxed mb-6">
@@ -350,7 +351,7 @@ END`}
               </p>
 
               <p className="text-gray-300 leading-relaxed mb-6">
-                Let's explore the basics of <strong>tokens</strong>...
+                Let's explore the basics of <Vocab>tokens</Vocab>...
               </p>
             </section>
           </article>
