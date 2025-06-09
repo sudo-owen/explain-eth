@@ -20,7 +20,7 @@ interface AnimationState {
     | "pause";
   mintTokenPosition: { x: string; y: string; opacity: number; scale: number };
   burnTokenPosition: { x: string; y: string; opacity: number; scale: number };
-  bankCharged: { left: boolean; right: boolean };
+  bankCharged: { left: boolean; right: boolean; aliceGlow?: boolean };
 }
 
 const MintBurnAnimation: React.FC = () => {
@@ -54,7 +54,7 @@ const MintBurnAnimation: React.FC = () => {
       setAliceBalanceLeft(50); // Reset minting side balance
       setAliceBalanceRight(60); // Reset burning side balance
 
-      // Phase 1: Mint - Dollar appears and moves to bank (1.5s)
+      // Phase 1: Mint - Dollar appears and moves to bank (1s)
       setTimeout(() => {
         setAnimationState((prev) => ({
           ...prev,
@@ -67,28 +67,28 @@ const MintBurnAnimation: React.FC = () => {
           },
         }));
 
-        // Then animate to center
+        // Then animate to center (bank)
         setTimeout(() => {
           setAnimationState((prev) => ({
             ...prev,
             mintTokenPosition: {
-              x: "calc(50% - 12px)", // Move to center
+              x: "calc(50% - 12px)", // Move to center (bank)
               y: "0px",
               opacity: 1,
               scale: 1,
             },
           }));
-        }, 100);
-      }, 500);
+        }, 50);
+      }, 300);
 
-      // Phase 2: Bank charges up, dollar vanishes, USDC appears from bank (1.5s)
+      // Phase 2: Bank charges up, dollar vanishes, USDC appears from bank (1s)
       setTimeout(() => {
         setAnimationState((prev) => ({
           ...prev,
           phase: "mint-usdc-from-bank",
           bankCharged: { ...prev.bankCharged, left: true },
           mintTokenPosition: {
-            x: "calc(50% - 12px)", // Start from center
+            x: "calc(50% - 12px)", // Start from center (bank)
             y: "0px",
             opacity: 1,
             scale: 1,
@@ -106,15 +106,15 @@ const MintBurnAnimation: React.FC = () => {
               scale: 1,
             },
           }));
-        }, 100);
-      }, 2000);
+        }, 50);
+      }, 1300);
 
-      // Phase 3: Show +10 badge and update Alice's balance (1s)
+      // Phase 3: Alice glows and balance updates (0.8s)
       setTimeout(() => {
         setAnimationState((prev) => ({
           ...prev,
           phase: "mint-balance-update",
-          bankCharged: { ...prev.bankCharged, left: false },
+          bankCharged: { ...prev.bankCharged, left: false, aliceGlow: true },
         }));
         setHighlightedBalance({ side: "left", type: "increase" });
         setFloatingBadges([
@@ -126,10 +126,14 @@ const MintBurnAnimation: React.FC = () => {
           setAliceBalanceLeft(60);
           setFloatingBadges([]);
           setHighlightedBalance(null);
-        }, 500);
-      }, 3500);
+          setAnimationState((prev) => ({
+            ...prev,
+            bankCharged: { ...prev.bankCharged, aliceGlow: false },
+          }));
+        }, 400);
+      }, 2300);
 
-      // Phase 4: Burn - USDC moves to bank (1.5s)
+      // Phase 4: Burn - USDC moves to bank (1s)
       setTimeout(() => {
         setAnimationState((prev) => ({
           ...prev,
@@ -142,27 +146,27 @@ const MintBurnAnimation: React.FC = () => {
           },
         }));
 
-        // Then animate to center
+        // Then animate to bank (right)
         setTimeout(() => {
           setAnimationState((prev) => ({
             ...prev,
             burnTokenPosition: {
-              x: "calc(50% - 12px)", // Move to center
+              x: "calc(100% - 64px)", // Move to bank
               y: "0px",
               opacity: 1,
               scale: 1,
             },
           }));
-        }, 100);
-      }, 5000);
+        }, 50);
+      }, 3100);
 
-      // Phase 5: Bank charges up, USDC vanishes, Dollar appears from bank (1.5s)
+      // Phase 5: Bank charges up, USDC vanishes, Dollar appears from bank (1s)
       setTimeout(() => {
         setAnimationState((prev) => ({
           ...prev,
           phase: "burn-dollar-from-bank",
           bankCharged: { ...prev.bankCharged, right: true },
-          burnTokenPosition: { x: "calc(50% - 12px)", y: "0px", opacity: 1, scale: 1 }, // Start from center
+          burnTokenPosition: { x: "calc(100% - 64px)", y: "0px", opacity: 1, scale: 1 }, // Start from bank
         }));
 
         // Then animate to Alice
@@ -171,15 +175,15 @@ const MintBurnAnimation: React.FC = () => {
             ...prev,
             burnTokenPosition: { x: "20px", y: "0px", opacity: 1, scale: 1 }, // Move to Alice
           }));
-        }, 100);
-      }, 6500);
+        }, 50);
+      }, 4100);
 
-      // Phase 6: Show -10 badge and update Alice's balance (1s)
+      // Phase 6: Alice glows and balance updates (0.8s)
       setTimeout(() => {
         setAnimationState((prev) => ({
           ...prev,
           phase: "burn-balance-update",
-          bankCharged: { ...prev.bankCharged, right: false },
+          bankCharged: { ...prev.bankCharged, right: false, aliceGlow: true },
         }));
         setHighlightedBalance({ side: "right", type: "decrease" });
         setFloatingBadges([
@@ -191,16 +195,17 @@ const MintBurnAnimation: React.FC = () => {
           setAliceBalanceRight(50);
           setFloatingBadges([]);
           setHighlightedBalance(null);
-        }, 500);
-      }, 8000);
+          setAnimationState((prev) => ({
+            ...prev,
+            bankCharged: { ...prev.bankCharged, aliceGlow: false },
+          }));
+        }, 400);
+      }, 5100);
 
-      // Phase 7: Shorter pause and restart cycle (1s)
+      // Phase 7: Immediate restart (no pause)
       setTimeout(() => {
-        setAnimationState((prev) => ({ ...prev, phase: "pause" }));
-        setTimeout(() => {
-          setAnimationCycle((prev) => prev + 1);
-        }, 1000);
-      }, 9000);
+        setAnimationCycle((prev) => prev + 1);
+      }, 5900);
     };
 
     runAnimationCycle();
@@ -275,7 +280,7 @@ const MintBurnAnimation: React.FC = () => {
             {/* Dollar Token (going into bank) */}
             {animationState.phase === "mint-dollar-to-bank" && (
               <div
-                className="absolute w-6 h-6 transition-all duration-1500 ease-in-out z-10"
+                className="absolute w-6 h-6 transition-all duration-1000 ease-in-out z-10"
                 style={{
                   left: animationState.mintTokenPosition.x,
                   top: `calc(50% - 12px + ${animationState.mintTokenPosition.y})`,
@@ -296,7 +301,7 @@ const MintBurnAnimation: React.FC = () => {
             {/* USDC Token (coming from bank) */}
             {animationState.phase === "mint-usdc-from-bank" && (
               <div
-                className="absolute w-6 h-6 transition-all duration-1500 ease-in-out z-10"
+                className="absolute w-6 h-6 transition-all duration-1000 ease-in-out z-10"
                 style={{
                   left: animationState.mintTokenPosition.x,
                   top: `calc(50% - 12px + ${animationState.mintTokenPosition.y})`,
@@ -411,13 +416,13 @@ const MintBurnAnimation: React.FC = () => {
         <div className="space-y-4">
           <div className="text-center">
             <h3 className="text-lg font-semibold text-red-400">Burning</h3>
-            <p className="text-sm text-gray-400">Destroying tokens</p>
+            <p className="text-sm text-gray-400">Redeeming tokens</p>
           </div>
 
           {/* Burning Animation */}
           <div className="relative w-full h-60 bg-gray-800/30 rounded-xl border border-gray-700/50 overflow-visible">
             {/* Bank */}
-            <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
+            <div className="absolute top-1/2 right-4 transform -translate-y-1/2 z-20">
               <div className="relative">
                 <div
                   className={`w-20 h-16 bg-gradient-to-br from-gray-600 to-gray-800 rounded-lg border-2 transition-all duration-500 ${
@@ -438,7 +443,11 @@ const MintBurnAnimation: React.FC = () => {
             </div>
 
             {/* Alice (sending USDC) */}
-            <div className="absolute left-4 top-1/2 transform -translate-y-1/2 z-30 px-3 py-2 bg-gray-700 rounded-lg border border-gray-600/50">
+            <div className={`absolute left-4 top-1/2 transform -translate-y-1/2 z-30 px-3 py-2 bg-gray-700 rounded-lg border transition-all duration-500 ${
+              animationState.bankCharged.aliceGlow
+                ? 'border-blue-400 shadow-lg shadow-blue-400/50'
+                : 'border-gray-600/50'
+            }`}>
               <div className="flex flex-col items-center space-y-1">
                 <div className="text-xl">{getRecipientEmoji("Alice")}</div>
                 <div className="text-xs text-gray-300 font-medium">Alice</div>
@@ -448,7 +457,7 @@ const MintBurnAnimation: React.FC = () => {
             {/* USDC Token (going into bank) */}
             {animationState.phase === "burn-usdc-to-bank" && (
               <div
-                className="absolute w-6 h-6 transition-all duration-1500 ease-in-out z-10"
+                className="absolute w-6 h-6 transition-all duration-1000 ease-in-out z-10"
                 style={{
                   left: animationState.burnTokenPosition.x,
                   top: `calc(50% - 12px + ${animationState.burnTokenPosition.y})`,
@@ -467,7 +476,7 @@ const MintBurnAnimation: React.FC = () => {
             {/* Dollar Token (coming from bank) */}
             {animationState.phase === "burn-dollar-from-bank" && (
               <div
-                className="absolute w-6 h-6 transition-all duration-1500 ease-in-out z-10"
+                className="absolute w-6 h-6 transition-all duration-1000 ease-in-out z-10"
                 style={{
                   left: animationState.burnTokenPosition.x,
                   top: `calc(50% - 12px + ${animationState.burnTokenPosition.y})`,
@@ -587,7 +596,7 @@ const MintBurnAnimation: React.FC = () => {
       <div className="flex justify-center mt-6 mb-6">
         <div className="text-white text-sm bg-black bg-opacity-50 px-4 py-2 rounded max-w-2xl">
           Minting creates new tokens when dollars are deposited. Burning
-          destroys tokens when dollars are withdrawn.
+          removes tokens when dollars are withdrawn.
         </div>
       </div>
     </div>

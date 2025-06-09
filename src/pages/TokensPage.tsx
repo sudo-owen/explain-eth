@@ -175,7 +175,7 @@ const TokensPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              What kind of cooler stuff can we build?
+              What kinds of cooler stuff can we build?
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
