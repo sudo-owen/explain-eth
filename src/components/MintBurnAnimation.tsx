@@ -255,7 +255,12 @@ const MintBurnAnimation: React.FC = () => {
           </div>
 
           {/* Minting Animation */}
-          <div className="relative w-full h-60 bg-gray-800/30 rounded-xl border border-gray-700/50 overflow-visible">
+          <div className="relative w-full h-60 rounded-xl border border-gray-700/50 overflow-visible">
+            {/* Split Background - Physical to Digital */}
+            <div className="absolute inset-0 rounded-xl overflow-hidden">
+              <div className="absolute left-0 top-0 w-1/2 h-full bg-blue-900/25"></div>
+              <div className="absolute right-0 top-0 w-1/2 h-full bg-sky-900/25"></div>
+            </div>
             {/* Bank */}
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20">
               <div className="relative">
@@ -275,6 +280,12 @@ const MintBurnAnimation: React.FC = () => {
                   Bank
                 </div>
               </div>
+            </div>
+
+            {/* Physical/Digital Labels */}
+            <div className="absolute bottom-2 left-0 right-0 flex justify-between px-4 z-5">
+              <div className="text-xs font-sans text-blue-500">Physical</div>
+              <div className="text-xs font-mono text-green-500">Digital</div>
             </div>
 
             {/* Dollar Token (going into bank) */}
@@ -420,7 +431,12 @@ const MintBurnAnimation: React.FC = () => {
           </div>
 
           {/* Burning Animation */}
-          <div className="relative w-full h-60 bg-gray-800/30 rounded-xl border border-gray-700/50 overflow-visible">
+          <div className="relative w-full h-60 rounded-xl border border-gray-700/50 overflow-visible">
+            {/* Split Background - Physical to Digital */}
+            <div className="absolute inset-0 rounded-xl overflow-hidden">
+              <div className="absolute left-0 top-0 w-1/2 h-full bg-blue-900/25"></div>
+              <div className="absolute right-0 top-0 w-1/2 h-full bg-sky-900/25"></div>
+            </div>
             {/* Bank */}
             <div className="absolute top-1/2 right-4 transform -translate-y-1/2 z-20">
               <div className="relative">
@@ -440,6 +456,12 @@ const MintBurnAnimation: React.FC = () => {
                   Bank
                 </div>
               </div>
+            </div>
+
+            {/* Physical/Digital Labels */}
+            <div className="absolute bottom-2 left-0 right-0 flex justify-between px-4 z-5">
+              <div className="text-xs font-sans text-blue-500">Physical</div>
+              <div className="text-xs font-mono text-green-500">Digital</div>
             </div>
 
             {/* Alice (sending USDC) */}

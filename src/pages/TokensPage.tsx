@@ -167,7 +167,11 @@ const TokensPage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Okay so now we know we know about stablecoins and smart contracts. We can combine them to build new types of apps!
+              Okay so now we know we know about stablecoins and smart contracts.
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Together, we can build new types of apps!
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
