@@ -7,6 +7,7 @@ import TokenFlowAnimation from '../components/TokenFlowAnimation'
 import StablecoinShowcase from '../components/StablecoinShowcase'
 import VolatilityComparison from '../components/VolatilityComparison'
 import TokenSpreadsheet from '../components/TokenSpreadsheet'
+import MintBurnAnimation from '../components/MintBurnAnimation'
 import Vocab from '../components/Vocab'
 
 const TokensPage: React.FC = () => {
@@ -126,11 +127,11 @@ const TokensPage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              This spreadsheet model also helps us think about what it really means when we "send" a token to another address (whether it's a person or a smart contract). 
+              This spreadsheet model helps us think about what it really means when we "send" a token to another address (whether it's a person or a smart contract). 
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              A "send" means updating the balance in the spreadsheet. The sender's balance goes down, and the receiver's balance goes up.            
+              A "send" means updating the balance in the spreadsheet. The sender's balance goes down, and the receiver's balance goes up.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -145,11 +146,28 @@ const TokensPage: React.FC = () => {
             />
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              One cool thing is that the Ethereum network is always live. You can send tokens around wherever you want, whenever you want. No early closing hours or weekends off. This is one reason why people are interested in using blockchain for financial apps like cross-border payments. 
+              So when a stablecoin company <Vocab>mints</Vocab> tokens, they are sending a digital message the Ethereum network to update the big spreadsheet so that their balance increases. 
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Okay so now we know the basics of smart contracts. And we know about stablecoins. We can combine them to build new types of apps!
+              We can send tokens around on the Ethereum network. But how do we actually get them "out" if we want to spend them somewhere else?
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              If at any point you want to cash out, you can send the stablecoins in your wallet to one of these companies, and they will wire US Dollars back into your bank account. Under the hood, these companies will <Vocab>burn</Vocab> the tokens, and they'll transfer you the dollars. 
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              As you may have guessed, <Vocab>burning</Vocab> is the opposite of minting. Instead of adding to someone's balance, we are now subtracting.
+            </p>
+
+            {/* BANK MINT VS BURN */}
+            <div className="my-8">
+              <MintBurnAnimation />
+            </div>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Okay so now we know we know about stablecoins and smart contracts. We can combine them to build new types of apps!
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -157,7 +175,11 @@ const TokensPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Let's do a deeper dive into <Vocab>smart contracts</Vocab>...
+              What kind of cooler stuff can we build?
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              Let's do a deeper dive into smart contracts, now with tokens...
             </p>
               
 

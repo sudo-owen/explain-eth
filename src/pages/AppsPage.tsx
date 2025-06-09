@@ -75,7 +75,7 @@ const AppsPage: React.FC = () => {
               </p>
 
               <p className="text-gray-300 leading-relaxed mb-6">
-                What if we could automate that to be just one click?
+                What if we could automate that to just one click?
               </p>
 
               <p className="text-gray-300 leading-relaxed mb-8">

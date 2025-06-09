@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import TableOfContentsOverlay from './TableOfContentsOverlay'
 
 interface NavigationProps {
   className?: string
@@ -8,6 +9,7 @@ interface NavigationProps {
 const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
   const navigate = useNavigate()
   const location = useLocation()
+  const [isTocOpen, setIsTocOpen] = useState(false)
 
   const pages = [
     { path: '/intro', title: 'Intro', label: 'Introduction' },
@@ -42,11 +44,19 @@ const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
   const previousPage = canGoBack ? pages[currentPage - 1] : null
   const nextPage = canGoForward ? pages[currentPage + 1] : null
 
+  const handleTocToggle = () => {
+    setIsTocOpen(!isTocOpen)
+  }
+
   return (
     <div className={`mt-16 pt-8 pb-24 border-t border-gray-700 ${className}`}>
       {/* Mobile: Page Indicator on top row */}
       <div className="flex justify-center items-center mb-4 md:hidden">
-        <div className="flex items-center space-x-4">
+        <button
+          onClick={handleTocToggle}
+          className="flex items-center space-x-4 px-3 py-2 rounded-lg transition-colors cursor-pointer hover:bg-gray-700/50"
+          aria-label="Open table of contents"
+        >
           <span className="text-gray-400 text-sm">
             {currentPage + 1} of {pages.length}
           </span>
@@ -54,8 +64,8 @@ const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
             {pages.map((_, index) => (
               <div
                 key={index}
-                className={`w-2 h-2 rounded-full ${
-                  index === currentPage ? 'bg-blue-500' : 'bg-gray-600'
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  index === currentPage ? 'bg-blue-500' : 'bg-gray-600 hover:bg-gray-500'
                 }`}
               />
             ))}
@@ -63,7 +73,7 @@ const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
           <span className="text-gray-300 text-sm font-medium">
             {pages[currentPage]?.title || 'Unknown'}
           </span>
-        </div>
+        </button>
       </div>
 
       {/* Navigation buttons row */}
@@ -81,7 +91,11 @@ const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
         )}
 
         {/* Desktop: Page Indicator in center */}
-        <div className="hidden md:flex items-center space-x-4">
+        <button
+          onClick={handleTocToggle}
+          className="hidden md:flex items-center space-x-4 px-3 py-2 rounded-lg transition-colors cursor-pointer hover:bg-gray-700/50"
+          aria-label="Open table of contents"
+        >
           <span className="text-gray-400 text-sm">
             {currentPage + 1} of {pages.length}
           </span>
@@ -89,16 +103,16 @@ const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
             {pages.map((_, index) => (
               <div
                 key={index}
-                className={`w-2 h-2 rounded-full ${
-                  index === currentPage ? 'bg-blue-500' : 'bg-gray-600'
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  index === currentPage ? 'bg-blue-500' : 'bg-gray-600 hover:bg-gray-500'
                 }`}
               />
             ))}
           </div>
-          <span className="text-gray-300 text-sm font-medium">
+          <span className="text-gray-300 text-sm font-bold">
             {pages[currentPage]?.title || 'Unknown'}
           </span>
-        </div>
+        </button>
 
         {/* Forward Button */}
         {canGoForward ? (
@@ -112,6 +126,30 @@ const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
           <div className="px-4 py-2"></div> // Empty space to maintain layout
         )}
       </div>
+
+      {/* GitHub link */}
+      <div className="flex justify-center mt-6">
+        <a
+          href="https://github.com/sudo-owen/explain-eth"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center justify-center w-8 h-8 rounded-lg transition-colors cursor-pointer bg-gray-700 hover:bg-gray-600"
+          aria-label="View source on GitHub"
+        >
+          <img
+            src="/img/github.svg"
+            alt="GitHub"
+            className="w-5 h-5 filter invert"
+          />
+        </a>
+      </div>
+
+      {/* Table of Contents Overlay */}
+      <TableOfContentsOverlay
+        pages={pages}
+        isOpen={isTocOpen}
+        onToggle={handleTocToggle}
+      />
     </div>
   )
 }
