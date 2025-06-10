@@ -79,7 +79,7 @@ const TransactionModal: React.FC<TransactionModalProps> = ({
                 : 'Transaction Failed'
               }
             </h3>
-            <p className="text-gray-300 text-sm mt-1">{message}</p>
+            <div className="text-gray-300 text-sm mt-1">{message}</div>
           </div>
           
           {/* Close button */}
