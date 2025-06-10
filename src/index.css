@@ -33,6 +33,12 @@ p, li, .text {
   font-weight: 400;
 }
 
+p > a {
+  text-decoration: underline;
+  font-weight: bold;
+  color: #7ba9f4;
+}
+
 /* Flash animation for balance updates */
 @keyframes flash {
   0% {

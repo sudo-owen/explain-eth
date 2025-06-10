@@ -66,7 +66,7 @@ const TokensPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Two popular USD stablecoins are <Vocab>USDC (US Dollar Coin)</Vocab> and <Vocab>USDT (US Dollar Tether)</Vocab>.
+              Two popular USD stablecoins are <Vocab>USDC</Vocab> (US Dollar Coin, made by <a href="https://www.circle.com/" target="_blank" rel="noopener noreferrer">Circle</a>) and <Vocab>USDT</Vocab> (US Dollar Tether, made by <a href="https://tether.to/" target="_blank" rel="noopener noreferrer">Tether</a>).
             </p>
 
             <div className="my-8">
@@ -87,7 +87,7 @@ const TokensPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Under the hood, a company manages a stablecoin. These companies will put money into bank accounts, bonds, or short-dated USD treasuries. Then, for each $1 that they put in, they will <Vocab>mint</Vocab> 1 USD token on Ethereum.
+              Under the hood, a company manages a stablecoin. These companies will put money into insured bank accounts or short-dated US treasuries. Then, for each $1 that they put in, they will <Vocab>mint</Vocab> 1 USD token on Ethereum.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
@@ -150,11 +150,15 @@ const TokensPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              We can send tokens around on the Ethereum network. But how do we actually get them "out" if we want to spend them somewhere else?
+              We can send tokens around on the Ethereum network.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              If at any point you want to cash out, you can send the stablecoins in your wallet to one of these companies, and they will wire US Dollars back into your bank account. Under the hood, these companies will <Vocab>burn</Vocab> the tokens, and they'll transfer you the dollars. 
+              But how do we actually get them "out" if we want to spend them somewhere else?
+            </p>
+
+            <p className="text-gray-300 leading-relaxed mb-6">
+              If at any point you want to cash out, you can send the stablecoins in your wallet to one of these stablecoin companies, and they'll wire US Dollars back into your bank account. Many other fintech companies like Striple or PayPal also support something similar. Under the hood, these companies will <Vocab>burn</Vocab> the tokens, and they'll transfer you the dollars. 
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
