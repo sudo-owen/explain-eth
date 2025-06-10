@@ -82,7 +82,7 @@ export const FootnoteRef: React.FC<FootnoteRefProps> = ({
       <a
         id={`ref-${id}`}
         href={`#${id}`}
-        className="text-blue-400 hover:text-blue-300 cursor-pointer underline transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded px-1"
+        className="text-blue-400 hover:text-blue-300 cursor-pointer underline transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-50 rounded mr-1"
         aria-label={`Go to footnote ${actualNumber}`}
       >
         [{actualNumber}]

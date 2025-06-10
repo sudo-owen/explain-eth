@@ -1,4 +1,5 @@
 import React from 'react'
+import { getRecipientEmoji, getRecipientAddressTruncated } from '../utils/recipients'
 
 // IDE-like Code Block Component
 interface CodeBlockProps {
@@ -10,12 +11,19 @@ interface CodeBlockProps {
 
 const CodeBlock: React.FC<CodeBlockProps> = ({ title, code, className = '', animatePercentages = false }) => {
   const generateStrikethroughCode = () => {
+    const aliceEmoji = getRecipientEmoji('Alice')
+    const bobEmoji = getRecipientEmoji('Bob')
+    const carolEmoji = getRecipientEmoji('Carol')
+    const aliceAddress = getRecipientAddressTruncated('Alice')
+    const bobAddress = getRecipientAddressTruncated('Bob')
+    const carolAddress = getRecipientAddressTruncated('Carol')
+
     return `PAYMENT SPLITTER 2 PROGRAM
 
 WHENEVER THIS PROGRAM RECEIVES ETH:
-  SEND 3̶3̶% 50% TO 👩 ALICE (0xb47...),
-  AND SEND 3̶3̶% 25% TO 👨 BOB (0x6b1...),
-  AND SEND 3̶3̶% 25% TO 👩‍🦰 CAROL (0xcA1...)
+  SEND 3̶3̶% 50% TO ${aliceEmoji} ALICE (${aliceAddress}),
+  AND SEND 3̶3̶% 25% TO ${bobEmoji} BOB (${bobAddress}),
+  AND SEND 3̶3̶% 25% TO ${carolEmoji} CAROL (${carolAddress})
 END`
   }
 

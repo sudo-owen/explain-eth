@@ -9,19 +9,19 @@ interface RecipientData {
 
 const recipientData: Record<string, RecipientData> = {
   'Alice': {
-    emoji: '👩',
+    emoji: '🧝‍♀️',
     description: 'Your friend Alice',
     backgroundColor: 'bg-sky-600/40 border-slate-200/60',
     address: '0xb47e3cd837ddf8e4c57f05d70ab865de6e193bbb'
   },
   'Bob': {
-    emoji: '👨',
+    emoji: '🤖',
     description: 'Your friend Bob',
     backgroundColor: 'bg-blue-600/40 border-slate-200/60',
     address: '0x6b175474e89094c44da98b954eedeac495271d0f'
   },
   'Carol': {
-    emoji: '👩‍🦰',
+    emoji: '🧛‍♀️',
     description: 'Your friend Carol',
     backgroundColor: 'bg-indigo-600/40 border-slate-200/60',
     address: '0xcA11bde05977b3631167028862bE2a173976CA11'

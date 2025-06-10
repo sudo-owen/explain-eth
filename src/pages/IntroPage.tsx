@@ -145,7 +145,7 @@ const IntroPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              Well, a <Vocab>network</Vocab> is a group of connected things, like a social network. As long as something is in the network, you can reach it. Just like how on the Facebook network, you can send a message to anyone as long as they have an account.
+              In general, a <Vocab>network</Vocab> is a group of connected things, like a social network. As long as something is in the network, you can reach it. Just like how on the Facebook network, you can send a message to anyone as long as they have an account.
             </p>
             
             {/* Network Animation */}
