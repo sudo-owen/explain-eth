@@ -146,7 +146,7 @@ const TokensPage: React.FC = () => {
             />
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              So when a stablecoin company <Vocab>mints</Vocab> tokens, they are sending a digital message the Ethereum network to update the big spreadsheet so that their balance increases. 
+              So when a stablecoin company <Vocab>mints</Vocab> tokens, they are sending a digital message to the Ethereum network to update the big spreadsheet so that their balance increases. 
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
