@@ -232,7 +232,7 @@ const IntroPage: React.FC = () => {
             </div>
 
             <p className="text-gray-300 leading-relaxed mb-8">
-              Once it turns green, your send transaction has been <Vocab>confirmed</Vocab>. This lets you know that it was successful, i.e. that it went through.
+              Once it turns green, your sent transaction has been <Vocab>confirmed</Vocab>. This lets you know that it was successful, i.e. that it went through.
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
