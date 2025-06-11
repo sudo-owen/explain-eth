@@ -471,7 +471,7 @@ const TokenSpreadsheet: React.FC<TokenSpreadsheetProps> = ({
                       )}
                       {(showTokens === 'both' || showTokens === 'USDC') && (
                         <td className="px-4 py-3 text-right border-b border-gray-700 relative">
-                          {renderBalance(formatCurrentBalance(user), false, user)}
+                          {renderBalance(formatUSDCBalance(user.usdcBalance), false, user)}
 
                           {/* Floating Badge */}
                           {floatingBadge && (

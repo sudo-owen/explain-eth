@@ -1,33 +1,13 @@
 import React from 'react'
-import { getRecipientEmoji, getRecipientAddressTruncated } from '../utils/recipients'
 
 // IDE-like Code Block Component
 interface CodeBlockProps {
   title: string
-  code?: string
+  code: string
   className?: string
-  animatePercentages?: boolean // New prop for percentage animation
 }
 
-const CodeBlock: React.FC<CodeBlockProps> = ({ title, code, className = '', animatePercentages = false }) => {
-  const generateStrikethroughCode = () => {
-    const aliceEmoji = getRecipientEmoji('Alice')
-    const bobEmoji = getRecipientEmoji('Bob')
-    const carolEmoji = getRecipientEmoji('Carol')
-    const aliceAddress = getRecipientAddressTruncated('Alice')
-    const bobAddress = getRecipientAddressTruncated('Bob')
-    const carolAddress = getRecipientAddressTruncated('Carol')
-
-    return `PAYMENT SPLITTER 2 PROGRAM
-
-WHENEVER THIS PROGRAM RECEIVES ETH:
-  SEND 3̶3̶% 50% TO ${aliceEmoji} ALICE (${aliceAddress}),
-  AND SEND 3̶3̶% 25% TO ${bobEmoji} BOB (${bobAddress}),
-  AND SEND 3̶3̶% 25% TO ${carolEmoji} CAROL (${carolAddress})
-END`
-  }
-
-  const finalCode = animatePercentages ? generateStrikethroughCode() : (code || '')
+const CodeBlock: React.FC<CodeBlockProps> = ({ title, code, className = '' }) => {
 
   return (
     <div className={`bg-gray-900 border border-gray-700 rounded-lg overflow-hidden shadow-lg ${className}`}>
@@ -44,7 +24,7 @@ END`
       {/* Code Content */}
       <div className="p-4 font-mono text-sm">
         <pre className="text-gray-300 leading-relaxed whitespace-pre-wrap">
-          {finalCode.split('\n').map((line, index) => {
+          {code.split('\n').map((line, index) => {
             // Simple syntax highlighting for our pseudocode
             let highlightedLine = line
 
@@ -56,7 +36,7 @@ END`
 
             // Highlight program name
             highlightedLine = highlightedLine.replace(
-              /(PAYMENT SPLITTER 2 PROGRAM)/g,
+              /(PAYMENT SPLITTER (?:2 )?PROGRAM)/g,
               '<span class="text-pink-400 font-bold">$1</span>'
             )
 

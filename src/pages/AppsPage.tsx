@@ -13,6 +13,7 @@ import {
   FootnoteRef,
 } from "../components/Footnote";
 import Vocab from "../components/Vocab";
+import { getRecipientEmoji, getRecipientAddressTruncated } from "../utils/recipients";
 
 const AppsPage: React.FC = () => {
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
@@ -101,11 +102,12 @@ const AppsPage: React.FC = () => {
               <div className="my-12">
                 <CodeBlock
                   title="PaymentSplitter.sol"
-                  code={`PAYMENT SPLITTER PROGRAM\n
+                  code={`PAYMENT SPLITTER PROGRAM
+
 WHENEVER THIS PROGRAM RECEIVES ETH:
-  SEND 33% TO 👩 ALICE (0xb47...),
-  AND SEND 33% TO 👨 BOB (0x6b1...),
-  AND SEND 33% TO 👩‍🦰 CAROL (0xcA1...)
+  SEND 33% TO ${getRecipientEmoji('Alice')} ALICE (${getRecipientAddressTruncated('Alice')}),
+  AND SEND 33% TO ${getRecipientEmoji('Bob')} BOB (${getRecipientAddressTruncated('Bob')}),
+  AND SEND 33% TO ${getRecipientEmoji('Carol')} CAROL (${getRecipientAddressTruncated('Carol')})
 END`}
                   className="max-w-2xl mx-auto"
                 />
@@ -218,7 +220,13 @@ END`}
               <div className="my-12">
                 <CodeBlock
                   title="PaymentSplitter2.sol"
-                  animatePercentages={true}
+                  code={`PAYMENT SPLITTER 2 PROGRAM
+
+WHENEVER THIS PROGRAM RECEIVES ETH:
+  SEND 3̶3̶% 50% TO ${getRecipientEmoji('Alice')} ALICE (${getRecipientAddressTruncated('Alice')}),
+  AND SEND 3̶3̶% 25% TO ${getRecipientEmoji('Bob')} BOB (${getRecipientAddressTruncated('Bob')}),
+  AND SEND 3̶3̶% 25% TO ${getRecipientEmoji('Carol')} CAROL (${getRecipientAddressTruncated('Carol')})
+END`}
                   className="max-w-2xl mx-auto"
                 />
               </div>

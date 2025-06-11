@@ -158,7 +158,7 @@ const TokensPage: React.FC = () => {
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
-              If at any point you want to cash out, you can send the stablecoins in your wallet to one of these stablecoin companies, and they'll wire US Dollars back into your bank account. Many other fintech companies like Striple or PayPal also support something similar. Under the hood, these companies will <Vocab>burn</Vocab> the tokens, and they'll transfer you the dollars. 
+              If at any point you want to cash out, you can send the stablecoins in your wallet to one of these stablecoin companies, and they'll wire US Dollars back into your bank account. Many other fintech companies like Stripe or PayPal also support something similar. Under the hood, these companies will <Vocab>burn</Vocab> the tokens, and they'll transfer you the dollars. 
             </p>
 
             <p className="text-gray-300 leading-relaxed mb-6">
