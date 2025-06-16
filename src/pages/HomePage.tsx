@@ -13,7 +13,7 @@ const HomePage: React.FC = () => {
     <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
       <div className="text-center">
         <h1 className="text-2xl font-bold mb-4">Redirecting...</h1>
-        <p className="text-gray-300">Taking you to the introduction</p>
+        <p>Taking you to the introduction</p>
       </div>
     </div>
   )

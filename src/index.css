@@ -33,6 +33,13 @@ p, li, .text {
   font-weight: 400;
 }
 
+/* Article paragraph styles */
+article p {
+  color: rgb(209 213 219); /* text-gray-300 */
+  line-height: 1.625; /* leading-relaxed */
+  margin-bottom: 1.5rem; /* mb-6 */
+}
+
 p > a {
   text-decoration: underline;
   font-weight: bold;

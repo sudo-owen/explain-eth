@@ -37,49 +37,49 @@ const AppsPage: React.FC = () => {
             <section className="mb-16">
               <h1 className="text-4xl font-bold text-white mb-8">Apps</h1>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 An app on Ethereum is a program that can also send or receive
                 ETH <Vocab>according to its own rules</Vocab>.
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 In blockchain jargon, this type of program is called a{" "}
                 <Vocab>smart contract</Vocab>.
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 What do these programs look like?
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 What kinds of rules can we set?
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 How can they be useful?
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 <i>
                   When will I stop with these hackneyed rhetorical questions?
                 </i>
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 Okay, okay, let's get back to an example.
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 Remember that example earlier, where we had to pay Alice, Bob,{" "}
                 <em>and</em> Carol one at a time? Sending money to all three of
                 them took several button clicks.
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 What if we could automate that to just one click?
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-8">
+              <p className="mb-8">
                 Let's look at a simplified smart contract{" "}
                 <FootnoteRef id="contract">
                   This is a simplified example that doesn't use real code,
@@ -113,50 +113,50 @@ END`}
                 />
               </div>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 What does it do?
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 (If you haven't read or written code before, don't worry, just
                 try to read the above text like a formal agreement, or a
                 specific formula and see if it makes some sense.)
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 It's a payment splitter!
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 That means it splits payments!
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 😑
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 ...in other words, it means whenever our Payment Splitter smart
                 contract receives ETH, it'll automatically send the right
                 proportion (1/3) to each person.
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 Now, we can use this simple program to send money to everyone at
                 once, instead of individually sending everyone ETH one at a
                 time.
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 How do we run this program?
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 On Ethereum, all smart contracts have their own address. To run
                 this program, we just send ETH to its address. So it's a transaction, just like how sending ETH to Alice, Bob, or Carol is also a transaction.
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 Once the program receives ETH, it'll automatically do its job and split the
                 funds three ways between Alice, Bob, and Carol as part of the same
                 transaction.
@@ -167,7 +167,7 @@ END`}
                 <SplitAnimation />
               </div>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 Here, give it a try yourself.
               </p>
 
@@ -187,17 +187,17 @@ END`}
                 />
               </div>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 Because the split amounts are coded up, it's also very easy to
                 change them.
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 Let's say that Alice, Bob, and Carol all baked cookies for a
                 bake sale.
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 Alice has baked half of all the cookies, and Bob and
                 Carol each baked a quarter. Let's say they take sales in ETH so
                 they tell everyone to send them money to a Payment Splitter
@@ -206,12 +206,12 @@ END`}
 
               {/* COOKIE DIAGRAM */}
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 How can we change the Payment Splitter program to instead send
                 50% to Alice, 25% to Bob, and 25% to Carol?
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 All we need to do is change the percentages we had for each
                 person in our smart contract!
               </p>
@@ -231,12 +231,12 @@ END`}
                 />
               </div>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 We change the 33% for Alice to 50%, and the 33% for Bob and Carol
                 to 25%.
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 Now, when we send ETH to this new Payment Splitter, it
                 automatically splits the funds 50/25/25 between Alice, Bob, and
                 Carol.
@@ -255,12 +255,12 @@ END`}
 
             {/* Additional Smart Contract Capabilities */}
             <section className="mb-16">
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 This is just the tip of the iceberg. There are many other types
                 of smart contracts we could write to handle even more complex types of payments.
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 For example, we could have:
               </p>
 
@@ -335,37 +335,37 @@ END`}
                 <AppsAbstractQuadrant />
               </div>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 All of this can let us make very flexible and customizable
                 programs to handle payments.
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 Let's go back to the bake sale example for a second. In an
                 ideal world, we can sell cookies to people for ETH.
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 In the real world, however, most people won't own ETH. They
                 may not even know how to buy it. But almost everyone will have
                 US Dollars in some shape or form (cash, credit, debit, etc.)
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 Can the Ethereum network handle dollars?
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 Yes!
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 As I mentioned at the very beginning, we can use all
                 sorts of currencies on the Ethereum network. Including digital
                 dollars!
               </p>
 
-              <p className="text-gray-300 leading-relaxed mb-6">
+              <p>
                 Let's explore the basics of <Vocab>tokens</Vocab>...
               </p>
             </section>
