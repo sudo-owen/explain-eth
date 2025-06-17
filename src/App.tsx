@@ -17,8 +17,13 @@ const LanguageRouteWrapper = ({ children }: { children: React.ReactNode }) => {
   const navigate = useNavigate()
 
   useEffect(() => {
+    console.log('Language route effect:', { lang, currentLang: i18n.language, isInitialized: i18n.isInitialized })
+    
+    if (!i18n.isInitialized) return
+    
     if (lang && ['en', 'zh'].includes(lang)) {
       if (i18n.language !== lang) {
+        console.log('Changing language from', i18n.language, 'to', lang)
         i18n.changeLanguage(lang)
       }
     } else if (lang) {
@@ -26,16 +31,20 @@ const LanguageRouteWrapper = ({ children }: { children: React.ReactNode }) => {
       const newPath = location.pathname.replace(`/${lang}`, '/en')
       navigate(newPath, { replace: true })
     }
-  }, [lang, i18n, location.pathname, navigate])
+  }, [lang, i18n, i18n.isInitialized, location.pathname, navigate])
 
-  return <>{children}</>
+  return (
+    <>
+      <LanguageSwitcher />
+      {children}
+    </>
+  )
 }
 
 function App() {
   return (
     <BrowserRouter>
       <BlockchainProvider>
-        <LanguageSwitcher />
         <Routes>
           {/* Root redirect to /en/intro */}
           <Route path="/" element={<Navigate to="/en/intro" replace />} />

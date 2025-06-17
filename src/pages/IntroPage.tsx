@@ -336,7 +336,10 @@ const IntroPage: React.FC = () => {
               </div>
 
               <p className="mb-8">
-                <Trans i18nKey={"intro.confirmation.0"}>
+                <Trans 
+                  i18nKey={"intro.confirmation.0"}
+                  values={{ totalAmountSent: totalAmountSent.toFixed(4) }}
+                >
                   So far you have sent {totalAmountSent.toFixed(4)} ETH. Nice!
                   After sending ETH, we get the pop-up below. What does it mean?
                 </Trans>
@@ -348,7 +351,10 @@ const IntroPage: React.FC = () => {
               </div>
 
               <p className="mb-8">
-                <Trans i18nKey={"intro.confirmation.1"}>
+                <Trans
+                  i18nKey={"intro.confirmation.1"}
+                  components={[<Vocab children="" />]}
+                >
                   Once it turns green, your send transaction has been{" "}
                   <Vocab>confirmed</Vocab>. This lets you know that it was
                   successful, i.e. that it went through.
@@ -364,7 +370,10 @@ const IntroPage: React.FC = () => {
               </p>
 
               <p>
-                <Trans i18nKey={"intro.timing.1"}>
+                <Trans
+                  i18nKey={"intro.timing.1"}
+                  components={[<Vocab children="" />]}
+                >
                   Specifically, on Ethereum, it takes{" "}
                   <Vocab>up to 12 seconds</Vocab> to complete a transaction.
                 </Trans>
@@ -432,7 +441,14 @@ const IntroPage: React.FC = () => {
               </p>
 
               <p>
-                <Trans i18nKey={"intro.blocks.0"}>
+                <Trans
+                  i18nKey={"intro.blocks.0"}
+                  components={[
+                    <Vocab children="" />,
+                    <Vocab children="" />,
+                    <FootnoteRef id="speedup" children="" />,
+                  ]}
+                >
                   It's because of something called <Vocab>block time</Vocab>. On
                   Ethereum, it takes about 12 seconds for the network to create
                   a <Vocab>block</Vocab>.
@@ -452,7 +468,23 @@ const IntroPage: React.FC = () => {
               </p>
 
               <p className="mb-8">
-                <Trans i18nKey={"intro.blocks.2"}>
+                <Trans
+                  i18nKey={"intro.blocks.2"}
+                  components={[
+                    <FootnoteRef id="tx-city">
+                      <a
+                        href="https://txcity.io/v/eth-btc"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-400 hover:text-blue-300 underline"
+                      >
+                        Here
+                      </a>
+                      is an actual real-time visualization for the Ethereum
+                      network if you are curious.
+                    </FootnoteRef>,
+                  ]}
+                >
                   Think of a block like a train in the animation above. The
                   train arrives on schedule, picks up everyone's transactions,
                   then leaves for its destination.
@@ -499,7 +531,10 @@ const IntroPage: React.FC = () => {
               </div>
 
               <p className="mb-8">
-                <Trans i18nKey={"intro.blocks.5"}>
+                <Trans
+                  i18nKey={"intro.blocks.5"}
+                  components={[<Vocab children="" />]}
+                >
                   When we send out all these different transactions, they get
                   collected into a <Vocab>block</Vocab>. So a block is a list of
                   all the transactions that have happened. And a new block gets
@@ -513,7 +548,10 @@ const IntroPage: React.FC = () => {
               </div>
 
               <p className="mb-8">
-                <Trans i18nKey={"intro.blocks.6"}>
+                <Trans
+                  i18nKey={"intro.blocks.6"}
+                  components={[<Vocab children="" />]}
+                >
                   Once we have more than one block, we have a
                   <Vocab>blockchain</Vocab>. As the name suggests, it's a chain
                   of blocks, or an ordered list of transactions.
@@ -533,7 +571,10 @@ const IntroPage: React.FC = () => {
               </p>
 
               <p>
-                <Trans i18nKey={"intro.apps.1"}>
+                <Trans
+                  i18nKey={"intro.apps.1"}
+                  components={[<Vocab children="" />]}
+                >
                   In addition to sending ETH around, we can also interact with{" "}
                   <Vocab>apps</Vocab> on the Ethereum network. These
                   interactions are also transactions!
@@ -547,7 +588,10 @@ const IntroPage: React.FC = () => {
               </p>
 
               <p>
-                <Trans i18nKey={"intro.apps.3"}>
+                <Trans
+                  i18nKey={"intro.apps.3"}
+                  components={[<Vocab children="" />]}
+                >
                   Let's explore the basics of <Vocab>apps</Vocab>...
                 </Trans>
               </p>

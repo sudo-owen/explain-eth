@@ -11,26 +11,27 @@ const LanguageSwitcher: React.FC = () => {
     { code: 'zh', name: '繁體中文' }
   ]
 
+  const currentLang = lang || 'en'
+  
+  console.log('LanguageSwitcher render:', { lang, currentLang, pathname: location.pathname })
+
   const handleLanguageChange = (newLang: string) => {
-    const currentLang = lang || 'en'
-    const currentPath = location.pathname
+    const pathSegments = location.pathname.split('/')
     
-    // Replace the current language in the URL with the new language
-    let newPath = currentPath
-    if (currentPath.startsWith(`/${currentLang}`)) {
-      newPath = currentPath.replace(`/${currentLang}`, `/${newLang}`)
+    if (pathSegments.length > 1 && ['en', 'zh'].includes(pathSegments[1])) {
+      pathSegments[1] = newLang
     } else {
-      // If no language prefix, add one
-      newPath = `/${newLang}${currentPath}`
+      pathSegments.splice(1, 0, newLang)
     }
     
+    const newPath = pathSegments.join('/')
     navigate(newPath)
   }
 
   return (
     <div className="fixed top-4 right-4 z-50">
       <select
-        value={lang || 'en'}
+        value={currentLang}
         onChange={(e) => handleLanguageChange(e.target.value)}
         className="px-3 py-2 bg-gray-800 text-white rounded-lg border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm shadow-lg"
       >
