@@ -54,9 +54,9 @@ const IntroPage: React.FC = () => {
                 <Trans
                   i18nKey="intro.opening.0"
                   components={[
-                    <Vocab children="" />, // 方法一（明確傳入空 children）
-                    <Vocab children="" />, // 方法一（明確傳入空 children）
-                    <Vocab children="" />, // 方法一（明確傳入空 children）
+                    <Vocab children="" />,
+                    <Vocab children="" />,
+                    <Vocab children="" />,
                   ]}
                 >
                   Hi, if you have no idea what <Vocab>Ethereum</Vocab>,{" "}
@@ -183,7 +183,14 @@ const IntroPage: React.FC = () => {
               </p>
 
               <p>
-                <Trans i18nKey={"intro.ethereum.2"}>
+                <Trans
+                  i18nKey={"intro.ethereum.2"}
+                  components={[
+                    <Vocab children="" />,
+                    <Vocab children="" />,
+                    <Vocab children="" />,
+                  ]}
+                >
                   What is Ethereum? Ethereum is a
                   <Vocab>blockchain network</Vocab>
                   for <Vocab>sending money</Vocab> and{" "}
@@ -196,7 +203,10 @@ const IntroPage: React.FC = () => {
               </p>
 
               <p>
-                <Trans i18nKey={"intro.ethereum.4"}>
+                <Trans
+                  i18nKey={"intro.network.0"}
+                  components={[<Vocab children="" />]}
+                >
                   In general, a <Vocab>network</Vocab> is a group of connected
                   things, like a social network. As long as something is in the
                   network, you can reach it. Just like how on the Facebook
@@ -211,14 +221,20 @@ const IntroPage: React.FC = () => {
               </div>
 
               <p>
-                <Trans i18nKey={"intro.network.1"}>
+                <Trans
+                  i18nKey={"intro.network.1"}
+                  components={[<Vocab children="" />]}
+                >
                   (I know we didn't define <Vocab>blockchain</Vocab> yet, don't
                   worry, we'll get to it.)
                 </Trans>
               </p>
 
               <p className="mb-8">
-                <Trans i18nKey={"intro.network.0"}>
+                <Trans
+                  i18nKey={"intro.account.0"}
+                  components={[<Vocab children="" />, <Vocab children="" />]}
+                >
                   Like a social media network, you'll need an{" "}
                   <Vocab>account</Vocab> to get started using Ethereum. An
                   account will let you receive <Vocab>money</Vocab>. You can
@@ -227,7 +243,7 @@ const IntroPage: React.FC = () => {
               </p>
 
               <p className="mb-8">
-                <Trans i18nKey={"intro.account.0"}>
+                <Trans i18nKey={"intro.account.1"}>
                   Let's give you a test account to get started:
                 </Trans>
               </p>
@@ -238,9 +254,12 @@ const IntroPage: React.FC = () => {
               </div>
 
               <p className="mb-8">
-                <Trans i18nKey={"intro.account.2"}>
-                  Every account has a unique ID, called an{" "}
-                  <Vocab>address</Vocab>. Your simulated address is{" "}
+                <Trans
+                  i18nKey={"intro.account.2"}
+                  components={[<Vocab children="" />, <code children="" />]}
+                >
+                  Every account has a unique ID, called an
+                  <Vocab>address</Vocab>. Your simulated address is
                   <code className="bg-gray-800 px-2 py-1 rounded text-sm break-all">
                     0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2
                   </code>
