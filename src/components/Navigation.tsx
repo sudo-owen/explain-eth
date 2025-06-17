@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate, useLocation, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import TableOfContentsOverlay from './TableOfContentsOverlay'
 
 interface NavigationProps {
@@ -9,14 +10,19 @@ interface NavigationProps {
 const Navigation: React.FC<NavigationProps> = ({ className = '' }) => {
   const navigate = useNavigate()
   const location = useLocation()
+  const { lang } = useParams<{ lang: string }>()
   const [isTocOpen, setIsTocOpen] = useState(false)
+  const { t } = useTranslation()
 
+  const currentLang = lang || 'en'
+  
   const pages = [
-    { path: '/intro', title: 'Intro', label: 'Introduction' },
-    { path: '/apps', title: 'Apps Part 1', label: 'Apps' },
-    { path: '/tokens', title: 'Tokens', label: 'Tokens' },
-    { path: '/apps2', title: 'Apps Part 2', label: 'Apps 2' }
+    { path: `/${currentLang}/intro`, title: t('nav.intro'), label: t('nav.intro') },
+    { path: `/${currentLang}/apps`, title: t('nav.apps'), label: t('nav.apps') },
+    { path: `/${currentLang}/tokens`, title: t('nav.tokens'), label: t('nav.tokens') },
+    { path: `/${currentLang}/apps2`, title: t('nav.apps') + ' 2', label: t('nav.apps') + ' 2' }
   ]
+
 
   const currentPageIndex = pages.findIndex(page => page.path === location.pathname)
   const currentPage = currentPageIndex !== -1 ? currentPageIndex : 0
