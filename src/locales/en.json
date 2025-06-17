@@ -1,7 +1,7 @@
 {
   "siteTitle": "Explain Ethereum",
   "languageSwitch": "Language",
-  
+
   "nav": {
     "home": "Home",
     "intro": "Introduction",
@@ -9,11 +9,11 @@
     "apps": "Apps",
     "playground": "Playground"
   },
-  
+
   "intro": {
     "title": "Intro",
     "opening": [
-      "Hi, if you have no idea what Ethereum, blockchains, and smart contracts are, this is for you!",
+      "Hi, if you have no idea what <0>Ethereum</0>, <1>blockchains</1>, and <2>smart contracts</2> are, this is for you!",
       "This is a series of articles that tries to explain the basics of blockchain in a simplified way. I do my best to avoid heavy math or programming jargon, but there will be some new words and ideas. I try to use real-world examples when possible to help bridge the gap.",
       "(For all the experts in the room, just enjoy the animations.)",
       "Along the way, we'll cover how blockchains:"
@@ -75,7 +75,7 @@
       "viewHistory": "View transaction history"
     }
   },
-  
+
   "tokens": {
     "title": "Tokens",
     "introduction": [
@@ -89,7 +89,7 @@
       "Traditional cryptocurrencies like ETH can be very volatile, while stablecoins maintain stable prices."
     ]
   },
-  
+
   "apps": {
     "title": "Apps",
     "introduction": [
@@ -99,11 +99,11 @@
     ],
     "examples": [
       "Bill Splitting: Automatically split bills between multiple people",
-      "Escrow: Hold funds until certain conditions are met", 
+      "Escrow: Hold funds until certain conditions are met",
       "Subscriptions: Automatically charge users on a recurring basis"
     ]
   },
-  
+
   "apps2": {
     "title": "Apps (But Now With Tokens)",
     "introduction": [
@@ -114,15 +114,13 @@
     ],
     "appTypes": [
       "Earning Yield: how to earn interest on your dollars, similar to a high-yield savings account",
-      "Lending: how to lend your money to others and earn interest", 
+      "Lending: how to lend your money to others and earn interest",
       "Trading: how to exchange different types of tokens",
       "Insurance: how to protect your investments"
     ],
-    "status": [
-      "This section is under construction"
-    ]
+    "status": ["This section is under construction"]
   },
-  
+
   "playground": {
     "title": "Playground",
     "ui": {
@@ -130,7 +128,7 @@
       "rollupChain": "Rollup Chain"
     }
   },
-  
+
   "common": {
     "loading": "Loading...",
     "error": "Error",

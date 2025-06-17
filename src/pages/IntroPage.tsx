@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 import { useBlockchainContext } from "../contexts/BlockchainContext";
 import BalanceComponent from "../components/BalanceComponent";
 import ProfileCards from "../components/ProfileCards";
@@ -48,11 +48,23 @@ const IntroPage: React.FC = () => {
             {/* Intro Section */}
             <section className="mb-16">
               {/* Opening paragraphs from translations */}
-              <Article
-                articleKey="intro"
-                sectionKey="opening"
-                showTitle={true}
-              />
+              <h1 className="text-4xl font-bold text-white mb-8">
+                {t("intro.title", "Intro")}
+              </h1>
+              <p>
+                <Trans
+                  i18nKey="intro.opening.0"
+                  components={[
+                    <Vocab children="" />, // 方法一（明確傳入空 children）
+                    <Vocab children="" />, // 方法一（明確傳入空 children）
+                    <Vocab children="" />, // 方法一（明確傳入空 children）
+                  ]}
+                >
+                  Hi, if you have no idea what <Vocab>Ethereum</Vocab>,{" "}
+                  <Vocab>blockchains</Vocab>, and <Vocab>smart contracts</Vocab>{" "}
+                  are, this is for you!
+                </Trans>
+              </p>
 
               {/* Interactive capabilities with quadrants */}
               <div className="text-gray-300 leading-relaxed mb-6">
@@ -132,8 +144,18 @@ const IntroPage: React.FC = () => {
             {/* Ethereum Section */}
             <section className="mb-16">
               <h1 className="text-4xl font-bold text-white mb-8">
-                {t("intro.ethereum.0")}
+                <Trans i18nKey={"intro.ethereum.0"}>Ethereum</Trans>
               </h1>
+
+              <Trans i18nKey={"intro.ethereum.0"}>Let's get started.</Trans>
+
+              <Trans i18nKey={"intro.ethereum.0"}>
+                What is Ethereum? Ethereum is a<Vocab>blockchain network</Vocab>
+                for <Vocab>sending money</Vocab> and <Vocab>running apps</Vocab>
+                .
+              </Trans>
+
+              <Trans i18nKey={"intro.ethereum.0"}>What does that mean?</Trans>
 
               <Article
                 articleKey="intro"
