@@ -1,19 +1,23 @@
 import React, { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate()
+  const { lang } = useParams<{ lang: string }>()
+  const { t } = useTranslation()
 
   useEffect(() => {
-    // Redirect to intro page
-    navigate('/intro')
-  }, [navigate])
+    // Redirect to intro page with language prefix
+    const currentLang = lang || 'en'
+    navigate(`/${currentLang}/intro`)
+  }, [navigate, lang])
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
       <div className="text-center">
-        <h1 className="text-2xl font-bold mb-4">Redirecting...</h1>
-        <p>Taking you to the introduction</p>
+        <h1 className="text-2xl font-bold mb-4">{t('common.loading')}</h1>
+        <p>{t('intro.description')}</p>
       </div>
     </div>
   )

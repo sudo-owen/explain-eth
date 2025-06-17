@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useBlockchainContext } from '../contexts/BlockchainContext'
 import { Recipient } from '../types/blockchain'
 import { formatETH, formatETHTruncated } from '../utils/transactions'
@@ -34,6 +35,7 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
   autoInitializeETH = false,
   showRecipientSelection = true
 }) => {
+  const { t } = useTranslation()
   const { ethereumState, sendMoney, sendToSplitter, receiveETH, transactionHistory } = useBlockchainContext()
   const [selectedRecipient, setSelectedRecipient] = useState<Recipient>(allowedRecipients[0] || 'Bob')
   const [lastTransactionCount, setLastTransactionCount] = useState(0)
@@ -151,7 +153,7 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
   return (
     <div className={`bg-gray-800 border border-gray-700 rounded-lg p-6 ${className}`}>
 
-      <h3 className="text-lg font-semibold text-gray-100 mb-4">Your Account</h3>
+      <h3 className="text-lg font-semibold text-gray-100 mb-4">{t('balanceComponent.yourAccount')}</h3>
 
       {/* User Address */}
       <div className="mb-4">
@@ -166,19 +168,19 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
         <div className="text-3xl font-bold text-green-400 mb-2">
           {formatETH(ethereumState.balance)}
         </div>
-        <div className="text-sm text-gray-400">Available Balance</div>
+        <div className="text-sm text-gray-400">{t('balanceComponent.availableBalance')}</div>
       </div>
 
       {/* Send Action */}
       {showSendAction && (
         <div className="space-y-4">
-          <h4 className="text-md font-medium text-gray-200">Send ETH</h4>
+          <h4 className="text-md font-medium text-gray-200">{t('balanceComponent.sendETH')}</h4>
           
           {/* Recipient Selection or Display */}
           {showRecipientSelection ? (
             <div>
               <label className="block text-sm text-gray-400 mb-2 break-all">
-                To: {useSplitter ? 'Payment Splitter Contract' : getRecipientAddress(selectedRecipient)}
+                {t('balanceComponent.to')} {useSplitter ? t('balanceComponent.paymentSplitterContract') : getRecipientAddress(selectedRecipient)}
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 {allowedRecipients.map((recipient) => {
@@ -219,7 +221,7 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
           ) : (
             <div>
               <label className="block text-sm text-gray-400 mb-2 break-all">
-                Recipients: Alice, Bob, and Carol will each receive {formatETHTruncated(splitterAmount / 3)}
+                {t('balanceComponent.recipientsEachReceive')} {formatETHTruncated(splitterAmount / 3)}
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 {allowedRecipients.map((recipient) => {
@@ -272,8 +274,8 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
                     `}
                   >
                     {useSplitter
-                      ? `Send ${formatETHTruncated(amount)} to Splitter`
-                      : `Send ${formatETHTruncated(amount)} to ${selectedRecipient}`
+                      ? t('balanceComponent.sendToSplitter', { amount: formatETHTruncated(amount) })
+                      : t('balanceComponent.sendToRecipient', { amount: formatETHTruncated(amount), recipient: selectedRecipient })
                     }
                   </button>
                 )
@@ -285,12 +287,12 @@ const BalanceComponent: React.FC<BalanceComponentProps> = ({
 
       {showReceiveAction && (
         <div className="mt-6 pt-6 border-t border-gray-700">
-          <h4 className="text-md font-medium text-gray-200 mb-4">Get ETH</h4>
+          <h4 className="text-md font-medium text-gray-200 mb-4">{t('balanceComponent.getETH')}</h4>
           <button
             onClick={receiveETH}
             className="w-full px-6 py-3 rounded-lg font-medium transition-all cursor-pointer bg-green-600 hover:bg-green-700 text-white animate-pulse-glow"
           >
-            Receive 1 ETH (Click me!)
+            {t('balanceComponent.receiveETH')}
           </button>
         </div>
       )}
